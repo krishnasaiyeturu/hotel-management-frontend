@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Category from "../components/Home/Category";
-import PriceWithTaxCard from "../components/Home/PriceWithTaxCard";
+// import Category from "../components/Home/Category";
+// import PriceWithTaxCard from "../components/Home/PriceWithTaxCard";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "../backend";
 import axios from "axios";
@@ -18,33 +18,74 @@ const Home = () => {
   const category = localStorage.getItem("category");
   // get listing data based on cat
   const { isLoading, data } = useGetSubCatListing(category);
-  console.log({data})
+  console.log({ data });
   const location = useLocation();
-   const roomPictures= [
-    ["https://images.pexels.com/photos/276671/pexels-photo-276671.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/19966760/pexels-photo-19966760/free-photo-of-gray-bedroom-with-a-double-bed-and-a-mirror-in-the-wardrobe.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-    "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=600"]
-    ,[
-    "https://images.pexels.com/photos/4030072/pexels-photo-4030072.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-    "https://images.pexels.com/photos/5649731/pexels-photo-5649731.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-    "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600"]
-    ,[
-    "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600"]
-  ]
+  const roomPictures = [
+    [
+      "https://images.pexels.com/photos/276671/pexels-photo-276671.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/19966760/pexels-photo-19966760/free-photo-of-gray-bedroom-with-a-double-bed-and-a-mirror-in-the-wardrobe.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/4030072/pexels-photo-4030072.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/5649731/pexels-photo-5649731.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/19966760/pexels-photo-19966760/free-photo-of-gray-bedroom-with-a-double-bed-and-a-mirror-in-the-wardrobe.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/276671/pexels-photo-276671.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/5649731/pexels-photo-5649731.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/4030072/pexels-photo-4030072.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/276671/pexels-photo-276671.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/19966760/pexels-photo-19966760/free-photo-of-gray-bedroom-with-a-double-bed-and-a-mirror-in-the-wardrobe.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+    ],
+    [
+      "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/4030072/pexels-photo-4030072.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+      "https://images.pexels.com/photos/5649731/pexels-photo-5649731.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+    ],
+    [
+      "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+    [
+      "https://images.pexels.com/photos/6480198/pexels-photo-6480198.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ],
+  ];
   // fetching all listing data
   const allListingData = useQuery({
     queryKey: ["allListing"],
     queryFn: async () => {
       const res = await axios.get(`${API}house/get_all_listing`);
-      const formattedResponse = res.data.allListingData.slice(0,3).map((item,index)=>{
-        return {
-          ...item,
-          photo: roomPictures[index]
-        }
-      })
-      console.log({formattedResponse});
+      const formattedResponse = res.data.allListingData
+        .slice(0, 10)
+        .map((item, index) => {
+          return {
+            ...item,
+            photo: roomPictures[index],
+          };
+        });
+      console.log({ formattedResponse });
       return formattedResponse;
     },
   });
@@ -95,31 +136,34 @@ const Home = () => {
     }
   }
 
-  const formattedData = data.map((item,index)=>{
+  const formattedData = data.map((item, index) => {
     return {
       ...item,
-      photo: roomPictures[index]
-    }
-  })
-  console.log({allListingData,formattedData})
+      photo: roomPictures[index],
+    };
+  });
+  console.log({ allListingData, formattedData });
 
   return (
-    <main className="max-w-screen-2xl xl:px-10 px-5 sm:px-16 mx-auto">
-      <section
+    <main className="max-w-screen-2xl xl:px-10 px-6  sm:px-16 mx-auto">
+      <h1 className="text-center font-bold text-xl text-[#002d72] py-4">
+        OUR ROOMS
+      </h1>
+      {/* <section
         className={` pt-8 grid md:grid-cols-12 gap-5 bg-white sticky top-16 z-30 ${
           hasScroll ? " shadow" : " shadow-none"
         }`}
-      >
-        {/* categories */}
-        <Category styleGrid={"md:col-span-8 lg:col-span-9"} />
-        {/* taxes toggle card */}
-        <PriceWithTaxCard
+      > */}
+      {/* categories */}
+      {/* <Category styleGrid={"md:col-span-8 lg:col-span-9"} /> */}
+      {/* taxes toggle card */}
+      {/* <PriceWithTaxCard
           style={
             " md:col-span-4 lg:col-span-3 border-[#e2e2e2] border rounded-xl h-14 md:flex justify-around items-center hidden"
           }
           setShowBeforeTaxPrice={setShowBeforeTaxPrice}
-        />
-      </section>
+        /> */}
+      {/* </section> */}
       {/* house listing data section */}
       {/* if sub cat listing data is loading else */}
       {isLoading ? (
@@ -142,7 +186,7 @@ const Home = () => {
               <>
                 {allListingData.data &&
                   allListingData.data.length !== 0 &&
-                  allListingData.data.map((listing,index) => {
+                  allListingData.data.map((listing, index) => {
                     return (
                       // this will be link to see full details of the listing
                       <Link
@@ -162,7 +206,7 @@ const Home = () => {
               <>
                 {/* only cat based listing data fetching */}
                 {formattedData.length !== 0 &&
-                  formattedData?.map((listing,index) => {
+                  formattedData?.map((listing, index) => {
                     return (
                       // this will be link to see full details of the listing
                       <Link

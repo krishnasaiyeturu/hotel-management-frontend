@@ -47,7 +47,7 @@ const ListingHousePhotos = lazy(() =>
 const HouseTitle = lazy(() =>
   import("../../Pages/ListingHouseStepTwo/HouseTitle")
 );
-const Home = lazy(() => import("../../Pages/Home"));
+const Home = lazy(() => import("../../components/Home/HomeContainer"));
 const ListingDetails = lazy(() => import("../../Pages/ListingDetails"));
 // import Book from "../../Pages/Book";
 const Book = lazy(() => import("../../Pages/Book"));
