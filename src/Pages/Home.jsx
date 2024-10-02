@@ -11,7 +11,7 @@ import { useGetSubCatListing } from "../hooks/useGetSubCatListing";
 import SkeletonLoadingCards from "../components/skeletonLoading/SkeletonLoadingCards";
 import { FadeLoader } from "react-spinners";
 
-const Home = () => {
+const RoomsList = () => {
   const [hasScroll, setHasScroll] = useState(false);
   //  before tax price state
   const [showBeforeTaxPrice, setShowBeforeTaxPrice] = useState(false);
@@ -205,8 +205,10 @@ const Home = () => {
             ) : (
               <>
                 {/* only cat based listing data fetching */}
-                {formattedData.length !== 0 &&
-                  formattedData?.map((listing, index) => {
+                {/* {formattedData.length !== 0 &&
+                  formattedData?.map((listing, index) => { */}
+                {allListingData.data.length !== 0 &&
+                  allListingData.data?.map((listing, index) => {
                     return (
                       // this will be link to see full details of the listing
                       <Link
@@ -230,4 +232,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default RoomsList;
