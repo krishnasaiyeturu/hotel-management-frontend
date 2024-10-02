@@ -8,7 +8,7 @@ import Checkouts from "../pages/checkouts/CheckOuts";
 import Transactions from "../pages/transactions/Transactions";
 import Agents from "../pages/agents/Agents";
 import Settings from "../pages/settings/Settings";
-import SignIn from "../../components/admin/SignIn";
+import SignIn from "../../components/auth/SignIn";
 
 const adminsRouter = [
   {
