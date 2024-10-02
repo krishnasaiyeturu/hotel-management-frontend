@@ -354,7 +354,7 @@ const ReservationCard = ({ listingData }) => {
               onClick={() => {
                 handleBooking();
               }}
-              className="capitalize py-3 w-full bg-[#ff385c] hover:bg-[#d90b63] transition duration-200 ease-in text-white font-medium text-sm rounded-md"
+              className="capitalize py-3 w-full bg-[#1b4281] hover:bg-[#002662] transition duration-200 ease-in text-white font-medium text-sm rounded-md"
             >
               reserve
             </button>

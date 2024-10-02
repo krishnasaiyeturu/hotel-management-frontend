@@ -132,7 +132,7 @@ const Payment = ({ searchParamsObj }) => {
           <button
             type="submit"
             disabled={isProcessing}
-            className="w-full md:max-w-[180px] mt-7 px-5 py-3 rounded-md bg-[#ff385c] hover:bg-[#d90b63] transition duration-200 ease-in text-white font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 disabled:bg-gray-400 min-w-[180px]"
+            className="w-full md:max-w-[180px] mt-7 px-5 py-3 rounded-md bg-[#1b4281] hover:bg-[#002662] transition duration-200 ease-in text-white font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 disabled:bg-gray-400 min-w-[180px]"
           >
             {isProcessing ? (
               <>

@@ -1,5 +1,4 @@
 import { Suspense, lazy } from "react";
-import { createBrowserRouter } from "react-router-dom";
 import { API } from "../../backend";
 import EditProfile from "../../Pages/UserProfile/EditProfile";
 import MainLayout from "../../layout/MainLayout";
@@ -10,6 +9,7 @@ import Reservations from "../../Pages/Dashboard/Reservations";
 import Listing from "../../Pages/Dashboard/Listing";
 import CreateNewListLayout from "../../layout/CreateNewListLayout";
 import ListHouseOverview from "../../Pages/ListHouseOverview";
+import SignIn from "../../components/auth/SignIn";
 import ListHouseStepOne from "../../Pages/ListingHouseStepOne/ListHouseStepOne";
 import ListHouseStepOneStructure from "../../Pages/ListingHouseStepOne/ListHouseStepOneStructure";
 import ListHouseStepOnePlacetype from "../../Pages/ListingHouseStepOne/ListHouseStepOnePlacetype";
@@ -29,6 +29,9 @@ import { FadeLoader } from "react-spinners";
 // import Receipt from "../../Pages/ListingHouseFinalStep/Receipt";
 // import Thankyou from "../../Pages/ListingHouseFinalStep/Thankyou";
 // import Home from "../../Pages/Home"; = lazy (() => import)
+import RoomsList from "../../Pages/Home";
+import SignUp from "../../components/auth/SignUp";
+
 const ListingHouseStepOneAddress = lazy(() =>
   import("../../Pages/ListingHouseStepOne/ListingHouseStepOneAddress")
 );
@@ -72,7 +75,7 @@ const Highlight = lazy(() =>
 );
 // import PaymentConfirmed from "../../Pages/PaymentConfirmed";
 
-const router = createBrowserRouter([
+const router = [
   {
     path: "/",
     element: <MainLayout />,
@@ -90,6 +93,21 @@ const router = createBrowserRouter([
             <Home />
           </Suspense>
         ),
+      },
+      {
+        path: "/rooms",
+        element: (
+          <Suspense
+            fallback={
+              <div className=" flex justify-center items-center w-full h-[60dvh]">
+                <FadeLoader color="#000" />
+              </div>
+            }
+          >
+            <RoomsList />
+          </Suspense>
+        ),
+        // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
       },
       {
         path: "/rooms/:id",
@@ -159,6 +177,14 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "/signIn",
+    element: <SignIn />,
+  },
+  {
+    path: "/signUp",
+    element: <SignUp />,
   },
   {
     path: "/become-a-host",
@@ -378,6 +404,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
 
 export default router;

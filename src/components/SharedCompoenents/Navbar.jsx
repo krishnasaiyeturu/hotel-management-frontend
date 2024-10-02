@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom"; // Use React Router for navigation
+import { Link, useLocation } from "react-router-dom";  // Use React Router for navigation
 
 function Navbar() {
   const [hideMenu, setHideMenu] = useState(true);
-
-  // Get the current pathname using window.location.pathname
-  const pathname = window.location.pathname;
+  const { pathname } = useLocation();
 
   return (
     <header className="bg-white bg-opacity-90 backdrop-blur-md shadow-md sticky top-0 z-50">
@@ -35,7 +33,7 @@ function Navbar() {
             <li className="p-2 lg:p-0">
               <Link
                 className={`${
-                  pathname === "/" ? "text-blue-600" : ""
+                  pathname === "/" ? "text-blue-600" : "text-black"
                 } hover:text-blue-600`}
                 to="/"
                 onClick={() => setHideMenu(true)}
@@ -46,7 +44,7 @@ function Navbar() {
             <li className="p-2 lg:p-0">
               <Link
                 className={`${
-                  pathname.includes("rooms") ? "text-blue-600" : ""
+                  pathname.includes("rooms") ? "text-blue-600" : "text-black"
                 } hover:text-blue-600`}
                 to="/rooms"
                 onClick={() => setHideMenu(true)}
@@ -57,7 +55,7 @@ function Navbar() {
             <li className="p-2 lg:p-0">
               <Link
                 className={`${
-                  pathname === "/amenities" ? "text-blue-600" : ""
+                  pathname === "/amenities" ? "text-blue-600" : "text-black"
                 } hover:text-blue-600`}
                 to="/amenities"
                 onClick={() => setHideMenu(true)}
@@ -70,7 +68,7 @@ function Navbar() {
                 className={`${
                   pathname.includes("events") || pathname === "/signin"
                     ? "text-blue-600"
-                    : ""
+                    : "text-black"
                 } hover:text-blue-600`}
                 to="/signin"
                 onClick={() => setHideMenu(true)}
