@@ -31,6 +31,7 @@ const ReservationCard = ({ listingData }) => {
 
   // guests state is here
   const [guestsNumber, setGuestsNumber] = useState(1);
+  const [numberOfRooms,setNumberOfRooms] = useState(0);
   const [childrenNumber, setChildrenNumber] = useState(0);
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
   const [reservations, setReservations] = useState([]);
@@ -264,6 +265,39 @@ const ReservationCard = ({ listingData }) => {
             className="min-h-[200px] w-72 shadow-lg border absolute z-[90] bg-white px-4 py-5 rounded-md"
           >
             <div className=" flex flex-col gap-5">
+              <div className=" flex felx-row items-center justify-between">
+                {/*  number of Rooms here */}
+                <span>
+                  <p className=" text-base text-[#222222] font-medium">
+                    Rooms
+                  </p>
+                </span>
+                {/* icons */}
+                <span className=" flex flex-row-reverse items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setNumberOfRooms((prev) => prev + 1);
+                    }}
+                    // disabled={listingData?.floorPlan?.guests === totalGuest}
+                    className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
+                  </button>
+                  <p className=" w-[30px] flex justify-center">
+                    {numberOfRooms}
+                  </p>
+
+                  <button
+                    onClick={() => {
+                      setNumberOfRooms((prev) => prev - 1);
+                    }}
+                    disabled={numberOfRooms === 0}
+                    className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                </span>
+              </div>
               <div className=" flex felx-row items-center justify-between">
                 {/* adults number here */}
                 <span>

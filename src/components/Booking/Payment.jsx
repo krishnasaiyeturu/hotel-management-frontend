@@ -29,6 +29,19 @@ const Payment = ({ searchParamsObj }) => {
     checkin: searchParamsObj?.checkin,
     checkout: searchParamsObj?.checkout,
   };
+  const [guestInfo, setGuestInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+
+   const handleInputChange = (e) => {
+     const { name, value } = e.target;
+     setGuestInfo({
+       ...guestInfo,
+       [name]: value,
+     });
+   };
 
   //   dates
   const formattedDates = useDateFormatting(dateObj);
@@ -100,6 +113,69 @@ const Payment = ({ searchParamsObj }) => {
             </p>
           </span>
         </div>
+        <div className="flex flex-col gap-6">
+        <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
+          Guest Information
+        </h5>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* First Name */}
+          <div className="p-3 rounded-md">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              First Name
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={guestInfo.firstName}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+              required
+            />
+          </div>
+          {/* Last Name */}
+          <div className="p-3 rounded-md">
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={guestInfo.lastName}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+              required
+            />
+          </div>
+
+          {/* Email Address */}
+          <div className="p-3 rounded-md">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={guestInfo.email}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+              required
+            />
+          </div>
+          </div>
+        </div>
+        </div>
         <hr className="w-full h-[1.3px] bg-[#dddddd] my-4" />
         {/* payment element */}
         <form onSubmit={handleSubmit}>
@@ -143,7 +219,6 @@ const Payment = ({ searchParamsObj }) => {
             )}
           </button>
         </form>
-      </div>
     </div>
   );
 };
