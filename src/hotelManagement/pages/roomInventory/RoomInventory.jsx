@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 
 const allRooms = [
   { id: 1, number: "#001", type: "Double bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
@@ -38,6 +40,9 @@ const allRooms = [
 const RoomInventory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("All rooms");
+  const navigate = useNavigate();
+    const rooms = useSelector((state) => state.rooms);
+    console.log("STATE FROM STORE",{ rooms });
   const roomsPerPage = 10;
 
   // Filter rooms based on active tab
@@ -78,11 +83,18 @@ const RoomInventory = () => {
     Blocked: "bg-gray-100 text-gray-600",
   };
 
+  const handleNavigateToCreateRoom = () => {
+    navigate("/admin/room-inventory/create-room");
+  };
+
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-base font-semibold">Room Inventory</h1>
-        <button className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center">
+        <button
+          onClick={handleNavigateToCreateRoom}
+          className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
+        >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Add Room
         </button>
@@ -119,8 +131,7 @@ const RoomInventory = () => {
           }`}
           onClick={() => handleTabChange("Booked rooms")}
         >
-          Booked (
-          {allRooms.filter((room) => room.status === "Booked").length})
+          Booked ({allRooms.filter((room) => room.status === "Booked").length})
         </button>
       </div>
 
@@ -138,7 +149,9 @@ const RoomInventory = () => {
                 Room facility
               </th>
               <th className="p-4 text-sm text-gray-500 border-b">Status</th>
-              <th className="p-4 text-sm text-gray-500 border-b text-center">Actions</th>
+              <th className="p-4 text-sm text-gray-500 border-b text-center">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>

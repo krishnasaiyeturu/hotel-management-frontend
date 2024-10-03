@@ -7,16 +7,12 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useLocation } from "react-router-dom"; // Use React Router for navigation
-
-// Mock data for famous hotels
-const famousHotels = [
-  { id: 1, name: "ASPEN GRAND HOTELS" },
-  { id: 2, name: "The Ritz-Carlton" },
-  { id: 3, name: "Four Seasons" },
-  { id: 4, name: "Mandarin Oriental" },
-  { id: 5, name: "Waldorf Astoria" },
-];
+import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllHotels,
+  setActiveHotel,
+} from "../redux/actions/hotelsListActions";
 
 // Mock data for user options
 const userOptions = [
@@ -29,14 +25,19 @@ function AdminsNavbar() {
   const [hideMenu, setHideMenu] = useState(true);
   const [hotelDropdownOpen, setHotelDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [activeHotel, setActiveHotel] = useState(famousHotels[0]); // Default to the first hotel
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [allHotels, setAllHotels] = useState([]);
+  // const [activeHotel, setActiveHotel] = useState(allHotels[0]);
   const { pathname } = useLocation();
-
-  const userDropdownRef = useRef(null); // Ref for user dropdown
-  const hotelDropdownRef = useRef(null); // Ref for hotel dropdown
-
+  const dispatch = useDispatch(); // Add dispatch
+  const admin = useSelector((state) => state.admin);
+  const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
+  const allHotels = useSelector((state) => state.admin.hotels.allHotels);
+  console.log({ admin , allHotels, activeHotel});
+  const userDropdownRef = useRef(null);
+  const hotelDropdownRef = useRef(null);
   const handleHotelSelect = (hotel) => {
-    setActiveHotel(hotel);
+    dispatch(setActiveHotel(hotel));
     setHotelDropdownOpen(false); // Close the dropdown after selection
   };
 
@@ -67,6 +68,10 @@ function AdminsNavbar() {
     };
   }, []);
 
+  useEffect(() => {
+    dispatch(getAllHotels());
+  }, [dispatch]);
+
   return (
     <header className="bg-white">
       <div className="container mx-auto flex justify-between items-center py-4 px-4">
@@ -83,24 +88,32 @@ function AdminsNavbar() {
               onClick={() => setHotelDropdownOpen(!hotelDropdownOpen)}
               className="bg-white text-black px-4 py-2 border rounded-md shadow-sm flex items-center"
             >
-              {activeHotel.name}
+              {activeHotel?.name}
               <FontAwesomeIcon icon={faCaretDown} className="ml-2" />
             </button>
 
             {/* Dropdown list */}
             {hotelDropdownOpen && (
               <ul className="absolute mt-2 bg-white shadow-lg border rounded-md py-2 right-0 w-64">
-                {famousHotels.map((hotel) => (
-                  <li
-                    key={hotel.id}
-                    className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                      activeHotel.id === hotel.id ? "bg-gray-200 font-bold" : ""
-                    }`}
-                    onClick={() => handleHotelSelect(hotel)}
-                  >
-                    {hotel.name}
+                {allHotels.length > 0 ? (
+                  allHotels.map((hotel) => (
+                    <li
+                      key={hotel._id}
+                      className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                        activeHotel._id === hotel._id
+                          ? "bg-gray-200 font-bold"
+                          : ""
+                      }`}
+                      onClick={() => handleHotelSelect(hotel)}
+                    >
+                      {hotel.name}
+                    </li>
+                  ))
+                ) : (
+                  <li className="px-4 py-2 text-gray-500">
+                    No hotels available
                   </li>
-                ))}
+                )}
               </ul>
             )}
           </div>
