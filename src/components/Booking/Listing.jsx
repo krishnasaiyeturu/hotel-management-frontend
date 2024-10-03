@@ -34,7 +34,8 @@ const Listing = ({ searchParamsObj }) => {
         <div className=" flex flex-row gap-2">
           {/* listing img */}
           <img
-            src={listingData?.photos[0]}
+            // src={listingData?.photos[0]}
+            src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600"
             alt="listing houses"
             className=" rounded-md object-cover w-[110px] h-[96px] sm:w-[124px] sm:h-[106px]"
           />

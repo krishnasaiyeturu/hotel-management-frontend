@@ -1,4 +1,45 @@
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
+import PulseLoader from "react-spinners/PulseLoader";
+import { API } from "../../backend";
+import { adminLogIn } from "../../hotelManagement/redux/actions/adminActions";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 const SignIn = () => {
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${API}auth/login`, {
+        email: adminEmail,
+        password: adminPassword,
+      });
+      const token = response.data.token;
+      const decodedToken = jwtDecode(token);
+      console.log({ decodedToken });
+      dispatch(adminLogIn(decodedToken.user));
+      if (token) {
+        localStorage.setItem("accessToken", token);
+        toast.success("Succesfully Logged in!");
+      }
+      setIsLoading(false);
+      navigate("/admin/dashboard");
+    } catch (error) {
+      setIsLoading(false);
+      toast.warn("Network error, try again!");
+    }
+  };
+
   return (
     <div className="h-[100vh] grid grid-cols-1 lg:grid-cols-2">
       {/* Left Side: Form */}
@@ -8,37 +49,37 @@ const SignIn = () => {
           <h2 className="text-left text-2xl font-bold text-navy-600">
             ASPEN GRAND HOTELS
           </h2>
-
           {/* Welcome Back */}
           <h1 className="text-xl font-bold mt-6 text-navy-600">Welcome Back</h1>
           <p className="text-gray-600 mb-6">Please enter your details below.</p>
-
           {/* Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="text-sm text-gray-700">
                 Email
               </label>
               <input
                 id="email"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
                 type="email"
                 placeholder="email"
                 className="w-full p-3 border border-gray-300 rounded mt-1"
               />
             </div>
-
             <div>
               <label htmlFor="password" className="text-sm text-gray-700">
                 Password
               </label>
               <input
                 id="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
                 type="password"
                 placeholder="********"
                 className="w-full p-3 border border-gray-300 rounded mt-1"
               />
             </div>
-
             {/* Remember and Forgot password */}
             <div className="flex justify-between items-center">
               <div className="flex items-center">
@@ -60,13 +101,17 @@ const SignIn = () => {
             <div>
               <button
                 type="submit"
-                className="w-full py-3 bg-[#1b4281] hover:bg-[#002662] bg-navy-600 text-white font-bold rounded hover:bg-navy-700 transition duration-300"
+                className="w-full py-3 bg-[#1b4281] hover:bg-[#002662] text-white font-bold rounded transition duration-300"
+                disabled={isLoading} // Disable button while loading
               >
-                Sign In
+                {isLoading ? (
+                  <PulseLoader size={8} color={"#fff"} />
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </div>
           </form>
-
           {/* Sign up link */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
@@ -85,7 +130,7 @@ const SignIn = () => {
       {/* Right Side: Hotel Image */}
       <div className="hidden lg:block relative">
         <img
-          src="https://images.pexels.com/photos/3201761/pexels-photo-3201761.jpeg?auto=compress&cs=tinysrgb&w=600" // Replace with the image you want to use
+          src="https://images.pexels.com/photos/3201761/pexels-photo-3201761.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Hotel"
           className="object-cover w-full h-[100vh]"
         />

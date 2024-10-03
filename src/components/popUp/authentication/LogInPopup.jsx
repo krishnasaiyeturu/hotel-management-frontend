@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { API } from "../../../backend";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogIn } from "../../../redux/actions/userActions";
+import { adminLogIn } from "../../../hotelManagement/redux/actions/adminActions";
 import { toast } from "react-hot-toast";
 import errorIcon from "../../../assets/basicIcon/errorIcon.png";
 import errorMessageIcon from "../../../assets/basicIcon/errorIcon2.png";
@@ -43,7 +43,7 @@ const LogInPopup = ({
     setIsLoading(true);
     setShowErrorMessage(false);
     try {
-      const response = await axios.post(`${API}auth/log_in`, {
+      const response = await axios.post(`${API}auth/login`, {
         email: loginEmail,
         password: data.password,
       });
@@ -53,7 +53,7 @@ const LogInPopup = ({
       if (userData?.success === 0) {
         setShowErrorMessage(true);
       } else if (userData?.success === 1) {
-        dispatch(userLogIn(userData));
+        dispatch(adminLogIn(userData));
         let accessToken = localStorage.getItem("accessToken");
         let refreshToken = localStorage.getItem("refreshToken");
 
