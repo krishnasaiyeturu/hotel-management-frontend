@@ -1,3 +1,7 @@
+/* Admin Room Inventory */
+.roomStatusWiseButtons{
+  font-size: 12px !important;
+}
 /* Main page custom css */
 .nav__search__button > p {
   padding-inline: 12px;

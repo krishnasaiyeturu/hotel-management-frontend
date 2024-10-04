@@ -5,15 +5,17 @@ const ListingTitle = ({ listingData }) => {
   return (
     <div className=" flex flex-col text-[#222222]">
       {/* title */}
-      <p className="text-xl md:text-2xl font-medium">{listingData?.title}</p>
+      <p className="text-xl md:text-2xl font-medium">{listingData?.name}</p>
       <div className=" grid grid-cols-1 md:grid-cols-5 items-center justify-end">
         <div className=" flex flex-row flex-wrap md:flex-nowrap items-center gap-2 col-span-4">
           {/* ratings */}
           <p className=" flex flex-row items-center gap-1">
-            {listingData?.ratings ? (
+            {listingData?.hotel?.ratings ? (
               <>
                 <AiFillStar size={16} />
-                <p className=" text-xs sm:text-sm">{listingData?.ratings}</p>
+                <p className=" text-xs sm:text-sm">
+                  {listingData?.hotel?.rating}
+                </p>
               </>
             ) : (
               <>
@@ -29,11 +31,11 @@ const ListingTitle = ({ listingData }) => {
           <span> · </span>
           {/* location */}
           <p className="text-xs sm:text-sm font-medium underline">
-            {listingData?.location?.addressLineOne
-              ? listingData?.location?.addressLineOne
-              : listingData?.location?.addressLineTwo
-              ? listingData?.location?.addressLineTwo
-              : listingData?.location?.country?.name}
+            {listingData?.hotel?.location?.address
+              ? listingData?.hotel?.location?.address
+              : listingData?.hotel?.location?.city
+                ? listingData?.hotel?.location?.city
+                : listingData?.hotel?.location?.state}
           </p>
         </div>
         {/* save wishlist options */}

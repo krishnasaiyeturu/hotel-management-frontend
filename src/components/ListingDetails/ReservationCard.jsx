@@ -31,6 +31,7 @@ const ReservationCard = ({ listingData }) => {
 
   // guests state is here
   const [guestsNumber, setGuestsNumber] = useState(1);
+  const [numberOfRooms,setNumberOfRooms] = useState(0);
   const [childrenNumber, setChildrenNumber] = useState(0);
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
   const [reservations, setReservations] = useState([]);
@@ -182,7 +183,7 @@ const ReservationCard = ({ listingData }) => {
         <div className=" flex felx-row justify-between items-start">
           <div className=" flex flex-col">
             <h3 className=" text-[22px] text-[#222222] font-semibold">
-              {/* ${listingData?.basePrice} */}${reservationBasePrice}
+              {/* ${listingData?.basePrice} */}${listingData.pricePerNight}
             </h3>
             <p className=" text-[#313131] text-sm">Total before taxes</p>
           </div>
@@ -261,9 +262,40 @@ const ReservationCard = ({ listingData }) => {
         {showDropdown && (
           <div
             ref={dropdownRef}
-            className="min-h-[200px] w-72 shadow-lg border absolute z-[90] bg-white px-4 py-5 rounded-md"
+            className="min-h-[240px] w-72 shadow-lg border absolute z-[90] bg-white px-4 py-5 rounded-md"
           >
             <div className=" flex flex-col gap-5">
+              <div className=" flex felx-row items-center justify-between">
+                {/*  number of Rooms here */}
+                <span>
+                  <p className=" text-base text-[#222222] font-medium">Rooms</p>
+                </span>
+                {/* icons */}
+                <span className=" flex flex-row-reverse items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setNumberOfRooms((prev) => prev + 1);
+                    }}
+                    // disabled={listingData?.floorPlan?.guests === totalGuest}
+                    className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
+                  </button>
+                  <p className=" w-[30px] flex justify-center">
+                    {numberOfRooms}
+                  </p>
+
+                  <button
+                    onClick={() => {
+                      setNumberOfRooms((prev) => prev - 1);
+                    }}
+                    disabled={numberOfRooms === 0}
+                    className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                </span>
+              </div>
               <div className=" flex felx-row items-center justify-between">
                 {/* adults number here */}
                 <span>
@@ -354,7 +386,7 @@ const ReservationCard = ({ listingData }) => {
               onClick={() => {
                 handleBooking();
               }}
-              className="capitalize py-3 w-full bg-[#ff385c] hover:bg-[#d90b63] transition duration-200 ease-in text-white font-medium text-sm rounded-md"
+              className="capitalize py-3 w-full bg-[#1b4281] hover:bg-[#002662] transition duration-200 ease-in text-white font-medium text-sm rounded-md"
             >
               reserve
             </button>
