@@ -16,6 +16,16 @@ export const adminLogIn = (adminData) => async (dispatch) => {
   });
 };
 
+// actions/adminActions.js
+
+export const getAdminDetails = (adminDetails) => {
+  return {
+    type: "GET_ADMIN_DETAILS",
+    payload: adminDetails,
+  };
+};
+
+
 // export const getUser = () => async (dispatch, getState) => {
 //   const { userDetails } = getState().user;
 

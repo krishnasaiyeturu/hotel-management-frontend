@@ -4,12 +4,13 @@ import SignUp from "../../components/auth/SignUp";
 import { FadeLoader } from "react-spinners";
 import Dashboard from "../pages/dashboard/Dashboard";
 import RoomInventory from "../pages/roomInventory/RoomInventory";
-import Checkouts from "../pages/checkouts/CheckOuts";
 import Transactions from "../pages/transactions/Transactions";
 import Agents from "../pages/agents/Agents";
 import Settings from "../pages/settings/Settings";
 import SignIn from "../../components/auth/SignIn";
 import RoomCreatorAndEditor from "../pages/roomInventory/RoomCreaterAndEditer";
+import FrontDesk from "../pages/frontDesk/FrontDesk";
+import ProtectedRoute from "./ProtectedRoute";
 
 const adminsRouter = [
   {
@@ -19,34 +20,39 @@ const adminsRouter = [
       {
         path: "dashboard",
         element: (
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Dashboard />
-          </Suspense>
+          <ProtectedRoute>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Dashboard />
+            </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
         path: "room-inventory",
         element: (
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <RoomInventory />
-          </Suspense>
+          <ProtectedRoute>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <RoomInventory />
+            </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
         path: "room-inventory/create-room",
         element: (
+          <ProtectedRoute>
           <Suspense
             fallback={
               <div className=" flex justify-center items-center w-full h-[60dvh]">
@@ -56,11 +62,13 @@ const adminsRouter = [
           >
             <RoomCreatorAndEditor />
           </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
-        path: "checkouts",
+        path: "room-inventory/edit-room",
         element: (
+          <ProtectedRoute>
           <Suspense
             fallback={
               <div className=" flex justify-center items-center w-full h-[60dvh]">
@@ -68,13 +76,31 @@ const adminsRouter = [
               </div>
             }
           >
-            <Checkouts />
+            <RoomCreatorAndEditor />
           </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "front-desk",
+        element: (
+          <ProtectedRoute>
+          <Suspense
+            fallback={
+              <div className=" flex justify-center items-center w-full h-[60dvh]">
+                <FadeLoader color="#000" />
+              </div>
+            }
+          >
+            <FrontDesk />
+          </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
         path: "transactions",
         element: (
+          <ProtectedRoute>
           <Suspense
             fallback={
               <div className=" flex justify-center items-center w-full h-[60dvh]">
@@ -84,11 +110,13 @@ const adminsRouter = [
           >
             <Transactions />
           </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
         path: "agents",
         element: (
+          <ProtectedRoute>
           <Suspense
             fallback={
               <div className=" flex justify-center items-center w-full h-[60dvh]">
@@ -98,11 +126,13 @@ const adminsRouter = [
           >
             <Agents />
           </Suspense>
+          </ProtectedRoute>
         ),
       },
       {
         path: "settings",
         element: (
+          <ProtectedRoute>
           <Suspense
             fallback={
               <div className=" flex justify-center items-center w-full h-[60dvh]">
@@ -112,6 +142,7 @@ const adminsRouter = [
           >
             <Settings />
           </Suspense>
+          </ProtectedRoute>
         ),
       },
     ],

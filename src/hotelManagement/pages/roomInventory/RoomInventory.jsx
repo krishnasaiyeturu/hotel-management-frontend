@@ -1,59 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
-
-const allRooms = [
-  { id: 1, number: "#001", type: "Double bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 2, number: "#002", type: "Single bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 3, number: "#003", type: "VIP", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 4, number: "#004", type: "VIP", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 5, number: "#005", type: "Single bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 6, number: "#006", type: "Double bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Waitlist" },
-  { id: 7, number: "#007", type: "Double bed", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 8, number: "#008", type: "Single bed", floor: "Floor -5", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-  { id: 9, number: "#009", type: "Double bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 10, number: "#010", type: "Double bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-  { id: 11, number: "#011", type: "Double bed", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 12, number: "#012", type: "Single bed", floor: "Floor -4", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 13, number: "#013", type: "VIP", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 14, number: "#014", type: "VIP", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 15, number: "#015", type: "Single bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 16, number: "#016", type: "Double bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Waitlist" },
-  { id: 17, number: "#017", type: "Double bed", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 18, number: "#018", type: "Single bed", floor: "Floor -5", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-  { id: 19, number: "#019", type: "Double bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 20, number: "#020", type: "Double bed", floor: "Floor -4", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-  { id: 21, number: "#021", type: "Single bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 22, number: "#022", type: "Double bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 23, number: "#023", type: "VIP", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Booked" },
-  { id: 24, number: "#024", type: "VIP", floor: "Floor -4", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 25, number: "#025", type: "Single bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 26, number: "#026", type: "Double bed", floor: "Floor -2", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Waitlist" },
-  { id: 27, number: "#027", type: "Double bed", floor: "Floor -5", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Reserved" },
-  { id: 28, number: "#028", type: "Single bed", floor: "Floor -3", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-  { id: 29, number: "#029", type: "Double bed", floor: "Floor -1", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Available" },
-  { id: 30, number: "#030", type: "Double bed", floor: "Floor -4", facility: "AC, shower, Double bed, towel, bathtub, TV", status: "Blocked" },
-];
+import {
+  getAllRooms,
+  getAllRoomsCount,
+} from "../../redux/actions/roomsActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const RoomInventory = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState("All rooms");
+  const [activeTab, setActiveTab] = useState("available");
   const navigate = useNavigate();
-    const rooms = useSelector((state) => state.rooms);
-    console.log("STATE FROM STORE",{ rooms });
+  const dispatch = useDispatch();
+  const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
+  const rooms = useSelector((state) => state.admin.roomsInventory.rooms);
+  const roomsCount = useSelector(
+    (state) => state.admin.roomsInventory.roomsCount
+  );
+console.log({ roomsCount });
   const roomsPerPage = 10;
-
-  // Filter rooms based on active tab
-  const filteredRooms = allRooms.filter((room) => {
-    if (activeTab === "Available rooms") return room.status === "Available";
-    if (activeTab === "Booked rooms") return room.status === "Booked";
-    return true; // All rooms
-  });
-
-  const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
-  const displayedRooms = filteredRooms.slice(
+  const totalPages = Math.ceil(rooms.length / roomsPerPage);
+  const displayedRooms = rooms.slice(
     (currentPage - 1) * roomsPerPage,
     currentPage * roomsPerPage
   );
@@ -68,6 +36,7 @@ const RoomInventory = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+    dispatch(getAllRooms(activeHotel._id, tab));
     setCurrentPage(1); // Reset to first page on tab change
   };
 
@@ -76,23 +45,30 @@ const RoomInventory = () => {
   };
 
   const statusColors = {
-    Available: "bg-blue-100 text-blue-600",
-    Booked: "bg-red-100 text-red-600",
-    Reserved: "bg-green-100 text-green-600",
-    Waitlist: "bg-yellow-100 text-yellow-600",
+    all: "bg-blue-100 text-blue-600",
+    booked: "bg-red-100 text-red-600",
+    available: "bg-green-100 text-green-600",
+    maintenance: "bg-yellow-100 text-yellow-600",
     Blocked: "bg-gray-100 text-gray-600",
   };
 
-  const handleNavigateToCreateRoom = () => {
-    navigate("/admin/room-inventory/create-room");
+  const navigateFunction = (route) => {
+    navigate(`/admin/room-inventory/${route}`);
   };
+
+  useEffect(() => {
+    if (activeHotel?._id && activeTab) {
+      dispatch(getAllRooms(activeHotel._id, activeTab));
+      dispatch(getAllRoomsCount(activeHotel._id));
+    }
+  }, [dispatch, activeHotel, activeTab]);
 
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-base font-semibold">Room Inventory</h1>
         <button
-          onClick={handleNavigateToCreateRoom}
+          onClick={() => navigateFunction("create-room")}
           className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
         >
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
@@ -104,34 +80,44 @@ const RoomInventory = () => {
       <div className="flex mb-4">
         <button
           className={`px-4 py-1  rounded-full mr-2 border-2 roomStatusWiseButtons ${
-            activeTab === "All rooms"
+            activeTab === ""
               ? "border-blue-500 bg-blue-100 text-blue-500"
               : "bg-gray-200 text-gray-700 border-gray-200"
           }`}
-          onClick={() => handleTabChange("All rooms")}
+          onClick={() => handleTabChange("")}
         >
-          All ({allRooms.length})
+          All ({roomsCount?.all ? roomsCount.all : 0})
         </button>
         <button
           className={`px-4 py-1 rounded-full mr-2 border-2 roomStatusWiseButtons ${
-            activeTab === "Available rooms"
+            activeTab === "available"
               ? "border-blue-500 bg-blue-100 text-blue-500"
               : "bg-gray-200 text-gray-700 border-gray-200"
           }`}
-          onClick={() => handleTabChange("Available rooms")}
+          onClick={() => handleTabChange("available")}
         >
-          Available (
-          {allRooms.filter((room) => room.status === "Available").length})
+          Available ({roomsCount?.available ? roomsCount.available : 0})
         </button>
         <button
-          className={`px-4 py-1 rounded-full border-2 roomStatusWiseButtons ${
-            activeTab === "Booked rooms"
+          className={`px-4 py-1 rounded-full mr-2  border-2 roomStatusWiseButtons ${
+            activeTab === "booked"
               ? "border-blue-500 bg-blue-100 text-blue-500"
               : "bg-gray-200 text-gray-700 border-gray-200"
           }`}
-          onClick={() => handleTabChange("Booked rooms")}
+          onClick={() => handleTabChange("booked")}
         >
-          Booked ({allRooms.filter((room) => room.status === "Booked").length})
+          Booked ({roomsCount?.booked ? roomsCount.booked : 0})
+        </button>
+        <button
+          className={`px-4 py-1  rounded-full mr-2 border-2 roomStatusWiseButtons ${
+            activeTab === "maintenance"
+              ? "border-blue-500 bg-blue-100 text-blue-500"
+              : "bg-gray-200 text-gray-700 border-gray-200"
+          }`}
+          onClick={() => handleTabChange("maintenance")}
+        >
+          Maintenance{" "}
+           ({roomsCount?.maintenance ? roomsCount.maintenance : 0})
         </button>
       </div>
 
@@ -141,13 +127,14 @@ const RoomInventory = () => {
           <thead>
             <tr>
               <th className="p-4 text-sm text-gray-500 border-b">
-                Room number
+                Room Number
               </th>
-              <th className="p-4 text-sm text-gray-500 border-b">Bed type</th>
-              <th className="p-4 text-sm text-gray-500 border-b">Room floor</th>
+              <th className="p-4 text-sm text-gray-500 border-b">Room Floor</th>
+              <th className="p-4 text-sm text-gray-500 border-b">Type</th>
               <th className="p-4 text-sm text-gray-500 border-b">
-                Room facility
+                Price Per Night
               </th>
+              <th className="p-4 text-sm text-gray-500 border-b">Occupancy</th>
               <th className="p-4 text-sm text-gray-500 border-b">Status</th>
               <th className="p-4 text-sm text-gray-500 border-b text-center">
                 Actions
@@ -155,74 +142,97 @@ const RoomInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedRooms.map((room) => (
-              <tr key={room.id}>
-                <td className="p-4 border-b text-xs">{room.number}</td>
-                <td className="p-4 border-b text-xs">{room.type}</td>
-                <td className="p-4 border-b text-xs">{room.floor}</td>
-                <td className="p-4 border-b text-xs">{room.facility}</td>
-                <td className="p-4 pl-3 border-b text-xs">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColors[room.status]}`}
-                  >
-                    {room.status}
-                  </span>
-                </td>
-                <td className="p-4 border-b text-center">
-                  <button className="text-gray-600 hover:text-gray-800 mr-2">
-                    <FontAwesomeIcon icon={faEye} />
-                  </button>
-                  <button className="text-gray-600 hover:text-gray-800">
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
+            {rooms.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="7"
+                  className="p-4 font-bold text-xl text-center text-gray-500"
+                >
+                  No rooms available. Please check back later.
                 </td>
               </tr>
-            ))}
+            ) : (
+              <>
+                {displayedRooms.map((room) => (
+                  <tr key={room._id}>
+                    <td className="p-4 border-b text-xs">{room.roomNumber}</td>
+                    <td className="p-4 border-b text-xs">{room.floorNumber}</td>
+                    <td className="p-4 border-b text-xs">{room.roomType}</td>
+                    <td className="p-4 border-b text-xs">
+                      $ {room.type.pricePerNight}
+                    </td>
+                    <td className="p-4 border-b text-xs">
+                      {room.type.maxOccupancy}
+                    </td>
+                    <td className="p-4 pl-3 border-b text-xs">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColors[room.status]}`}
+                      >
+                        {room.status}
+                      </span>
+                    </td>
+                    <td className="p-4 border-b text-center">
+                      <button className="text-gray-600 hover:text-gray-800 mr-2">
+                        <FontAwesomeIcon icon={faEye} />
+                      </button>
+                      <button
+                        onClick={() => navigateFunction("edit-room")}
+                        className="text-gray-600 hover:text-gray-800"
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 1}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <div className="flex justify-center items-center mt-4">
-          {totalPages > 1 && (
-            <>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <button
-                  key={index + 1}
-                  className={`px-3 py-1 border mx-1 rounded ${
-                    currentPage === index + 1
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700"
-                  }`}
-                  onClick={() => handlePageClick(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </>
-          )}
-          {totalPages <= 1 && (
-            <button className="px-3 py-1 border mx-1 rounded bg-blue-500 text-white">
-              1
-            </button>
-          )}
+      {rooms.length > 0 && (
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <div className="flex justify-center items-center mt-4">
+            {totalPages > 1 && (
+              <>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    className={`px-3 py-1 border mx-1 rounded ${
+                      currentPage === index + 1
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => handlePageClick(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </>
+            )}
+            {totalPages <= 1 && (
+              <button className="px-3 py-1 border mx-1 rounded bg-blue-500 text-white">
+                1
+              </button>
+            )}
+          </div>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+      )}
     </div>
   );
 };

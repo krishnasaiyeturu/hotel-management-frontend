@@ -19,6 +19,11 @@ const adminReducer = (state = initialState, { type, payload }) => {
         ...state,
         adminDetails: payload,
       };
+    case "GET_ADMIN_DETAILS":
+      return {
+        ...state,
+        adminDetails: payload,  // Update the admin details from the action's payload
+      };
     // case "USER_LOG_OUT": {
     //   localStorage.removeItem("accessToken");
     //   localStorage.removeItem("refreshToken");

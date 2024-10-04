@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faTrash,
   faQuestionCircle,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createRoom as createRoomAction } from "../../redux/actions/roomsActions";
+import {
+  createRoom as createRoomAction,
+  editRoom as updateRoomAction,
+} from "../../redux/actions/roomsActions";
+import api from "../../../backend";
+import { amenitiesList } from "../../modules/constants";
+import toast from "react-hot-toast";
 
 const RoomCreatorAndEditor = () => {
   // Form state
@@ -20,13 +27,28 @@ const RoomCreatorAndEditor = () => {
     roomDetails: [{ roomNumber: "", floorNumber: "" }],
     roomImages: [],
   });
-  console.log(createRoom.roomImages)
+
   const [showTooltip, setShowTooltip] = useState({
     roomType: false,
     amenities: false,
     roomDetails: false,
   });
 
+  const mockData = {
+    roomType: "Deluxe",
+    roomCapacity: "2",
+    roomPrice: "150",
+    roomDescription: "A luxurious room with sea view.",
+    amenities: ["Wi-Fi", "Mini-bar"],
+    roomDetails: [{ roomNumber: "101", floorNumber: "1" }],
+    roomImages: [
+      "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/271619/pexels-photo-271619.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=600",
+    ], // You can simulate existing images here if needed
+  };
+  const location = useLocation();
+  const [roomTypes, setRoomTypes] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +56,7 @@ const RoomCreatorAndEditor = () => {
   const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
   // Handle input change for main fields
   const handleChange = (e) => {
-    const { name, value,checked } = e.target;
+    const { name, value, checked } = e.target;
     if (name === "amenities") {
       // Handle the amenities as an array of strings
       let updatedAmenities = createRoom.amenities || [];
@@ -53,7 +75,7 @@ const RoomCreatorAndEditor = () => {
         ...createRoom,
         amenities: updatedAmenities,
       });
-    } else{
+    } else {
       setCreateRoom({
         ...createRoom,
         [name]: value,
@@ -61,11 +83,9 @@ const RoomCreatorAndEditor = () => {
     }
     // Validate the specific field
     const updatedErrors = errors;
-    console.log({ updatedErrors }, 1);
     if (updatedErrors[`${name}`]) {
       delete errors[`${name}`];
     }
-    console.log({ updatedErrors }, 2);
     setErrors(updatedErrors);
   };
 
@@ -74,34 +94,48 @@ const RoomCreatorAndEditor = () => {
     const { name, value } = e.target;
     const newRoomDetails = [...createRoom.roomDetails];
     newRoomDetails[index][name] = value;
-    setCreateRoom({ ...createRoom, roomDetails: newRoomDetails });
+    const room = { ...createRoom, roomDetails: newRoomDetails };
+    setCreateRoom(room);
+    const newErrors = errors;
+    const hasRoomDetailError = room.roomDetails.every(
+      (detail) => detail.roomNumber && detail.floorNumber
+    );
+    // If there's any error in room details, set a general error message
+    if (hasRoomDetailError) {
+      delete newErrors.roomDetails;
+    }
   };
-  console.log({ errors });
 
   // Add new row for room number and floor number
   const addRoom = () => {
-    setCreateRoom({
+    const room = {
       ...createRoom,
       roomDetails: [
         ...createRoom.roomDetails,
         { roomNumber: "", floorNumber: "" },
       ],
-    });
+    };
+    setCreateRoom(room);
+    const newErrors = errors;
+    const hasRoomDetailError = room.roomDetails.every(
+      (detail) => detail.roomNumber && detail.floorNumber
+    );
+    // If there's any error in room details, set a general error message
+    if (!hasRoomDetailError) {
+      delete newErrors.roomDetails;
+    }
   };
 
   // Remove room row
   const removeRoom = (index) => {
     const newRoomDetails = [...createRoom.roomDetails];
     newRoomDetails.splice(index, 1);
-    const allRooms = { ...createRoom, roomDetails: newRoomDetails };
-    setCreateRoom(allRooms);
+    const room = { ...createRoom, roomDetails: newRoomDetails };
+    setCreateRoom(room);
     const newErrors = errors;
-    let hasRoomDetailError = false;
-    if (
-      allRooms.every((detail) => detail.roomNumber && detail.floorNumber)
-    ) {
-      delete newErrors.roomDetails; // Clear room details error if all fields are valid
-    }
+    const hasRoomDetailError = room.roomDetails.every(
+      (detail) => detail.roomNumber && detail.floorNumber
+    );
     // If there's any error in room details, set a general error message
     if (!hasRoomDetailError) {
       delete newErrors.roomDetails;
@@ -114,7 +148,7 @@ const RoomCreatorAndEditor = () => {
     const file = e.target.files[0];
     if (file) {
       const newImages = [...createRoom.roomImages];
-      newImages[index] = URL.createObjectURL(file); // store image URL in state
+      newImages[index] = file; // store image URL in state
       setCreateRoom({ ...createRoom, roomImages: newImages });
     }
   };
@@ -134,55 +168,168 @@ const RoomCreatorAndEditor = () => {
     if (!formState.roomPrice) newErrors.roomPrice = "Room price is required";
     if (!formState.roomDescription)
       newErrors.roomDescription = "Room description is required";
-    let hasRoomDetailError = false;
-    formState.roomDetails.forEach((detail) => {
-      if (!detail.roomNumber || !detail.floorNumber) {
-        hasRoomDetailError = true;
-      }
-    });
-    // If there's any error in room details, set a general error message
-    if (hasRoomDetailError) {
-      newErrors.roomDetails = "All room details must be filled out.";
+    const validateRooms = createRoom.roomDetails.every(
+      (detail) => detail.roomNumber && detail.floorNumber
+    );
+    if (!validateRooms) {
+      newErrors.roomDetails = "Please fill the room details";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  // Handle form submission
-const handleSubmit = (e) => {
-  e.preventDefault();  if (validateForm(createRoom)) {
-    // Create FormData instance
+  console.log({ activeHotel });
+  // Function to create FormData for creating a room
+  const createRoomFormData = () => {
     const formData = new FormData();
-    // Append fields to formData
-    console.log({createRoom: createRoom})
     formData.append("hotel", activeHotel._id);
     formData.append("roomTypeName", createRoom.roomType);
     formData.append("description", createRoom.roomDescription);
     formData.append("maxOccupancy", createRoom.roomCapacity);
     formData.append("pricePerNight", createRoom.roomPrice);
-    // For arrays like rooms and amenities, append them one by one
-    // createRoom.roomDetails.forEach((room) => {
-      formData.append(`rooms`, JSON.stringify(createRoom.roomDetails));
-    // });
-    // createRoom.amenities.forEach((amenity) => {
-      formData.append(`amenities`, JSON.stringify(createRoom.amenities));
-    // });
-    // Append each photo (assuming it's a file object)
+    formData.append(`rooms`, JSON.stringify(createRoom.roomDetails));
+    formData.append(`amenities`, JSON.stringify(createRoom.amenities));
     createRoom.roomImages.forEach((image) => {
       formData.append(`photos`, image);
     });
-    dispatch(createRoomAction(formData));
-    navigate("/admin/room-inventory");
-  }
-};
+    return formData;
+  };
 
+  // Function to create FormData for editing a room
+  const editRoomFormData = () => {
+    const formData = new FormData();
+    let isModified = false; // Track if there are any modifications
+
+    // Compare with mockData and append only changed fields
+    if (createRoom.roomType !== mockData.roomType) {
+      formData.append("roomTypeName", createRoom.roomType);
+      isModified = true;
+    }
+
+    if (createRoom.roomDescription !== mockData.roomDescription) {
+      formData.append("description", createRoom.roomDescription);
+      isModified = true;
+    }
+
+    if (createRoom.roomCapacity !== mockData.roomCapacity) {
+      formData.append("maxOccupancy", createRoom.roomCapacity);
+      isModified = true;
+    }
+
+    if (createRoom.roomPrice !== mockData.roomPrice) {
+      formData.append("pricePerNight", createRoom.roomPrice);
+      isModified = true;
+    }
+
+    // Handle rooms and amenities comparison
+    const originalRooms = mockData.roomDetails || [];
+    const originalAmenities = mockData.amenities || [];
+
+    // Check for changed room details
+    if (
+      JSON.stringify(createRoom.roomDetails) !== JSON.stringify(originalRooms)
+    ) {
+      formData.append("rooms", JSON.stringify(createRoom.roomDetails));
+      isModified = true;
+    }
+
+    // Check for changed amenities
+    if (
+      JSON.stringify(createRoom.amenities) !== JSON.stringify(originalAmenities)
+    ) {
+      formData.append("amenities", JSON.stringify(createRoom.amenities));
+      isModified = true;
+    }
+
+    // Append each photo if added (assuming it's a file object)
+    createRoom.roomImages.forEach((image) => {
+      if (!mockData.roomImages.includes(image)) {
+        // Check if the image is new
+        formData.append("photos", image);
+        isModified = true;
+      }
+    });
+
+    return isModified ? formData : null; // Return null if no fields were changed
+  };
+
+  // In handleSubmit, check if formData is not null
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (validateForm(createRoom)) {
+      // Keep the validation check here
+      let formData;
+
+      if (location.pathname.includes("/edit-room")) {
+        formData = editRoomFormData(); // Call edit function to get FormData
+        console.log('edit form data',{ formData });
+        if (!formData) {
+          toast.info("No changes made to update.");
+          return; // Stop if no changes were found
+        }
+      } else {
+        formData = createRoomFormData(); // Call create function to get FormData
+        console.log("create form data", { formData });
+      }
+
+      try {
+        const response = dispatch(
+          location.pathname.includes("/edit-room")
+            ? updateRoomAction(formData)
+            : createRoomAction(formData)
+        );
+        console.log("Room Creation/Update", { response });
+        navigate("/rooms-inventory"); // Redirect after creation/update
+        toast.success(
+          location.pathname.includes("/edit-room")
+            ? "Room updated successfully!"
+            : "Room created successfully!"
+        );
+      } catch (error) {
+        console.log({ error: error });
+        toast.error("Failed to process room!");
+      }
+    }
+  };
+
+  const getAllRoomTypes = async () => {
+    try {
+      const response = await api.get("/room/room-types");
+      const list = response.data.data;
+      setRoomTypes(list);
+    } catch (error) {
+      console.error("Error fetching room types", error);
+    }
+  };
+  // UseEffect to set initial room data for editing
+  useEffect(() => {
+    // Check the pathname and set mock data for editing
+    if (location.pathname.includes("/edit-room")) {
+      setCreateRoom(mockData);
+    }
+    getAllRoomTypes();
+  }, [location.pathname]);
+
+  const getImageBasedOnImagetype = (image) => {
+    console.log("IMAGE TYPE", image.type);
+    // return image
+    if (image.type !== undefined) {
+      return URL.createObjectURL(image);
+    } else {
+      return image;
+    }
+  };
 
   const hasErrors = Object.keys(errors).length > 0;
-
+  console.log({ createRoom });
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <form onSubmit={handleSubmit} className="px-8 py-4 space-y-8">
-        <h1 className="text-lg text-center font-semibold">Create Room</h1>
+        <h1 className="text-lg text-center font-semibold">
+          {location.pathname.includes("/edit-room")
+            ? "Update Room"
+            : "Create Room"}
+        </h1>
         {/* Room Picture */}
         <div>
           <label className="font-medium text-base">
@@ -209,7 +356,7 @@ const handleSubmit = (e) => {
                 className="relative w-28 h-28 border border-gray-300"
               >
                 <img
-                  src={image}
+                  src={getImageBasedOnImagetype(image)}
                   alt="Room"
                   className="object-cover w-full h-full"
                 />
@@ -242,7 +389,7 @@ const handleSubmit = (e) => {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="font-medium text-base">
-              Room Type *{" "}
+              Room Type *
               <FontAwesomeIcon
                 icon={faQuestionCircle}
                 onMouseEnter={() =>
@@ -265,8 +412,11 @@ const handleSubmit = (e) => {
               className="border p-2 w-full"
             >
               <option value="">Select Type</option>
-              <option value="Deluxe">Deluxe</option>
-              <option value="Suite">Suite</option>
+              {roomTypes.map((type, index) => (
+                <option key={index} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
             {errors.roomType && (
               <span className="text-red-500 text-sm">{errors.roomType}</span>
@@ -321,8 +471,8 @@ const handleSubmit = (e) => {
 
         {/* Amenities */}
         <div>
-          <label className=" font-medium text-base">
-            Amenities{" "}
+          <label className="font-medium text-base">
+            Amenities
             <FontAwesomeIcon
               icon={faQuestionCircle}
               onMouseEnter={() =>
@@ -338,43 +488,19 @@ const handleSubmit = (e) => {
               Select amenities available in the room.
             </span>
           )}
-          <div className="grid grid-cols-4 gap-2">
-            <label>
-              <input
-                type="checkbox"
-                name="amenities"
-                value="Wi-Fi"
-                onChange={handleChange}
-              />{" "}
-              Wi-Fi
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="amenities"
-                value="Mini-bar"
-                onChange={handleChange}
-              />{" "}
-              Mini-bar
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="amenities"
-                value="Coffee maker"
-                onChange={handleChange}
-              />{" "}
-              Coffee maker
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                name="amenities"
-                value="Sea view"
-                onChange={handleChange}
-              />{" "}
-              Sea view
-            </label>
+          <div className="grid grid-cols-4 gap-2 py-2">
+            {amenitiesList.map((amenity, index) => (
+              <label key={index}>
+                <input
+                  type="checkbox"
+                  name="amenities"
+                  value={amenity}
+                  checked={createRoom.amenities.includes(amenity)}
+                  onChange={handleChange}
+                />{" "}
+                {amenity}
+              </label>
+            ))}
           </div>
         </div>
 
@@ -449,16 +575,29 @@ const handleSubmit = (e) => {
           )}
         </div>
         <div className="flex justify-end">
-          <button
-            type="submit"
-            className={`bg-blue-500 text-white p-2 rounded-md transition-opacity ${
-              hasErrors ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-            }`}
-            disabled={hasErrors} // Disable button if there are errors
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Create Room
-          </button>
+          {location.pathname.includes("/edit-room") ? (
+            <button
+              type="submit"
+              className={`bg-blue-500 text-white p-2 rounded-md transition-opacity ${
+                hasErrors ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
+              disabled={hasErrors}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
+              Update Room
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className={`bg-blue-500 text-white p-2 rounded-md transition-opacity ${
+                hasErrors ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
+              disabled={hasErrors}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              Create Room
+            </button>
+          )}
         </div>
       </form>
     </div>

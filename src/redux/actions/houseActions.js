@@ -21,8 +21,9 @@ export const getHouseDetails = (id) => async (dispatch) => {
 
 export const getOneListingRoomsDetails = (id) => async (dispatch) => {
   try {
-    let listingId = { id: id };
-    const res = await api.post(`${API}house/room_details`, listingId);
+    // let listingId = { id: id };
+    // http://localhost:4000/api/room/public/66fedce2a57e2fa9bfd16bb0
+    const res = await api.get(`${API}room/public/${id}`);
     // console.log(res, "resposnse");
 
     if (res.status === 200) {
