@@ -66,6 +66,17 @@ function Navbar() {
             <li className="p-2 lg:p-0">
               <Link
                 className={`${
+                  pathname === "/gallery" ? "text-blue-600" : "text-black"
+                } hover:text-blue-600`}
+                to="/gallery"
+                onClick={() => setHideMenu(true)}
+              >
+                Gallery
+              </Link>
+            </li>
+            <li className="p-2 lg:p-0">
+              <Link
+                className={`${
                   pathname.includes("events") || pathname === "/signin"
                     ? "text-blue-600"
                     : "text-black"
