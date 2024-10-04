@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-// import Heading from "../ui/Heading"; // Adjust the path for your Heading component
-// import Image from "next/image";
 
-const SUPABASE_ROOMS_URL = "https://example.com/images"; // Mocked Supabase URL
-
-// Mock room data
 const mockRooms = [
   {
     id: 1,
@@ -52,7 +47,6 @@ function Gallery() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    // Simulate fetching data by setting mock data
     setRooms(mockRooms);
   }, []);
 
@@ -69,7 +63,6 @@ function Gallery() {
                 src={item.thumbnail}
                 alt={`Room ${item.id}`}
                 className="object-cover object-center rounded-xl hover:scale-110 transition duration-500 ease-in-out cursor-pointer"
-                // className="object-cover rounded-lg shadow-lg"
               />
             </div>
           ))}
