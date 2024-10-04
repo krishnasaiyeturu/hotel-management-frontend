@@ -12,7 +12,7 @@ import {
 const menuItems = [
   { to: "dashboard", icon: faTachometerAlt, title: "Dashboard" },
   { to: "room-inventory", icon: faDoorOpen, title: "Room Inventory" },
-  { to: "checkouts", icon: faClipboardCheck, title: "Checkouts" },
+  { to: "front-desk", icon: faClipboardCheck, title: "FrontDesk" },
   { to: "transactions", icon: faMoneyBillWave, title: "Transactions" },
   { to: "agents", icon: faUserFriends, title: "Agents" },
   { to: "settings", icon: faCogs, title: "Settings" },
@@ -30,7 +30,7 @@ const AdminsSidebar = () => {
             <Link
               to={to}
               className={`${
-                pathname === `/admin/${to}`
+                pathname.includes(`/admin/${to}`) // Use includes for route matching
                   ? "text-blue-600 bg-[#001f53]"
                   : "text-white bg-[#001844]"
               } hover:text-blue-600 block py-2 px-4 hover:bg-[#001844] hover:text-gray-500 rounded-md grid grid-cols-[auto_1fr] items-center transition-all duration-200`}

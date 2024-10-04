@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { API } from "../../backend";
+// import { API } from "../../backend";
 import EditProfile from "../../Pages/UserProfile/EditProfile";
 import MainLayout from "../../layout/MainLayout";
 import UserProfile from "../../Pages/UserProfile/UserProfile";
@@ -122,7 +122,7 @@ const router = [
             <ListingDetails />
           </Suspense>
         ),
-        loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
+        // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
       },
       {
         path: "/book/stays/:id",

@@ -5,7 +5,7 @@ import { hotelsListReducer } from "./hotelsListReducer";
 
 const adminRootReducer = combineReducers({
   admin: adminReducer,
-  rooms: roomsReducer,
+  roomsInventory: roomsReducer,
   hotels: hotelsListReducer,
   // house: houseReducer,
   // reservations: reservationsReducer,

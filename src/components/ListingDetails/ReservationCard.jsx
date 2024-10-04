@@ -183,7 +183,7 @@ const ReservationCard = ({ listingData }) => {
         <div className=" flex felx-row justify-between items-start">
           <div className=" flex flex-col">
             <h3 className=" text-[22px] text-[#222222] font-semibold">
-              {/* ${listingData?.basePrice} */}${reservationBasePrice}
+              {/* ${listingData?.basePrice} */}${listingData.pricePerNight}
             </h3>
             <p className=" text-[#313131] text-sm">Total before taxes</p>
           </div>
@@ -262,15 +262,13 @@ const ReservationCard = ({ listingData }) => {
         {showDropdown && (
           <div
             ref={dropdownRef}
-            className="min-h-[200px] w-72 shadow-lg border absolute z-[90] bg-white px-4 py-5 rounded-md"
+            className="min-h-[240px] w-72 shadow-lg border absolute z-[90] bg-white px-4 py-5 rounded-md"
           >
             <div className=" flex flex-col gap-5">
               <div className=" flex felx-row items-center justify-between">
                 {/*  number of Rooms here */}
                 <span>
-                  <p className=" text-base text-[#222222] font-medium">
-                    Rooms
-                  </p>
+                  <p className=" text-base text-[#222222] font-medium">Rooms</p>
                 </span>
                 {/* icons */}
                 <span className=" flex flex-row-reverse items-center gap-2">

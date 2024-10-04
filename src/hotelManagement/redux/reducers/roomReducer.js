@@ -2,11 +2,13 @@ import {
   GET_ALL_ROOMS,
   CREATE_ROOM,
   GET_ROOM_BY_ID,
-  EDIT_ROOM, } from "../actions/roomsActions";
+  EDIT_ROOM,
+  GET_ROOMS_COUNT, } from "../actions/roomsActions";
 
 const initialState = {
   rooms: [],
   roomDetailsById: null,
+  roomsCount: null
 };
 
 const roomsReducer = (state = initialState, action) => {
@@ -15,6 +17,11 @@ const roomsReducer = (state = initialState, action) => {
       return {
         ...state,
         rooms: action.payload,
+      };
+    case GET_ROOMS_COUNT:
+      return {
+        ...state,
+        roomsCount: action.payload,
       };
     case CREATE_ROOM:
       return {

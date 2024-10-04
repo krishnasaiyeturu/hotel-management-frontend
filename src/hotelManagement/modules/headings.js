@@ -1,7 +1,7 @@
 export const headings = {
   dashboard: "Dashboard",
   roomInventory: "Room Inventory",
-  checkouts: "Checkouts",
+  frontDesk: "FrontDesk",
   transactions: "Transactions",
   agents: "Agents",
   settings: "Settings",

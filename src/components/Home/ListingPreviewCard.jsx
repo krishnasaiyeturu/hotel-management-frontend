@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
 import { AiFillStar } from "react-icons/ai";
 
-const ListingPreviewCard = ({ listingData, showBeforeTaxPrice }) => {
-  const taxes = Math.round((listingData?.basePrice * 14) / 100);
-  const priceAfterTaxes = listingData?.basePrice + taxes;
-
+const ListingPreviewCard = ({ room }) => {
+  console.log({room})
+  // const taxes = Math.round((room?.basePrice * 14) / 100);
+  // const priceAfterTaxes = room?.basePrice + taxes;
+         
   return (
     <>
       <div className=" h-[310px] md:h-[277px] overflow-hidden rounded-xl">
         <img
-          src={listingData?.photo[0]}
+          src={room?.photos[0]}
           alt="Listing images"
           className=" w-full h-[310px] md:h-[277px] object-cover object-center rounded-xl hover:scale-110 transition duration-500 ease-in-out cursor-pointer"
         />
@@ -18,26 +19,25 @@ const ListingPreviewCard = ({ listingData, showBeforeTaxPrice }) => {
         {/* listings details */}
         <div className=" flex flex-col gap-1">
           <p className="text-sm text-[#222222] font-medium">
-            {listingData?.location?.city?.name},{" "}
-            {listingData?.location?.country?.name}
+            {room?.name}
+            {/* {room?.hotel?.location?.city}, {room?.hotel?.location?.country} */}
           </p>
-          {showBeforeTaxPrice && (
+          {/* {showBeforeTaxPrice && (
             <p className="text-sm text-[#717171]">
               After tax ${priceAfterTaxes}{" "}
               <span className=" font-normal">night</span>
             </p>
-          )}
+          )} */}
           <p className="text-sm text-[#222222] font-semibold">
-            ${listingData?.basePrice}{" "}
-            <span className=" font-normal">night</span>
+            ${room?.pricePerNight} <span className=" font-normal">night</span>
           </p>
         </div>
         {/* ratings / new status */}
         <div className=" flex flex-row gap-1 items-center">
-          {listingData?.ratings ? (
+          {room?.ratings ? (
             <>
               <AiFillStar size={16} />
-              <p className=" text-sm">{listingData?.ratings}</p>
+              <p className=" text-sm">{room?.hotel?.rating}</p>
             </>
           ) : (
             <>
