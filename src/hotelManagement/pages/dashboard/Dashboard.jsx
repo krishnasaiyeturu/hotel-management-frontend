@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,
@@ -6,13 +7,14 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import RecentBookings from "./RecentBookings";
+import RoomStatusSpectrum from "./RoomStatusSpectrum";
 
 // Sample mock data
 const mockData = {
-  newBooking: 172,
-  availableRoom: 103,
-  checkIn: 71,
-  checkOut: 29,
+  newBooking: 12,
+  availableRoom: 20,
+  checkIn: 12,
+  checkOut: 10,
 };
 
 const Dashboard = () => {
@@ -29,7 +31,7 @@ const Dashboard = () => {
             />
           </div>
           <div className="ml-3">
-            <h2 className="text-gray-600">New Booking</h2>
+            <h2 className="text-gray-600">New Reservations</h2>
             <p className="text-2xl font-bold">{mockData.newBooking}</p>
           </div>
         </div>
@@ -44,7 +46,7 @@ const Dashboard = () => {
             />
           </div>
           <div className="ml-3">
-            <h2 className="text-gray-600">Available Room</h2>
+            <h2 className="text-gray-600">Available Rooms</h2>
             <p className="text-2xl font-bold">{mockData.availableRoom}</p>
           </div>
         </div>
@@ -79,12 +81,18 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2">
-        <div className="col-span-1 bg-white p-4 rounded-lg">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-1 bg-white h-[25rem] p-4 rounded-lg">
           <h1 className="text-base font-semibold text-[#002d72]">
-            Recent Bookings
+            Recent Check In's
           </h1>
           <RecentBookings />
+        </div>
+        <div className="col-span-1 bg-white h-[25rem] p-4 rounded-lg">
+          <h1 className="text-base font-semibold text-[#002d72]">
+            Room Status Spectrum
+          </h1>
+          <RoomStatusSpectrum />
         </div>
       </div>
     </div>
