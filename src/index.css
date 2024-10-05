@@ -26,3 +26,7 @@ p {
 .screen__lock {
   overflow: hidden;
 }
+
+.topHeight{
+  top: 55.1%;
+}
