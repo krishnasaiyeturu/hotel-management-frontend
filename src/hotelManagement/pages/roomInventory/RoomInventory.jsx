@@ -18,7 +18,7 @@ const RoomInventory = () => {
   const roomsCount = useSelector(
     (state) => state.admin.roomsInventory.roomsCount
   );
-console.log({ roomsCount });
+
   const roomsPerPage = 10;
   const totalPages = Math.ceil(rooms.length / roomsPerPage);
   const displayedRooms = rooms.slice(

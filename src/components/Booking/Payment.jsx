@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
+// Write email validation and check formvalidatio nand provide error validation
 import { useEffect, useState } from "react";
 import { useDateFormatting } from "../../hooks/useDateFormatting";
-import {
-  // PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+// import {
+//   // PaymentElement,
+//   useElements,
+//   useStripe,
+// } from "@stripe/react-stripe-js";
 import { PulseLoader } from "react-spinners";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
@@ -13,8 +14,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { API } from "../../backend";
 
-const Payment = ({ searchParamsObj }) => {
+const Payment = ({ bookedData}) => {
+  console.log({bookedData})
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -28,21 +31,21 @@ const Payment = ({ searchParamsObj }) => {
     zipcode: "",
   });
   const [errors, setErrors] = useState({});
-  const user = useSelector((state) => state.user.userDetails);
+  // const user = useSelector((state) => state.user.userDetails);
   const newReservationData = useSelector(
     (state) => state.reservations?.newReservationsData
   );
-  const listingData = useSelector(
-    (state) => state.house.listingDetails.listing
-  );
+  // const listingData = useSelector(
+  //   (state) => state.house.listingDetails.listing
+  // );
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isProcessing, setIsProcessing] = useState(false);
+  // const stripe = useStripe();
+  // const elements = useElements();
+  // const [isProcessing, setIsProcessing] = useState(false);
   //   geting the checkin and checkout dates
   const dateObj = {
-    checkin: searchParamsObj?.checkin,
-    checkout: searchParamsObj?.checkout,
+    checkin: bookedData?.checkIn,
+    checkout: bookedData?.checkOut,
   };
   const [guestInfo, setGuestInfo] = useState({
     firstName: "",
@@ -70,17 +73,8 @@ const Payment = ({ searchParamsObj }) => {
   //   reservation data
   const guestNumber = newReservationData
     ? newReservationData.guestNumber
-    : searchParamsObj?.numberOfGuests;
-  const checkin = newReservationData
-    ? newReservationData?.checkIn
-    : searchParamsObj.checkin;
-  const checkout = newReservationData
-    ? newReservationData?.checkOut
-    : searchParamsObj?.checkout;
-  const nightStaying = newReservationData
-    ? newReservationData?.nightStaying
-    : searchParamsObj?.nightStaying;
-  const orderId = Math.round(Math.random() * 10000000000);
+    : bookedData?.adults + bookedData?.children;
+
   const fetchCountries = async () => {
     try {
       const countriesUrl =
@@ -124,7 +118,7 @@ const Payment = ({ searchParamsObj }) => {
     updateErrors(name);
   };
 
-  const validateForm = () => {
+    const validateForm = () => {
     const newErrors = {};
     if (!guestInfo.firstName) newErrors.firstName = "First Name is required.";
     if (!guestInfo.lastName) newErrors.lastName = "Last Name is required.";
@@ -139,58 +133,88 @@ const Payment = ({ searchParamsObj }) => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
+  // Booking 
+    const bookRooms = async () => {
+      try {
+        const bookingUrl = `${API}bookings/`;
+        const bookingInformation = {
+          checkIn: bookedData?.checkIn,
+          checkOut: bookedData?.checkOut,
+          hotelType: bookedData?.roomTypeId, // The ObjectId of the RoomType
+          rooms: bookedData?.rooms,
+          adults: bookedData?.adults,
+          children: bookedData?.children,
+          guestInformation: {
+            firstName: guestInfo?.firstName,
+            lastName: guestInfo?.lastName,
+            email: guestInfo?.email,
+          },
+          address: {
+            addressLine1: addressInfo?.addressLine1,
+            addressLine2: addressInfo?.addressLine2,
+            country: selectedCountry,
+            state: selectedState,
+            city: addressInfo?.city,
+            zipCode: addressInfo?.zipcode,
+          },
+        };
+        const response = await axios.post(bookingUrl, bookingInformation);
+        console.log('BOOKING RESPONSE',{response});
+        toast.success("Booking is Successful Please check your email !!")
+        navigate('/')
+      } catch (error) {
+        console.error("Error BOOKING RESPONSE", error);
+      }
+    };
   // reservation form handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    if (!user) {
-      toast.error("You need to log in first!");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 500);
-    } else {
-      if (!stripe || !elements) {
-        return;
-      }
-      setIsProcessing(true);
-      const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment-confirmed?guestNumber=${guestNumber}&checkIn=${checkin}&checkOut=${checkout}&listingId=${listingData?._id}&authorId=${listingData?.author}&nightStaying=${nightStaying}&orderId=${orderId}`,
-        },
-      });
-      if (error) {
-        // setMessage(error.message);
-        toast.error("Payment failed. Try again!");
-      }
-      setIsProcessing(false);
-    }
+    // if (!user) {
+    bookRooms();
+    // }
+// {
+//   "checkIn": "2024-10-19",
+//   "checkOut": "2024-10-20",
+//   "hotelType": "67000bfc980b7ecadcd9813d",  // The ObjectId of the RoomType
+//   "rooms": 1,
+//   "adults": 4,
+//   "children": 2,
+//   "guestInformation": {
+//     "firstName": "John",
+//     "lastName": "Doe",
+//     "email": "john.doe@example.com"
+//   },
+//   "address": {
+//     "addressLine1": "1234 Elm Street",
+//     "addressLine2": "Apt 101",
+//     "country": "USA",
+//     "state": "CA",
+//     "city": "Los Angeles",
+//     "zipCode": "90001"
+//   }
+// }
   };
   console.log({ states });
   return (
     <div>
       {/* trips section */}
       <div className=" flex flex-col gap-6">
-        <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
-          Your trip
-        </h5>
+        <h5 className="text-xl text-[#222222] font-bold">Your Booking Details</h5>
         {/* dates */}
         <div className=" flex flex-row justify-between">
-          <span className="text-sm md:text-base text-[#222222]">
+          <span className="text-lg text-[#222222]">
             <p className="font-medium">Dates</p>
-            <p>{formattedDates}</p>
+            <p className="text-base">{formattedDates}</p>
           </span>
           {/* guests */}
-          <span className="text-sm md:text-base text-[#222222]">
+          <span className="text-lg text-[#222222]">
             <p className="font-medium">Guests</p>
-            <p>
-              {guestNumber} {guestNumber === "1" ? "guest" : "guests"}
-            </p>
+            <p className="text-center text-base">{guestNumber}</p>
           </span>
         </div>
         <div className="flex flex-col gap-6">
-          <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
+          <h5 className="text-lg text-[#222222] font-medium">
             Guest Information
           </h5>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -263,7 +287,7 @@ const Payment = ({ searchParamsObj }) => {
       </div>
       <hr className="w-full h-[1.3px] bg-[#dddddd] my-4" />
       <div className="flex flex-col gap-6">
-        <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
+        <h5 className="text-lg text-[#222222] font-medium">
           Address Information
         </h5>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -467,11 +491,11 @@ const Payment = ({ searchParamsObj }) => {
           <button
             onClick={handleSubmit}
             className={`px-4 mt-5 bg-blue-500 text-white p-2 rounded-md transition-opacity ${
-              Object.keys(errors).length > 0 || isProcessing
+              Object.keys(errors).length > 0
                 ? "bg-gray-400 opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
             } rounded-md py-2`}
-            disabled={Object.keys(errors).length > 0 || isProcessing}
+            disabled={Object.keys(errors).length > 0}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Book

@@ -15,7 +15,8 @@ import { API } from "../../backend";
 import { parseISO } from "date-fns";
 
 /* eslint-disable react/prop-types */
-const ReservationCard = ({ listingData }) => {
+const ReservationCard = ({ listingData, filters }) => {
+  console.log({ listingData });
   // refs
   const calendarRef = useRef();
   const dropdownRef = useRef();
@@ -30,9 +31,15 @@ const ReservationCard = ({ listingData }) => {
     useOutsideClick(dropdownRef);
 
   // guests state is here
-  const [guestsNumber, setGuestsNumber] = useState(1);
-  const [numberOfRooms,setNumberOfRooms] = useState(0);
-  const [childrenNumber, setChildrenNumber] = useState(0);
+  const [guestsNumber, setGuestsNumber] = useState(
+    filters?.adults ? filters?.adults : 1
+  );
+  const [numberOfRooms, setNumberOfRooms] = useState(
+    filters?.rooms ? filters?.rooms : 1
+  );
+  const [childrenNumber, setChildrenNumber] = useState(
+    filters?.children ? filters?.children : 1
+  );
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
   const [reservations, setReservations] = useState([]);
   // pricing state
@@ -49,8 +56,10 @@ const ReservationCard = ({ listingData }) => {
   // dates saving and showing to the dateRange calendar calculation here
   const [selectedDates, setSelectedDates] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: filters?.adults ? new Date(filters?.checkIn) : new Date(),
+      endDate: filters?.adults
+        ? new Date(filters?.checkOut)
+        : new Date(new Date().setDate(new Date().getDate() + 1)),
       key: "selection",
     },
   ]);
@@ -75,18 +84,44 @@ const ReservationCard = ({ listingData }) => {
   //   "dates"
   // );
   // Function to handle date selection
-  const handleSelect = (ranges) => {
+const handleSelect = (ranges) => {
+  console.log({ ranges });
+  if (ranges?.key === "selection") {
     setSelectedDates([ranges.selection]);
-  };
+  } else {
+    const startDate = new Date(ranges.selection.startDate);
+    const endDate = new Date(ranges.selection.endDate);
+    // Reset time to compare only the date
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+    // Check if the dates are the same
+    if (startDate.getTime() === endDate.getTime()) {
+      // Set end date to the next day
+      endDate.setDate(endDate.getDate() + 1);
+    }
+    console.log("Selected Start Date:", startDate);
+    console.log("Adjusted End Date:", endDate);
+
+    // Set selected dates in the state
+    setSelectedDates([{ startDate, endDate, key: "selection" }]);
+  }
+};
 
   // booking function
-  const orderNumber = localStorage.getItem("orderId");
-  const orderId = orderNumber ? orderNumber : 1;
+  // const orderNumber = localStorage.getItem("orderId");
+  // const orderId = orderNumber ? orderNumber : 1;
   // // console.log(orderId);
   const handleBooking = () => {
-    navigate(
-      `/book/stays/${listingData._id}?numberOfGuests=${totalGuest}&nightStaying=${nightsStaying}&checkin=${formattedStartDate}&checkout=${formattedEndDate}&orderId=${orderId}`
-    );
+    const checkkingData = {
+      checkIn: selectedDates[0]?.startDate,
+      checkOut: selectedDates[0]?.endDate,
+      rooms: numberOfRooms,
+      adults: guestsNumber,
+      children: childrenNumber,
+      roomTypeId: listingData?._id,
+      listingData: listingData,
+    };
+    navigate(`/book/stays/${guestsNumber}`, { state: { data: checkkingData } });
   };
 
   // getting saved reservations data
@@ -185,7 +220,7 @@ const ReservationCard = ({ listingData }) => {
             <h3 className=" text-[22px] text-[#222222] font-semibold">
               {/* ${listingData?.basePrice} */}${listingData.pricePerNight}
             </h3>
-            <p className=" text-[#313131] text-sm">Total before taxes</p>
+            <p className=" text-[#313131] text-sm">Price Per Night</p>
           </div>
           <span className=" text-sm text-[#222222] flex flex-row gap-1 items-center mt-2">
             <AiFillStar size={18} />
@@ -276,6 +311,7 @@ const ReservationCard = ({ listingData }) => {
                     onClick={() => {
                       setNumberOfRooms((prev) => prev + 1);
                     }}
+                    disabled={numberOfRooms === 4}
                     // disabled={listingData?.floorPlan?.guests === totalGuest}
                     className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
                   >
@@ -310,7 +346,7 @@ const ReservationCard = ({ listingData }) => {
                     onClick={() => {
                       setGuestsNumber((prev) => prev + 1);
                     }}
-                    disabled={listingData?.floorPlan?.guests === totalGuest}
+                    disabled={totalGuest === 8}
                     className={` p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20`}
                   >
                     <AiOutlinePlus size={16} />
@@ -344,7 +380,7 @@ const ReservationCard = ({ listingData }) => {
                     onClick={() => {
                       setChildrenNumber((prev) => prev + 1);
                     }}
-                    disabled={listingData?.floorPlan?.guests === totalGuest}
+                    disabled={totalGuest === 8}
                     className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
                   >
                     <AiOutlinePlus size={16} />

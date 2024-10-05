@@ -1,16 +1,14 @@
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-
+import room1 from "../../assets/aspengrandhotellaportepictures/STANDARD-KING.jpg";
+import room2 from "../../assets/aspengrandhotellaportepictures/king-suite3.jpg";
+import room3 from "../../assets/aspengrandhotellaportepictures/king-suite.jpg";
 /* eslint-disable react/prop-types */
 const   ListingsPhotos = ({ listingData }) => {
   
   const navigate = useNavigate();
   function addMissingImages(listingData) {
-    const placeholderImages = [
-      "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png?auto=compress&cs=tinysrgb&w=600",
-      "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png?auto=compress&cs=tinysrgb&w=600",
-      "https://images.pexels.com/photos/28216688/pexels-photo-28216688/free-photo-of-autumn-camping.png?auto=compress&cs=tinysrgb&w=600",
-    ];
+    const placeholderImages = [room1, room2, room3];
     const photos = listingData?.photos || [];
     const missingImagesCount = 3 - photos.length;
     if (missingImagesCount > 0) {

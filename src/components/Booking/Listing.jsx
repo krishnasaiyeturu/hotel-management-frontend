@@ -1,89 +1,63 @@
 /* eslint-disable react/prop-types */
-import { useSelector } from "react-redux";
 import { AiFillStar } from "react-icons/ai";
 
-const Listing = ({ searchParamsObj }) => {
-  const listingData = useSelector(
-    (state) => state.house.listingDetails.listing
-  );
-  // listing data
-  const listingSpace =
-    listingData?.privacyType === "An entire place" ? "Entire" : "Shared";
-  const listingType = listingData?.houseType;
-
-  const nightStaying = searchParamsObj?.nightStaying;
-
-  const basePrice =
-    parseInt(nightStaying) !== 0
-      ? parseInt(nightStaying) * listingData?.basePrice
-      : listingData?.basePrice;
-
-  const tax =
-    basePrice !== 0
-      ? Math.round((basePrice * 14) / 100)
-      : Math.round((listingData?.basePrice * 14) / 100);
-
-  const totalPrice = basePrice + tax;
-
-  // // console.log(listingData, "lis");
+const Listing = ({ listingData, calculatedPriceDetails }) => {
 
   return (
-    <div>
-      <div className=" border border-[#dddddd] rounded-xl p-6 flex flex-col sticky top-28 min-h-[200px] bg-white">
-        {/* listing data */}
-        <div className=" flex flex-row gap-2">
-          {/* listing img */}
-          <img
-            // src={listingData?.photos[0]}
-            src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="listing houses"
-            className=" rounded-md object-cover w-[110px] h-[96px] sm:w-[124px] sm:h-[106px]"
-          />
-          {/* title & desc */}
-          <div className=" flex flex-col justify-between">
-            <span className=" flex flex-col gap-1">
-              <p className="text-xs text-[#717171]">
-                {listingSpace} {listingType}
-              </p>
-              <p className="text-sm text-[#222222]">{listingData?.title}</p>
-            </span>
-            <span className=" text-xs text-[#222222] flex flex-row gap-1 items-center mt-2">
-              <AiFillStar size={16} />
-              {listingData?.ratings ? listingData?.ratings : "New"}
-              {listingData?.reviews && (
-                <span>
-                  <span>·</span>
-                  <span>{listingData?.reviews}</span>
-                </span>
-              )}
-            </span>
-          </div>
+    <div className="relative">
+      <div className="border border-[#dddddd] rounded-xl p-6 sticky top-24 max-h-[85vh] bg-white overflow-y-auto">
+        {/* Images Section */}
+        <div className="grid grid-cols-3 gap-2">
+          {listingData?.photos.slice(0, 3).map((photo, index) => (
+            <div key={index}>
+              <img
+                src={photo}
+                alt={`Listing image ${index + 1}`}
+                className="rounded-md object-cover w-full h-[100px] sm:h-[120px]"
+              />
+            </div>
+          ))}
         </div>
-        <hr className="w-full h-[1.3px] bg-[#dddddd] my-6" />
-        {/* prices */}
-        <div className=" flex flex-col gap-3">
-          <h5 className=" text-[22px] text-[#222222] font-medium pb-1">
+
+        {/* Room Title and Hotel Rating */}
+        <div className="grid grid-cols-2 p-4 gap-2">
+          <p className="text-sm text-[#222222]">{listingData?.name}</p>
+          <span className="text-xs text-[#222222] flex justify-end items-center gap-1">
+            <AiFillStar size={16} />
+            {listingData?.hotel?.rating || "New"}
+          </span>
+        </div>
+
+        <hr className="w-full h-[1.3px] bg-[#dddddd] mb-6" />
+
+        {/* Price Breakdown */}
+        <div className="grid gap-3">
+          <h5 className="text-[22px] text-[#222222] font-medium pb-1">
             Your total
           </h5>
-          <span className=" flex flex-row justify-between text-base text-[#222]">
-            {/* calculating night/day */}
-            {parseInt(nightStaying) === 0 ? (
-              <p>1 day</p>
-            ) : (
-              <p>{nightStaying} nights</p>
-            )}
-            {/* calculating price */}
-            <p>${basePrice === 0 ? listingData?.basePrice : basePrice}</p>
-          </span>
-          <span className=" flex flex-row justify-between text-base text-[#222]">
-            <p>Taxes</p>
-            <p>${tax}</p>
-          </span>
+          <div className="grid grid-cols-2 justify-between text-base text-[#222]">
+            <p>1 Night</p>
+            <p>${calculatedPriceDetails?.pricePerNight}</p>
+          </div>
+          <div className="grid grid-cols-2 justify-between text-base text-[#222]">
+            <p>{calculatedPriceDetails?.nights} nights</p>
+            <p>${calculatedPriceDetails?.totalPriceBeforeTax}</p>
+          </div>
+          <div className="grid grid-cols-2 justify-between text-base text-[#222]">
+            <p>Tax</p>
+            <p>
+              ${calculatedPriceDetails?.taxAmount} (
+              {calculatedPriceDetails?.taxRate})
+            </p>
+          </div>
         </div>
+
         <hr className="w-full h-[1.3px] bg-[#dddddd] my-6" />
-        <div className=" flex flex-row justify-between text-base text-[#222] font-medium">
-          <p>Total(USD)</p>
-          <p>${totalPrice}</p>
+
+        {/* Total Price */}
+        <div className="grid grid-cols-2 justify-between text-base text-[#222] font-medium">
+          <p>Total (USD)</p>
+          <p>${calculatedPriceDetails?.totalPriceAfterTax || "-"}</p>
         </div>
       </div>
     </div>

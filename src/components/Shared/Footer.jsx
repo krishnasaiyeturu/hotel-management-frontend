@@ -12,11 +12,11 @@ const Footer = () => {
               <h6 className=" text-[#002d72] font-bold">Support</h6>
               <p>Customer Support</p>
               <p>Contact Us</p>
-              <p>Travel Insurance</p>
+              {/* <p>Travel Insurance</p>
               <p>Help for Guests with Disabilities</p>
               <p>Reservation Assistance</p>
               <p>Covid-19 Response</p>
-              <p>Report an Issue</p>
+              <p>Report an Issue</p> */}
             </div>
             <div className="flex flex-col gap-4 opacity-80">
               <h6 className=" text-[#002d72] font-bold">Community</h6>
@@ -25,26 +25,23 @@ const Footer = () => {
               <p>Environment & Sustainability</p>
             </div>
             <div className="flex flex-col gap-4 opacity-80">
-              <h6 className="text-[#002d72] font-bold">Hosting</h6>
-              <Link to={"/host/homes"}>List Your Property</Link>
-              <p>Host Protection Program</p>
-              <p>Hosting Tips & Resources</p>
-              <p>Join Our Host Community</p>
-              <p>Host Responsibly</p>
-              <p>Partner with Aspen Grand Hotels</p>
+              <h6 className="text-[#002d72] font-bold">Services</h6>
+              <Link to="/services/booking" className="hover:underline">
+                Booking
+              </Link>
+              <p>Room Reservations</p>
+              <p>Event Hosting</p>
+              <p>Special Offers</p>
             </div>
             <div className="flex flex-col gap-4 opacity-80">
               <h6 className="text-[#002d72] font-bold">ASPEN GRAND HOTELS</h6>
               <p>About Us</p>
               <p>Corporate News</p>
-              <p>Careers</p>
-              <p>Investors</p>
-              <p>Corporate Responsibility</p>
             </div>
           </section>
         </div>
         {/* <hr className="bg-[#f7f7f7] mb-6" /> */}
-        <section className="flex py-4  bg-[#001844] flex-row flex-wrap justify-between gap-10 px-10 max-w-screen-2xl mx-auto">
+        <section className="flex py-4  bg-[#001844] flex-row flex-wrap justify-between gap-10 px-10 mx-auto">
           <div className="flex flex-row flex-wrap items-center">
             <p className="text-white">© 2023 ASPEN GRAND HOTELS, Inc.</p>
             <span className="p-3">·</span>

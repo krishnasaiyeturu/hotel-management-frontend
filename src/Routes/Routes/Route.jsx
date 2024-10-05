@@ -31,6 +31,7 @@ import { FadeLoader } from "react-spinners";
 // import Home from "../../Pages/Home"; = lazy (() => import)
 import RoomsList from "../../Pages/Home";
 import SignUp from "../../components/auth/SignUp";
+import Gallery from "../../components/Home/Gallery";
 
 const ListingHouseStepOneAddress = lazy(() =>
   import("../../Pages/ListingHouseStepOne/ListingHouseStepOneAddress")
@@ -93,6 +94,21 @@ const router = [
             <Home />
           </Suspense>
         ),
+      },
+      {
+        path: "/gallery",
+        element: (
+          <Suspense
+            fallback={
+              <div className=" flex justify-center items-center w-full h-[60dvh]">
+                <FadeLoader color="#000" />
+              </div>
+            }
+          >
+            <Gallery />
+          </Suspense>
+        ),
+        // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
       },
       {
         path: "/rooms",
