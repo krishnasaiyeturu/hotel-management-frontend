@@ -1,4 +1,4 @@
-const frontDeskBookingData = [
+export const frontDeskBookingData = [
   { name: 'Lewis', startDate: '2024-05-02', endDate: '2024-05-04', status: 'due-in' },
   { name: 'Mark', startDate: '2024-05-03', endDate: '2024-05-06', status: 'checked-out' },
   { name: 'Andrew', startDate: '2024-05-08', endDate: '2024-05-09', status: 'due-out' },
@@ -11,4 +11,93 @@ const frontDeskBookingData = [
   { name: 'White', startDate: '2024-05-08', endDate: '2024-05-11', status: 'checked-in' },
 ];
 
-export default frontDeskBookingData;
+export const bookingMockDataForCheckInAndCheckOut = {
+  guestName: "Glenn Zimmerman",
+  guestEmils: 'glen@gmail.com',
+  bookingId: "#5550114",
+  address: {
+    addressLine1: "addressLine1",
+    addressLine2: "addressLine2",
+    country: "Countr",
+    state: "State",
+    city: "City",
+    zipCode: "Zip Code",
+  },
+  checkIn: "Tue, 21 Mar 2023",
+  checkOut: "Thu, 23 Mar 2023",
+  guestCount: "2 Adults",
+  roomType: "Deluxe Suites",
+  noOfRooms: 2,
+  manifests: ["Breakfast", "Dinner", "Laundry"],
+  totalCost: 320.00,
+  roomCost: 300.00,
+  extrasCost: 30.00,
+  discount: 33.00,
+  taxes: 13.00,
+  availableRoomsForAssignment: [
+    {
+      roomId: "R101",
+      roomNumber: "101",
+      roomType: "Deluxe",
+      floorNumber: 1,
+      pricePerNight: 150.00,
+      manifests: ["Free Wi-Fi", "Sea View", "Air Conditioning"],
+      availability: "Available",
+    },
+    {
+      roomId: "R102",
+      roomNumber: "102",
+      roomType: "Deluxe",
+      floorNumber: 1,
+      pricePerNight: 140.00,
+      manifests: ["Free Wi-Fi", "Mountain View", "Balcony"],
+      availability: "Available",
+    },
+    {
+      roomId: "R201",
+      roomNumber: "201",
+      roomType: "Suite",
+      floorNumber: 2,
+      pricePerNight: 250.00,
+      manifests: ["Free Wi-Fi", "Sea View", "Private Pool"],
+      availability: "Available",
+    },
+    {
+      roomId: "R202",
+      roomNumber: "202",
+      roomType: "Standard",
+      floorNumber: 2,
+      pricePerNight: 100.00,
+      manifests: ["Free Wi-Fi", "Garden View"],
+      availability: "Available",
+    },
+    {
+      roomId: "R203",
+      roomNumber: "203",
+      roomType: "Suite",
+      floorNumber: 2,
+      pricePerNight: 200.00,
+      manifests: ["Free Wi-Fi", "Jacuzzi", "Mountain View"],
+      availability: "Occupied",
+    },
+    {
+      roomId: "R301",
+      roomNumber: "301",
+      roomType: "Standard",
+      floorNumber: 3,
+      pricePerNight: 90.00,
+      manifests: ["Free Wi-Fi", "City View"],
+      availability: "Available",
+    },
+    {
+      roomId: "R302",
+      roomNumber: "302",
+      roomType: "Deluxe",
+      floorNumber: 3,
+      pricePerNight: 160.00,
+      manifests: ["Free Wi-Fi", "Sea View", "King Size Bed"],
+      availability: "Occupied",
+    },
+  ]
+};
+

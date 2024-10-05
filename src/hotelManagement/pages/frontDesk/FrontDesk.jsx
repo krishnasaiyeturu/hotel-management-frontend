@@ -2,7 +2,7 @@ import  { useState } from "react";
 import BookingGrid from "./BookingGrid";
 import FilterControls from "./FilterControls";
 // import DatePicker from "react-datepicker"; // For the date picker
-import frontDeskBookingData from "../../modules/mockData";
+import { frontDeskBookingData } from "../../modules/mockData";
 
 const months = [
   "Jan",

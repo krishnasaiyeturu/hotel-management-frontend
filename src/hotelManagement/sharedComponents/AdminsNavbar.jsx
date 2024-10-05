@@ -7,18 +7,19 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllHotels,
   setActiveHotel,
 } from "../redux/actions/hotelsListActions";
+import toast from "react-hot-toast";
 
 // Mock data for user options
 const userOptions = [
-  { id: 1, name: "Profile" },
-  { id: 2, name: "Settings" },
-  { id: 3, name: "Logout" },
+  { id: 1, name: "Profile", disabled: true },
+  { id: 2, name: "Settings", disabled: true },
+  { id: 3, name: "Logout", disabled: false },
 ];
 
 function AdminsNavbar() {
@@ -33,14 +34,14 @@ function AdminsNavbar() {
   const admin = useSelector((state) => state.admin);
   const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
   const allHotels = useSelector((state) => state.admin.hotels.allHotels);
-  console.log({ admin , allHotels, activeHotel});
+  console.log({ admin, allHotels, activeHotel });
   const userDropdownRef = useRef(null);
   const hotelDropdownRef = useRef(null);
   const handleHotelSelect = (hotel) => {
     dispatch(setActiveHotel(hotel));
     setHotelDropdownOpen(false); // Close the dropdown after selection
   };
-
+  const navigate = useNavigate();
   const handleUserDropdownToggle = () => {
     setUserDropdownOpen(!userDropdownOpen);
   };
@@ -72,6 +73,15 @@ function AdminsNavbar() {
     dispatch(getAllHotels());
   }, [dispatch]);
 
+  const handleUserOptionSelect = (option) => {
+    if (option.name === "Logout") {
+      localStorage.clear();
+      toast.success("You are Logged out !!");
+      navigate("/admin/sign-in");
+    }
+    setUserDropdownOpen(false);
+  };
+
   return (
     <header className="bg-white">
       <div className="container mx-auto flex justify-between items-center py-4 px-4">
@@ -100,9 +110,7 @@ function AdminsNavbar() {
                     <li
                       key={hotel._id}
                       className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                        activeHotel._id === hotel._id
-                          ? "bg-gray-200 font-bold"
-                          : ""
+                        activeHotel._id === hotel._id ? "bg-gray-200" : ""
                       }`}
                       onClick={() => handleHotelSelect(hotel)}
                     >
@@ -164,8 +172,14 @@ function AdminsNavbar() {
                   {userOptions.map((option) => (
                     <li
                       key={option.id}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setUserDropdownOpen(false)} // Close dropdown on click
+                      className={`px-4 py-2 ${
+                        option.disabled
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "hover:bg-gray-100 cursor-pointer"
+                      }`}
+                      onClick={() =>
+                        !option.disabled && handleUserOptionSelect(option)
+                      }
                     >
                       {option.name}
                     </li>
