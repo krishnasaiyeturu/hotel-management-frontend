@@ -3,17 +3,23 @@ import { useEffect, useState } from "react";
 // import PriceWithTaxCard from "../components/Home/PriceWithTaxCard";
 // import { useQuery } from "@tanstack/react-query";
 import { API } from "../backend";
+// import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import HomePageSkeleton from "../components/skeletonLoading/HomePageSkeleton";
 import ListingPreviewCard from "../components/Home/ListingPreviewCard";
 import { Link } from "react-router-dom";
 // import { useGetSubCatListing } from "../hooks/useGetSubCatListing";
 // import SkeletonLoadingCards from "../components/skeletonLoading/SkeletonLoadingCards";
 import { FadeLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const RoomsList = () => {
   const [roomTypes, setRoomTypes] = useState([]);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const userFilters = location.state;
+  console.log({ userFilters });
   // const [hasScroll, setHasScroll] = useState(false);
   // //  before tax price state
   // const [showBeforeTaxPrice, setShowBeforeTaxPrice] = useState(false);
@@ -75,13 +81,39 @@ const RoomsList = () => {
   //   ],
   // ];
   // fetching all listing data
-  const getAllRoomTypes = async () => {
+const getAllRoomTypes = async () => {
+  setLoading(true); // Start loading state
+  try {
     const res = await axios.get(`${API}room/public`);
     console.log("ALL ROOMS", { res });
+
     setRoomTypes(res.data);
-    setLoading(false);
-    return res.data;
-  };
+    // toast.success("Room types fetched successfully!");
+  } catch (error) {
+    console.error("Error fetching room types:", {error});
+    toast.error("Failed to fetch room types. Please try again.");
+  } finally {
+    setLoading(false); // Stop loading state
+  }
+};
+
+const getAvailableRoomTypes = async () => {
+  setLoading(true); // Start loading state
+  try {
+    const res = await axios.post(
+      `${API}bookings/check-availability`,
+      userFilters?.data
+    );
+    console.log("USER FILTERS ROOMS", { res });
+    setRoomTypes(res.data.availabilityTypes);
+    // toast.success("Available room types fetched successfully!");
+  } catch (error) {
+    console.error("Error user fetching available room types:", {error});
+    toast.error("Failed to fetch available room types. Please try again.");
+  } finally {
+    setLoading(false); // Stop loading state
+  }
+};
   // const handleScrollTracking = () => {
   //   const scrollPosition = window.scrollY;
   //   // checking if we scroll from top
@@ -117,9 +149,9 @@ const RoomsList = () => {
   // }, [location.search]);
 
   useEffect(() => {
-    setLoading(true)
-    getAllRoomTypes();
-  }, []);
+    setLoading(true);
+    userFilters !== null ? getAvailableRoomTypes() : getAllRoomTypes();
+  }, [userFilters]);
 
   if (loading) {
     if (window.innerWidth <= 1080) {
@@ -184,6 +216,7 @@ const RoomsList = () => {
                   to={`/rooms/${roomType._id}`} // Uncommented this line to enable linking
                   key={roomType._id}
                   className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto"
+                  state={{ data: userFilters?.data }}
                 >
                   <ListingPreviewCard
                     room={roomType}

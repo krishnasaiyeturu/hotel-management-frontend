@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import ListingTitle from "../components/ListingDetails/ListingTitle";
 import ListingsPhotos from "../components/ListingDetails/ListingsPhotos";
 import ListingDescriptions from "../components/ListingDetails/ListingDescriptions";
@@ -13,6 +13,10 @@ const ListingDetails = () => {
   const selectedRoomData = useSelector((state) => state.house.listingDetails);
   const params = useParams();
   console.log({ selectedRoomData });
+  const location = useLocation();
+  console.log({location})
+  // const { data } = location.state || {};
+  // console.log("PARAMS",{data}) 
   const dispatch = useDispatch();
   const roomPictures = [
     "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -62,7 +66,7 @@ const ListingDetails = () => {
         </div>
         {/* reservations of the listing */}
         <div className="md:col-span-3 lg:col-span-2 order-1 md:order-2 max-h-[900px]">
-          <ReservationCard listingData={selectedRoomData} />
+          <ReservationCard listingData={selectedRoomData} filters={location?.state?.data}/>
         </div>
       </section>
     </main>

@@ -81,10 +81,10 @@ function Navbar() {
                     ? "text-blue-600"
                     : "text-black"
                 } hover:text-blue-600`}
-                to="/signin"
+                to="/admin/sign-in"
                 onClick={() => setHideMenu(true)}
               >
-                Groups & Events
+               Admin Log In
               </Link>
             </li>
           </ul>

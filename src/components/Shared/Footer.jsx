@@ -37,9 +37,6 @@ const Footer = () => {
               <h6 className="text-[#002d72] font-bold">ASPEN GRAND HOTELS</h6>
               <p>About Us</p>
               <p>Corporate News</p>
-              <p>Careers</p>
-              <p>Investors</p>
-              <p>Corporate Responsibility</p>
             </div>
           </section>
         </div>

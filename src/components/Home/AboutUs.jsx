@@ -1,4 +1,5 @@
 // import React from "react"; // Import React (optional for modern React versions)
+import room3 from "../../assets/aspengrandhotellaportepictures/king-suite.jpg";
 
 function About() {
   return (
@@ -23,7 +24,7 @@ function About() {
         </div>
         <div className="flex justify-center items-center">
           <img
-            src="https://digital.ihg.com/is/image/ihg/holiday-inn-express-and-suites-la-porte-2532858980-4x3?wid=733"
+            src={room3}
             alt="About Us Image"
             className="w-full h-3/4 object-cover"
           />

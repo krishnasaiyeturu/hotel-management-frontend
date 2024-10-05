@@ -17,11 +17,14 @@ const ListingDescriptions = ({ listingData }) => {
     <>
       <div className=" flex flex-row justify-between items-center max-h-16">
         <div className=" flex flex-col gap-1 text-[#222222]">
-          <h2 className=" text-xl md:text-[22px] font-medium">
-            This room is offered by {listingData?.listingDetails?.hotel?.name}
-          </h2>
+          <h5 className="text-lg">
+            This room is offered by{" "}
+            <span className="text-xl font-bold"> {listingData?.hotel?.name}</span>
+          </h5>
           <p className=" text-sm md:text-base">
-            <span className="text-[#001f53] text-base">{listingData?.maxOccupancy}</span>{" "}
+            <span className="text-[#001f53] text-base">
+              {listingData?.maxOccupancy}
+            </span>{" "}
             Guests ·{" "}
             {/* {listingData?.floorPlan?.bedrooms} bedroom ·{" "}
             {listingData?.floorPlan?.beds} beds ·{" "}
