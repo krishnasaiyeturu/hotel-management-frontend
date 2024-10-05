@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { getDecadeRange } from '../utils/helper';
-import './CustomYearDropdown.css';
-import { FaCaretLeft, FaCaretRight, FaChevronDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaCaretLeft, FaCaretRight, FaChevronDown } from 'react-icons/fa';
+import { getDecadeRange } from '../../utils/helper';
 
-export const CustomYearDropdown = ({ year, onChangeYear }) => {
+const YearSelector = ({ year, onChangeYear }) => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [years, setSelectedYears] = useState([]);
 
@@ -19,7 +18,6 @@ export const CustomYearDropdown = ({ year, onChangeYear }) => {
   }, [selectedYear]);
 
   const handleClickYear = (year) => {
-    console.log(year)
     setSelectedYear(year);
     onChangeYear(year);
   }
@@ -51,3 +49,5 @@ export const CustomYearDropdown = ({ year, onChangeYear }) => {
 
   )
 }
+
+export default YearSelector;

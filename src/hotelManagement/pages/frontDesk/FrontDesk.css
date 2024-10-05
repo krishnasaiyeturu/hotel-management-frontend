@@ -48,12 +48,18 @@
   margin-top: 20px;
 }
 
-.days-container table thead tr th, .days-container table tbody tr td {
+.days-container table thead tr th,
+.days-container table tbody tr td {
   width: 45px;
   height: 50px;
 }
 
-.days-container table thead tr th:first-child, .days-container table tbody tr td:first-child {
+.days-container table {
+  position: relative;
+}
+
+.days-container table thead tr th:first-child,
+.days-container table tbody tr td:first-child {
   width: 80px;
 }
 
@@ -62,7 +68,8 @@
 }
 
 .days-container table tbody tr td.last-child {
-  border-right: 1px solid rgb(228, 228, 228);;
+  border-right: 1px solid rgb(228, 228, 228);
+  ;
 }
 
 .days-container table tbody tr td {
@@ -89,6 +96,7 @@
 .pagination-container .per-page:focus {
   border: 1px solid gray !important;
 }
+
 .pagination {
   display: flex;
   list-style-type: none;

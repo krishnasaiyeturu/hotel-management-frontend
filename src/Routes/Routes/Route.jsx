@@ -14,7 +14,6 @@ import ListHouseStepOne from "../../Pages/ListingHouseStepOne/ListHouseStepOne";
 import ListHouseStepOneStructure from "../../Pages/ListingHouseStepOne/ListHouseStepOneStructure";
 import ListHouseStepOnePlacetype from "../../Pages/ListingHouseStepOne/ListHouseStepOnePlacetype";
 import { FadeLoader } from "react-spinners";
-import { CustomDate } from "../../components/CustomDate";
 // import ListingHouseStepOneAddress from "../../Pages/ListingHouseStepOne/ListingHouseStepOneAddress";
 // import ListingHouseStepOneFloorPlan from "../../Pages/ListingHouseStepOne/ListingHouseStepOneFloorPlan";
 // import StepTwoOverview from "../../Pages/ListingHouseStepTwo/StepTwoOverview";
@@ -174,10 +173,6 @@ const router = [
       {
         path: "/users/dashboard/:id/listing=true",
         element: <Listing />,
-      },
-      {
-        path: "/date-view",
-        element: <CustomDate />,
       },
       {
         path: "/host/homes",
