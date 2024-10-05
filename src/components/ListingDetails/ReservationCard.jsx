@@ -57,7 +57,9 @@ const ReservationCard = ({ listingData, filters }) => {
   const [selectedDates, setSelectedDates] = useState([
     {
       startDate: filters?.adults ? new Date(filters?.checkIn) : new Date(),
-      endDate: filters?.adults ? new Date(filters?.checkOut) : new Date(),
+      endDate: filters?.adults
+        ? new Date(filters?.checkOut)
+        : new Date(new Date().setDate(new Date().getDate() + 1)),
       key: "selection",
     },
   ]);
@@ -82,9 +84,28 @@ const ReservationCard = ({ listingData, filters }) => {
   //   "dates"
   // );
   // Function to handle date selection
-  const handleSelect = (ranges) => {
+const handleSelect = (ranges) => {
+  console.log({ ranges });
+  if (ranges?.key === "selection") {
     setSelectedDates([ranges.selection]);
-  };
+  } else {
+    const startDate = new Date(ranges.selection.startDate);
+    const endDate = new Date(ranges.selection.endDate);
+    // Reset time to compare only the date
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+    // Check if the dates are the same
+    if (startDate.getTime() === endDate.getTime()) {
+      // Set end date to the next day
+      endDate.setDate(endDate.getDate() + 1);
+    }
+    console.log("Selected Start Date:", startDate);
+    console.log("Adjusted End Date:", endDate);
+
+    // Set selected dates in the state
+    setSelectedDates([{ startDate, endDate, key: "selection" }]);
+  }
+};
 
   // booking function
   // const orderNumber = localStorage.getItem("orderId");

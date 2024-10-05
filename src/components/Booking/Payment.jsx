@@ -151,7 +151,7 @@ const Payment = ({ bookedData}) => {
           },
           address: {
             addressLine1: addressInfo?.addressLine1,
-            addressLine2: addressInfo?.addressLine1,
+            addressLine2: addressInfo?.addressLine2,
             country: selectedCountry,
             state: selectedState,
             city: addressInfo?.city,
