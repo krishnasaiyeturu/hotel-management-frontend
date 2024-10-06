@@ -9,39 +9,24 @@
   margin-bottom: 20px;
 }
 
-.months-container {
+.month-options-container {
   display: flex;
 }
 
-.months-container .month-content {
+.month-options-container .month-content {
   width: 8%;
   text-align: center;
   padding: 10px 5px;
 }
 
-.months-container .month-content.active {
+.month-options-container .month-content.active {
   border: 1px solid #001844;
   font-weight: bold;
 }
 
-.months-container .month-content:hover {
+.month-options-container .month-content:hover {
   cursor: pointer;
   border: 1px solid #001844;
-}
-
-.cover-div {
-  position: absolute;
-  z-index: 1;
-  border-radius: 5px;
-  padding: 3px 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 14px;
-  font-size: 16;
-  box-sizing: border-box;
-  cursor: pointer;
-  margin-top: 7px;
 }
 
 .days-container {
@@ -79,6 +64,21 @@
 
 .days-container table thead tr th {
   padding-bottom: 15px;
+}
+
+.days-container .bookings-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 14px;
+  padding: 3px 5px;
+  margin-top: 7px;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .pagination-container {
