@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { API } from "../../backend";
 
 const Payment = ({ bookedData}) => {
@@ -200,7 +200,9 @@ const Payment = ({ bookedData}) => {
     <div>
       {/* trips section */}
       <div className=" flex flex-col gap-6">
-        <h5 className="text-xl text-[#222222] font-bold">Your Booking Details</h5>
+        <h5 className="text-xl text-[#222222] font-bold">
+          Your Booking Details
+        </h5>
         {/* dates */}
         <div className=" flex flex-row justify-between">
           <span className="text-lg text-[#222222]">
@@ -451,12 +453,26 @@ const Payment = ({ bookedData}) => {
         </div>
       </div>
       {/* payment element */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleSubmit}
+          className={`px-4 mt-5 bg-[#002d72] text-white p-2 rounded-md transition-opacity ${
+            Object.keys(errors).length > 0
+              ? "bg-gray-400 opacity-50 cursor-not-allowed"
+              : "cursor-pointer"
+          } rounded-md py-2`}
+          disabled={Object.keys(errors).length > 0}
+        >
+          {/* <FontAwesomeIcon icon={faPlus} className="mr-2" /> */}
+          Book now & pay at hotel
+        </button>
+      </div>
       <form onSubmit={handleSubmit}>
         {/* <h5 className="text-xl md:text-[22px] text-[#222222] font-medium pb-4">
             Pay with
           </h5> */}
         {/* <PaymentElement /> */}
-        <hr className="w-full h-[1.3px] bg-[#dddddd] my-10" />
+        <hr className="w-full h-[1.3px] bg-[#dddddd] my-4" />
         <div>
           <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
             Ground rules
@@ -487,20 +503,6 @@ const Payment = ({ bookedData}) => {
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Create Room
         </button> */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSubmit}
-            className={`px-4 mt-5 bg-blue-500 text-white p-2 rounded-md transition-opacity ${
-              Object.keys(errors).length > 0
-                ? "bg-gray-400 opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            } rounded-md py-2`}
-            disabled={Object.keys(errors).length > 0}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Book
-          </button>
-        </div>
       </form>
     </div>
   );

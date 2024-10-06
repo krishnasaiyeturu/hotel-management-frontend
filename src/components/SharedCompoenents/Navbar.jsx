@@ -84,7 +84,7 @@ function Navbar() {
                 to="/admin/sign-in"
                 onClick={() => setHideMenu(true)}
               >
-               Admin Log In
+              Log In
               </Link>
             </li>
           </ul>

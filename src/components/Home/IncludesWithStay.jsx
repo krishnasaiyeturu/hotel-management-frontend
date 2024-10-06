@@ -1,27 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCoffee,
-  faBath,
   faTv,
   faLaptop,
   faWind,
   faBroom,
-  faFan,
   faWifi,
-  faGlassMartiniAlt,
+  faJugDetergent,
+  faDumbbell,
+  faSwimmingPool,
+  faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 
 const IncludedWithStay = () => {
   const amenities = [
-    { icon: faCoffee, label: "Coffee maker" },
-    { icon: faBath, label: "Bath amenities" },
+    { icon: faJugDetergent, label: "Guest Laundry" },
+    { icon: faSwimmingPool, label: "Swimming Pool" },
     { icon: faLaptop, label: "Work space" },
-    { icon: faFan, label: "Hair dryer" },
+    { icon: faBriefcase, label: "Business Center" },
     { icon: faBroom, label: "Daily housekeeping" },
     { icon: faTv, label: "Television" },
     { icon: faWind, label: "Air conditioning" },
     { icon: faWifi, label: "Free Wi-Fi" },
-    { icon: faGlassMartiniAlt, label: "Mini Bar" },
+    { icon: faDumbbell, label: "Fitness Center" },
   ];
 
   return (

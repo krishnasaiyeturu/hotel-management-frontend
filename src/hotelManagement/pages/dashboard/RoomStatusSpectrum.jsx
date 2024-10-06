@@ -1,145 +1,62 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllRooms } from "../../redux/actions/roomsActions";
+import { useState } from "react";
+import ReactApexChart from "react-apexcharts";
 
-function RecentBookings() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
-  const rooms = useSelector((state) => state.admin.roomsInventory.rooms);
-  const dispatch = useDispatch();
+const RoomStatusSpectrum = () => {
+  // Total rooms
+  const totalRooms = 50;
 
-    const handlePrev = () => {
-      if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
+  // Mock data for room statuses
+  const mockData = {
+    checkedIn: 20,
+    available: 25,
+    maintenance: 5,
+  };
 
-    const handleNext = () => {
-      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-    const roomsPerPage = 10;
-    const totalPages = Math.ceil(rooms.length / roomsPerPage);
-    const displayedRooms = rooms.slice(
-      (currentPage - 1) * roomsPerPage,
-      currentPage * roomsPerPage
-    );
-      const handlePageClick = (pageNumber) => {
-        setCurrentPage(pageNumber);
-      };
-  useEffect(() => {
-    if (activeHotel?._id) {
-      dispatch(getAllRooms(activeHotel._id, ""));
-    }
-  }, [dispatch, activeHotel]);
+  // Verify the total matches
+  const totalCalculated =
+    mockData.checkedIn + mockData.available + mockData.maintenance;
+
+  // If the calculated total doesn't match, warn about potential data issues
+  if (totalCalculated !== totalRooms) {
+    console.warn("The total of room statuses doesn't match the total rooms.");
+  }
+
+  const [chartData] = useState({
+    series: [mockData.available, mockData.checkedIn, mockData.maintenance],
+    options: {
+      chart: {
+        type: "donut",
+      },
+      labels: [
+        `Available Rooms (${mockData.available})`,
+        `Checked-In (${mockData.checkedIn})`,
+        `Under Maintenance (${mockData.maintenance})`,
+      ],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    },
+  });
 
   return (
-    <div>
-      <div className="">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr>
-              <th className="p-3 text-sm text-gray-500 border-b">
-                Room Number
-              </th>
-              <th className="p-3 text-sm text-gray-500 border-b">Room Floor</th>
-              <th className="p-3 text-sm text-gray-500 border-b">Type</th>
-              <th className="p-3 text-sm text-gray-500 border-b">
-                Price Per Night
-              </th>
-              <th className="p-3 text-sm text-gray-500 border-b">Occupancy</th>
-              <th className="p-3 text-sm text-gray-500 border-b">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="7"
-                  className="p-4 font-bold text-xl text-center text-gray-500"
-                >
-                  No rooms available. Please check back later.
-                </td>
-              </tr>
-            ) : (
-              <>
-                {displayedRooms.map((room) => (
-                  <tr key={room._id}>
-                    <td className="p-2 border-b text-xs">
-                      {room?.roomNumber ? room.roomNumber : "-"}
-                    </td>
-                    <td className="p-2 border-b text-xs">
-                      {room?.floorNumber ? room.floorNumber : "-"}
-                    </td>
-                    <td className="p-2 border-b text-xs">
-                      {room?.roomType ? room.roomType : "-"}
-                    </td>
-                    <td className="p-2 border-b text-xs">
-                      ${" "}
-                      {room?.type?.pricePerNight
-                        ? room.type.pricePerNight
-                        : "-"}
-                    </td>
-                    <td className="p-2 border-b text-xs">
-                      {room?.type?.maxOccupancy ? room.type.maxOccupancy : "-"}
-                    </td>
-                    <td className="p-2 pl-3 border-b text-xs">
-                      <span
-                        className={'px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-600'}
-                      >
-                        {room?.status ? room.status : "-"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </>
-            )}
-          </tbody>
-        </table>
+    <div className="mt-10">
+      <ReactApexChart
+        options={chartData.options}
+        series={chartData.series}
+        type="donut"
+        height={280}
+      />
       </div>
-
-      {/* Pagination */}
-      {rooms.length > 0 && totalPages > 1  && (
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={handlePrev}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <div className="flex justify-center items-center mt-4">
-            {totalPages > 1 && (
-              <>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <button
-                    key={index + 1}
-                    className={`px-3 py-1 border mx-1 rounded ${
-                      currentPage === index + 1
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-gray-700"
-                    }`}
-                    onClick={() => handlePageClick(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </>
-            )}
-            {totalPages <= 1 && (
-              <button className="px-3 py-1 border mx-1 rounded bg-blue-500 text-white">
-                1
-              </button>
-            )}
-          </div>
-          <button
-            onClick={handleNext}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  )
 }
-
-export default RecentBookings;
+export default RoomStatusSpectrum;

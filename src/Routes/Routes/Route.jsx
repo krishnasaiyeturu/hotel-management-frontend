@@ -33,6 +33,8 @@ import RoomsList from "../../Pages/Home";
 import SignUp from "../../components/auth/SignUp";
 import Gallery from "../../components/Home/Gallery";
 import ErrorBoundary from "../errorHandling/ErrorBoundary";
+import HomeAmenities from "../../components/amenities/HomeAmenities";
+
 
 const ListingHouseStepOneAddress = lazy(() =>
   import("../../Pages/ListingHouseStepOne/ListingHouseStepOneAddress")
@@ -95,39 +97,55 @@ const router = [
             >
               <Home />
             </Suspense>
-            </ErrorBoundary>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/gallery",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Gallery />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Gallery />
+            </Suspense>
           </ErrorBoundary>
         ),
         // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
       },
       {
+        path: "/amenities",
+        element: (
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <HomeAmenities />
+            </Suspense>
+          </ErrorBoundary>
+        ),
+      },
+      {
         path: "/rooms",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <RoomsList />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <RoomsList />
+            </Suspense>
           </ErrorBoundary>
         ),
         // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
@@ -136,15 +154,15 @@ const router = [
         path: "/rooms/:id",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <ListingDetails />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <ListingDetails />
+            </Suspense>
           </ErrorBoundary>
         ),
         // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
@@ -153,61 +171,85 @@ const router = [
         path: "/book/stays/:id",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Book />,
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Book />,
+            </Suspense>
           </ErrorBoundary>
         ),
       },
       {
         path: "/users/show/:id",
         element: (
-          <ErrorBoundary> <UserProfile /></ErrorBoundary>),
+          <ErrorBoundary>
+            {" "}
+            <UserProfile />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/users/show/:id/editMode=true",
-        element:(
-          <ErrorBoundary> <EditProfile /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            {" "}
+            <EditProfile />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/users/dashboard/:id/overview=true",
-        element:(
-          <ErrorBoundary> <Overview /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            {" "}
+            <Overview />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/users/dashboard/:id/reservations",
-        element:(
-          <ErrorBoundary> <Reservations /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            {" "}
+            <Reservations />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/users/dashboard/:id/listing=true",
-        element:(
-          <ErrorBoundary> <Listing /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            {" "}
+            <Listing />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/host/homes",
-        element:(
-          <ErrorBoundary> <MotelYourHome /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            {" "}
+            <MotelYourHome />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/payment-confirmed",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <PaymentConfirmed />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <PaymentConfirmed />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -215,45 +257,73 @@ const router = [
   },
   {
     path: "/signIn",
-    element: (<ErrorBoundary><SignIn /></ErrorBoundary>),
+    element: (
+      <ErrorBoundary>
+        <SignIn />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/signUp",
-    element: (<ErrorBoundary><SignUp /></ErrorBoundary>),
+    element: (
+      <ErrorBoundary>
+        <SignUp />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/become-a-host",
-    element: (<ErrorBoundary><CreateNewListLayout /></ErrorBoundary>),
+    element: (
+      <ErrorBoundary>
+        <CreateNewListLayout />
+      </ErrorBoundary>
+    ),
     children: [
       {
         path: "/become-a-host",
-        element:(<ErrorBoundary><ListHouseOverview /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            <ListHouseOverview />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/become-a-host/:id/about-your-place",
-        element: (<ErrorBoundary><ListHouseStepOne /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            <ListHouseStepOne />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/become-a-host/:id/structure",
-        element: (<ErrorBoundary><ListHouseStepOneStructure /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            <ListHouseStepOneStructure />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/become-a-host/:id/privacy-type",
-        element: (<ErrorBoundary><ListHouseStepOnePlacetype /></ErrorBoundary>),
+        element: (
+          <ErrorBoundary>
+            <ListHouseStepOnePlacetype />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/become-a-host/:id/location",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <ListingHouseStepOneAddress />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <ListingHouseStepOneAddress />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -261,15 +331,15 @@ const router = [
         path: "/become-a-host/:id/floor-plan",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <ListingHouseStepOneFloorPlan />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <ListingHouseStepOneFloorPlan />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -277,15 +347,15 @@ const router = [
         path: "/become-a-host/:id/stand-out",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <StepTwoOverview />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <StepTwoOverview />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -293,15 +363,15 @@ const router = [
         path: "/become-a-host/:id/amenities",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Amenities />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Amenities />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -309,15 +379,15 @@ const router = [
         path: "/become-a-host/:id/photos",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <ListingHousePhotos />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <ListingHousePhotos />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -325,15 +395,15 @@ const router = [
         path: "/become-a-host/:id/title",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <HouseTitle />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <HouseTitle />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -341,15 +411,15 @@ const router = [
         path: "/become-a-host/:id/highlight",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Highlight />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Highlight />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -357,15 +427,15 @@ const router = [
         path: "/become-a-host/:id/description",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Description />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Description />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -373,15 +443,15 @@ const router = [
         path: "/become-a-host/:id/finish-step",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <FinalStepOverview />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <FinalStepOverview />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -389,15 +459,15 @@ const router = [
         path: "/become-a-host/:id/visiblity",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Visibility />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Visibility />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -405,15 +475,15 @@ const router = [
         path: "/become-a-host/:id/price",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Pricing />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Pricing />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -421,15 +491,15 @@ const router = [
         path: "/become-a-host/:id/legal",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Legal />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Legal />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -437,15 +507,15 @@ const router = [
         path: "/become-a-host/:id/receipt",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Receipt />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Receipt />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
@@ -453,15 +523,15 @@ const router = [
         path: "/become-a-host/:id/published",
         element: (
           <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className=" flex justify-center items-center w-full h-[60dvh]">
-                <FadeLoader color="#000" />
-              </div>
-            }
-          >
-            <Thankyou />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <Thankyou />
+            </Suspense>
           </ErrorBoundary>
         ),
       },
