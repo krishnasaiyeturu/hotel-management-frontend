@@ -33,7 +33,9 @@ const IncludedWithStay = () => {
         {amenities.map((amenity, index) => (
           <div key={index} className="flex flex-col items-center">
             <FontAwesomeIcon icon={amenity.icon} className="text-2xl mb-2" />
-            <span className="text-base font-semibold">{amenity.label}</span>
+            <span className="lg:text-sm md:text-sm sm:text-base text-xs font-semibold">
+              {amenity.label}
+            </span>
           </div>
         ))}
       </div>

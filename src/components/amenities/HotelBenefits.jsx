@@ -40,7 +40,7 @@ const Offers = () => {
                 icon={offer.icon}
                 className="text-blue-600 w-8 h-8 mr-4"
               />
-              <span className="text-lg font-semibold text-black">
+              <span className="lg:text-sm md:text-sm sm:text-base text-xs font-semibold text-black">
                 {offer.text}
               </span>
             </li>

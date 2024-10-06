@@ -32,13 +32,15 @@ function HomeAmenities() {
       <AmenitiesDescription />
       <div className="bg-gray-100 py-10 px-6">
         <h2 className="text-xl text-[#002d72] font-bold text-left px-9 mb-8">
-          SAFETY Measures WITH EVERY STAY
+          SAFETY MEASURES WITH EVERY STAY
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           {safetyAmenities.map((amenity, index) => (
             <div key={index} className="flex flex-col items-center">
               <div className="text-2xl mb-2">{amenity.icon}</div>
-              <span className="text-base font-semibold">{amenity.label}</span>
+              <span className="lg:text-sm md:text-sm sm:text-base text-xs font-semibold">
+                {amenity.label}
+              </span>
             </div>
           ))}
         </div>
