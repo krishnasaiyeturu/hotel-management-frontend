@@ -25,12 +25,13 @@ const CheckInAndCheckOut = () => {
   };
   const location = useLocation();
   console.log({ location });
-  const { bookingId } = location?.state;
+  // const { bookingId } = location?.state;
   const isRoomSelectionAllowed = (roomId) =>
     selectedRooms.includes(roomId) || selectedRooms.length < data.noOfRooms;
   const isButtonDisabled = data?.noOfRooms === selectedRooms?.length;
 
   const getDetailsOfSelectedCustomer = async () => {
+    const bookingId = "670124e99ce37abfb1b613f2";
     // http://localhost:4000/api/bookings/670124e99ce37abfb1b613f2
     try {
       const response = await axios.get(
@@ -47,7 +48,8 @@ const CheckInAndCheckOut = () => {
 
   useEffect(() => {
     getDetailsOfSelectedCustomer();
-  }, [bookingId]);
+  }, []);
+  // bookingId
   return (
     <div className="p-6 rounded-lg bg-white min-h-screen">
       {/* Guest Information and Current Booking */}
