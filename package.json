@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "aws s3 sync dist/ s3://front-end-apsen",
+    "prod": "npm run build && npm run deploy",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -18,12 +20,14 @@
     "@stripe/react-stripe-js": "^2.3.0",
     "@stripe/stripe-js": "^2.1.6",
     "@tanstack/react-query": "^4.29.13",
+    "apexcharts": "^3.54.0",
     "axios": "^1.4.0",
     "country-state-city": "^3.1.4",
     "date-fns": "^2.30.0",
     "jwt-decode": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-date-range": "^1.4.0",
     "react-datepicker": "^7.4.0",
     "react-dom": "^18.2.0",

@@ -14,6 +14,7 @@ import {
   setActiveHotel,
 } from "../redux/actions/hotelsListActions";
 import toast from "react-hot-toast";
+import hotelLogo from "../../assets/ASPENLOGO.jpg";
 
 // Mock data for user options
 const userOptions = [
@@ -88,9 +89,16 @@ function AdminsNavbar() {
         {/* Logo (Hotel Name) on the left */}
         {/* Dropdown for Hotels */}
         <div className="flex items-center">
-          <h2 className="text-2xl font-bold text-[#001f53]">
-            ASPEN GRAND HOTELS
-          </h2>
+          <div className="flex">
+            <img
+              src={hotelLogo}
+              alt="Hotel logo"
+              className="w-6 h-6 mr-4 mt-1"
+            />
+            <h2 className="text-2xl font-bold text-[#001f53]">
+              ASPEN GRAND HOTELS
+            </h2>
+          </div>
 
           {/* Dropdown beside hotel name */}
           <div className="relative ml-4" ref={hotelDropdownRef}>

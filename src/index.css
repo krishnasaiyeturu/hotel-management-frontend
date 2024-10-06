@@ -28,7 +28,11 @@ p {
 }
 
 .topHeight{
-  top: 55.1%;
+  top: 90.1%;
+}
+
+.toHeightForMobile{
+  top: 83%
 }
 
 .dropdown {

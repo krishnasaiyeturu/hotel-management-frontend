@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { bookingMockDataForCheckInAndCheckOut } from "../../modules/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -5,23 +6,50 @@ import {
   faCircleCheck,
   faPersonWalkingDashedLineArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { API } from "../../../backend";
+import toast from "react-hot-toast";
 
 const CheckInAndCheckOut = () => {
   const data = bookingMockDataForCheckInAndCheckOut;
-    const [selectedRooms, setSelectedRooms] = useState([]);
+  const [selectedRooms, setSelectedRooms] = useState([]);
 
-    const handleRoomSelection = (roomId) => {
-      const updatedSelectedRooms = selectedRooms.includes(roomId)
-        ? selectedRooms.filter((id) => id !== roomId)
-        : [...selectedRooms, roomId];
+  const handleRoomSelection = (roomId) => {
+    const updatedSelectedRooms = selectedRooms.includes(roomId)
+      ? selectedRooms.filter((id) => id !== roomId)
+      : [...selectedRooms, roomId];
 
-      setSelectedRooms(updatedSelectedRooms);
-    };
+    setSelectedRooms(updatedSelectedRooms);
+  };
+  const location = useLocation();
+  console.log({ location });
+  // const { bookingId } = location?.state;
+  const isRoomSelectionAllowed = (roomId) =>
+    selectedRooms.includes(roomId) || selectedRooms.length < data.noOfRooms;
+  const isButtonDisabled = data?.noOfRooms === selectedRooms?.length;
 
-    const isRoomSelectionAllowed = (roomId) =>
-      selectedRooms.includes(roomId) || selectedRooms.length < data.noOfRooms;
-    const isButtonDisabled = data?.noOfRooms === selectedRooms?.length;
+  const getDetailsOfSelectedCustomer = async () => {
+    const bookingId = "670124e99ce37abfb1b613f2";
+    // http://localhost:4000/api/bookings/670124e99ce37abfb1b613f2
+    try {
+      const response = await axios.get(
+        `${API}bookings/${bookingId}`
+        // ${API}bookings/670124e99ce37abfb1b613f2
+      );
+      console.log("GET DETAILS OF SELECTED USER", { response });
+      // navigate("/admin/front-desk/check-in");
+    } catch (error) {
+      console.log("GET DETAILS OF SELECTED USER ERROR", { error });
+      toast.error(error.response.data.message || "Error while FETCHING in !");
+    }
+  };
+
+  useEffect(() => {
+    getDetailsOfSelectedCustomer();
+  }, []);
+  // bookingId
   return (
     <div className="p-6 rounded-lg bg-white min-h-screen">
       {/* Guest Information and Current Booking */}

@@ -5,6 +5,7 @@ import IncludedWithStay from './IncludesWithStay'
 import AdditionalInformation from './AdditionalInformation'
 import HomeCarousel from './HomeCarousel'
 import AvailablityCheckCard from '../ListingDetails/AvailablityCheckCard'
+import HotelBenefits from '../amenities/HotelBenefits'
 
 const HomeContainer = () => {
   return (
@@ -16,13 +17,14 @@ const HomeContainer = () => {
         </div>
 
         {/* AvailablityCheckCard - Positioned to Overlap */}
-        <div className="absolute topHeight left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[80%]">
+        <div className="absolute toHeightForMobile md:topHeight left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[80%]">
           <AvailablityCheckCard />
         </div>
-          <AboutUs />
       </div>
-      <Home />
+      <HotelBenefits />
       <IncludedWithStay />
+      <Home />
+      <AboutUs />
       <AdditionalInformation />
     </div>
   );

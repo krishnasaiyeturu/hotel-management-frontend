@@ -122,6 +122,11 @@ const FrontDesk = () => {
       search: `?${queryParams.toString()}`,
     }, { replace: true });
     setCurrentStatus(name);
+    if(name === "Bookings"){
+    navigate("/admin/front-desk/check-in", {
+      state: { bookingId: "670124e99ce37abfb1b613f2" },
+    });
+    }
   }
 
   const handlePageClick = ($event) => {
@@ -130,7 +135,7 @@ const FrontDesk = () => {
 
 
   return (
-    <div className="date-container bg-white">
+    <div className="date-container h-[85vh] bg-white">
       <div className="year-container">
         <div className="me-5">{OCCUPANCY_STATUS_STYLES.map((status, index) => (<button className={`${status.className} ${currentStatus === status.name ? status.activeColor : ''}`} key={status.name + index} onClick={() => onClickStatus(status.name)}>{status.name}</button>))}</div>
         <label><b>Select Year: </b>&nbsp;&nbsp;</label>

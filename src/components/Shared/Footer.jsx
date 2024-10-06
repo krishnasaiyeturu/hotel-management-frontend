@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { faFacebook, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -26,9 +26,10 @@ const Footer = () => {
             </div>
             <div className="flex flex-col gap-4 opacity-80">
               <h6 className="text-[#002d72] font-bold">Services</h6>
-              <Link to="/services/booking" className="hover:underline">
+              {/* <Link to="/services/booking" className="hover:underline">
                 Booking
-              </Link>
+              </Link> */}
+              <p>Booking</p>
               <p>Room Reservations</p>
               <p>Event Hosting</p>
               <p>Special Offers</p>
