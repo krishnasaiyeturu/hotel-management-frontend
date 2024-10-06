@@ -57,7 +57,9 @@ const FrontDesk = () => {
   }, []);
 
   useEffect(() => {
-    fetchBookingsData();
+    if (activeHotel?._id && selectedMonth && selectedYear && currentStatus) {
+      fetchBookingsData();
+    }
   }, [selectedMonth, selectedYear, currentStatus, currentPage, currentPerPage]);
 
   const fetchBookingsData = async () => {
