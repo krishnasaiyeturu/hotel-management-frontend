@@ -41,6 +41,7 @@
   font-size: 16;
   box-sizing: border-box;
   cursor: pointer;
+  margin-top: 7px;
 }
 
 .days-container {
@@ -118,4 +119,10 @@
   background-color: #007bff;
   color: white;
   border-color: #007bff;
+}
+
+.booking-loader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

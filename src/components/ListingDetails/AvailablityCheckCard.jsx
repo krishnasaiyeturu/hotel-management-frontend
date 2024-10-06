@@ -54,11 +54,9 @@ const AvailablityCheckCard = () => {
       key: "selection",
     },
   ]);
-console.log({selectedDates})
   // calculating how many nights guest is staying
   // const [nightsStaying, setNightStaying] = useState(1);
 
-  // // console.log(nightsStaying, typeof nightsStaying, "nights");
 
   // formatted dates to save in the db
   const formattedStartDate = selectedDates[0]?.startDate?.toISOString();
@@ -68,15 +66,8 @@ console.log({selectedDates})
   const localStartDate = new Date(formattedStartDate).toLocaleDateString();
   const localEndDate = new Date(formattedEndDate).toLocaleDateString();
 
-  // // console.log(
-  //   new Date(formattedStartDate).toLocaleDateString(),
-  //   localStartDate,
-  //   localEndDate,
-  //   "dates"
-  // );
   // Function to handle date selection
 const handleSelect = (ranges) => {
-  console.log({ ranges });
 if(ranges?.key === "selection"){
   setSelectedDates([ranges.selection]);
 }else {

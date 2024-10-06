@@ -1,6 +1,5 @@
 export const generateDates = (month, year) => {
   let days = [];
-  console.log(month, year)
   const daysInMonth = new Date(year, month, 0).getDate();
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -130,31 +129,38 @@ export const generateDummyData = (year, month) => {
   return bookings;
 }
 
-export const OCCUPANCY_STATUS = {
-  ALL_STATUS: 'All Status',
+export const OCCUPANCY_STATUSES = {
   BOOKINGS: 'Bookings',
   CHECK_IN: 'Checked In / Out',
   CHECK_OUT: 'Checked Out',
-  No_SHOW: 'No Show'
-}
+  NO_SHOW: 'No Show'
+};
 
-export const statusDetails = [
+export const OCCUPANCY_STATUS_LABELS = {
+  [OCCUPANCY_STATUSES.BOOKINGS]: 'booked',
+  [OCCUPANCY_STATUSES.CHECK_IN]: 'checked-in',
+  [OCCUPANCY_STATUSES.CHECK_OUT]: 'checked-out',
+  [OCCUPANCY_STATUSES.NO_SHOW]: 'no-show'
+};
+
+export const OCCUPANCY_STATUS_STYLES = [
   {
-    name: OCCUPANCY_STATUS.BOOKINGS,
+    name: OCCUPANCY_STATUSES.BOOKINGS,
     className: 'rounded-lg bg-blue-100 text-blue-400 p-2 me-2 text-sm',
     activeColor: 'border-2 border-blue-600 text-blue-800',
   },
   {
-    name: OCCUPANCY_STATUS.CHECK_IN,
+    name: OCCUPANCY_STATUSES.CHECK_IN,
     className: 'rounded-lg bg-yellow-100 text-yellow-400 p-2 me-2 text-sm',
     activeColor: 'border-2 border-yellow-600 text-yellow-600',
   },
   {
-    name: OCCUPANCY_STATUS.No_SHOW,
+    name: OCCUPANCY_STATUSES.NO_SHOW,
     className: 'rounded-lg bg-red-100 text-red-400 p-2 me-2 text-sm',
     activeColor: 'border-2 border-red-600 text-red-600',
   }
 ];
+
 
 export const getRandomNumber = () => Math.floor(Math.random() * 5);
 

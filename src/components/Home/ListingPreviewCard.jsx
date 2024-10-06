@@ -2,7 +2,6 @@
 import { AiFillStar } from "react-icons/ai";
 
 const ListingPreviewCard = ({ room }) => {
-  console.log({room})
   // const taxes = Math.round((room?.basePrice * 14) / 100);
   // const priceAfterTaxes = room?.basePrice + taxes;
          

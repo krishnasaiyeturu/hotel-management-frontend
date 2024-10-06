@@ -26,7 +26,6 @@ const SignIn = () => {
       });
       const token = response.data.token;
       const decodedToken = jwtDecode(token);
-      console.log({ decodedToken });
       dispatch(adminLogIn(decodedToken.user));
       if (token) {
         localStorage.setItem("accessToken", token);

@@ -17,7 +17,6 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { API } from "../../backend";
 
 const Payment = ({ bookedData}) => {
-  console.log({bookedData})
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -159,7 +158,6 @@ const Payment = ({ bookedData}) => {
           },
         };
         const response = await axios.post(bookingUrl, bookingInformation);
-        console.log('BOOKING RESPONSE',{response});
         toast.success("Booking is Successful Please check your email !!")
         navigate('/')
       } catch (error) {
@@ -195,7 +193,6 @@ const Payment = ({ bookedData}) => {
 //   }
 // }
   };
-  console.log({ states });
   return (
     <div>
       {/* trips section */}
