@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api, { API } from "../../../backend";
 
 // Action Types
@@ -13,12 +14,15 @@ export const setActiveHotel = (hotel) => ({
 export const getAllHotels = () => async (dispatch) => {
   try {
     const response = await api.get(`${API}admin/hotels`);
-    console.log("All Hotels List", { response });
+    if (!response) {
+      throw new Error('Failed to fetch all hotels');
+    }
     dispatch({
       type: GET_ALL_HOTELS,
       payload: response.data, // Data from the API response
     });
   } catch (error) {
-    console.log("rror fetcbhing hotels",error);
+    toast.error(error.response.data.message || "Error  Fetching all hotels list !")
+
   }
 };

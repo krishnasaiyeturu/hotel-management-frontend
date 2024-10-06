@@ -155,20 +155,20 @@ const RoomInventory = () => {
               <>
                 {displayedRooms.map((room) => (
                   <tr key={room._id}>
-                    <td className="p-4 border-b text-xs">{room.roomNumber}</td>
-                    <td className="p-4 border-b text-xs">{room.floorNumber}</td>
-                    <td className="p-4 border-b text-xs">{room.roomType}</td>
+                    <td className="p-4 border-b text-xs">{room?.roomNumber ? room.roomNumber : '-'}</td>
+                    <td className="p-4 border-b text-xs">{room?.floorNumber ? room.floorNumber : '-'}</td>
+                    <td className="p-4 border-b text-xs">{room?.roomType ? room.roomType : '-'}</td>
                     <td className="p-4 border-b text-xs">
-                      $ {room.type.pricePerNight}
+                      $ {room?.type?.pricePerNight ? room.type.pricePerNight : '-'}
                     </td>
                     <td className="p-4 border-b text-xs">
-                      {room.type.maxOccupancy}
+                      {room?.type?.maxOccupancy ? room.type.maxOccupancy : '-'}
                     </td>
                     <td className="p-4 pl-3 border-b text-xs">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColors[room.status]}`}
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColors[room.status] ? statusColors[room.status] : '-'}`}
                       >
-                        {room.status}
+                        {room?.status ? room.status : '-'}
                       </span>
                     </td>
                     <td className="p-4 border-b text-center">
