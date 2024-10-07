@@ -148,21 +148,21 @@ const AvailablityCheckCard = () => {
                 </span>
                 <span className="flex items-center gap-2">
                   <button
+                    onClick={() =>
+                      setNumberOfRooms((prev) => (prev > 0 ? prev - 1 : 0))
+                    }
+                    disabled={numberOfRooms === 1}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{numberOfRooms}</p>
+                  <button
                     onClick={() => setNumberOfRooms((prev) => prev + 1)}
                     disabled={numberOfRooms === 4}
                     className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
                   >
                     <AiOutlinePlus size={16} />
-                  </button>
-                  <p className="w-[30px] text-center">{numberOfRooms}</p>
-                  <button
-                    onClick={() =>
-                      setNumberOfRooms((prev) => (prev > 0 ? prev - 1 : 0))
-                    }
-                    disabled={numberOfRooms === 0}
-                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
-                  >
-                    <AiOutlineMinus size={16} />
                   </button>
                 </span>
               </div>
@@ -175,14 +175,6 @@ const AvailablityCheckCard = () => {
                 </span>
                 <span className="flex items-center gap-2">
                   <button
-                    onClick={() => setGuestsNumber((prev) => prev + 1)}
-                    disabled={totalGuest === 8}
-                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
-                  >
-                    <AiOutlinePlus size={16} />
-                  </button>
-                  <p className="w-[30px] text-center">{guestsNumber}</p>
-                  <button
                     onClick={() =>
                       setGuestsNumber((prev) => (prev > 0 ? prev - 1 : 0))
                     }
@@ -190,6 +182,14 @@ const AvailablityCheckCard = () => {
                     className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
                   >
                     <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{guestsNumber}</p>
+                  <button
+                    onClick={() => setGuestsNumber((prev) => prev + 1)}
+                    disabled={totalGuest === 8}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
                   </button>
                 </span>
               </div>
@@ -204,14 +204,6 @@ const AvailablityCheckCard = () => {
                 </span>
                 <span className="flex items-center gap-2">
                   <button
-                    onClick={() => setChildrenNumber((prev) => prev + 1)}
-                    disabled={totalGuest === 8}
-                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
-                  >
-                    <AiOutlinePlus size={16} />
-                  </button>
-                  <p className="w-[30px] text-center">{childrenNumber}</p>
-                  <button
                     onClick={() =>
                       setChildrenNumber((prev) => (prev > 0 ? prev - 1 : 0))
                     }
@@ -219,6 +211,14 @@ const AvailablityCheckCard = () => {
                     className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
                   >
                     <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{childrenNumber}</p>
+                  <button
+                    onClick={() => setChildrenNumber((prev) => prev + 1)}
+                    disabled={totalGuest === 8}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
                   </button>
                 </span>
               </div>
