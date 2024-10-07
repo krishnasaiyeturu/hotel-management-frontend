@@ -133,6 +133,10 @@ const FrontDesk = () => {
     setCurrentPageIndex($event.selected);
   }
 
+  const selectedUserHandler = (currentBooking) => {
+    navigate('/admin/front-desk/guest',{state: {bookingId: currentBooking?._id}});
+  };
+
   return (
     <div className="date-container h-[85vh] bg-white">
       {/* Status and Year Selection */}
@@ -188,7 +192,7 @@ const FrontDesk = () => {
                   Number(currentPageIndex) * itemsPerPage,
                   Number(currentPageIndex) * itemsPerPage + itemsPerPage
                 )
-                .map((room, roomIndex) => (
+                .map((room) => (
                   <tr key={room.id}>
                     {occupancyStatus === OCCUPANCY_STATUSES.CHECK_IN && room.roomNumber && (
                       <td>{room.roomNumber}</td>
@@ -203,16 +207,24 @@ const FrontDesk = () => {
   
                       return (
                         <td
-                          key={day + index + 'td'}
-                          className={index === dayOptions.length - 1 ? 'last-child' : ''}
-                          style={{ position: 'relative' }}
+                          key={day + index + "td"}
+                          className={
+                            index === dayOptions.length - 1 ? "last-child" : ""
+                          }
+                          style={{ position: "relative" }}
                         >
                           {isBookingStart && currentBooking && (
                             <div
-                              className='bookings-tag'
+                              className="bookings-tag"
+                              onClick={() =>
+                                selectedUserHandler(currentBooking)
+                              }
                               style={{
                                 width: `calc(${
-                                  (currentBooking.checkout - currentBooking.checkin + 1) * 100
+                                  (currentBooking.checkout -
+                                    currentBooking.checkin +
+                                    1) *
+                                  100
                                 }% + ${(currentBooking.checkout - currentBooking.checkin + 1) * 1}px)`,
                                 backgroundColor: currentBooking.backgroundColor,
                                 color: currentBooking.color,

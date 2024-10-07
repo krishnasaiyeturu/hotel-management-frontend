@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlus, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
 import {
   getAllRooms,
   getAllRoomsCount,
@@ -62,17 +62,17 @@ const RoomInventory = () => {
       dispatch(getAllRoomsCount(activeHotel._id));
     }
   }, [dispatch, activeHotel, activeTab]);
-
+console.log({ displayedRooms });
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-base font-semibold">Room Inventory</h1>
         <button
-          onClick={() => navigateFunction("create-room")}
+          onClick={() => navigateFunction("types")}
           className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
         >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Add Room
+          {/* <FontAwesomeIcon icon={faPlus} className="mr-2" /> */}
+          Room Types Manager
         </button>
       </div>
 
@@ -136,9 +136,9 @@ const RoomInventory = () => {
               </th>
               <th className="p-4 text-sm text-gray-500 border-b">Occupancy</th>
               <th className="p-4 text-sm text-gray-500 border-b">Status</th>
-              <th className="p-4 text-sm text-gray-500 border-b text-center">
+              {/* <th className="p-4 text-sm text-gray-500 border-b text-center">
                 Actions
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -171,7 +171,7 @@ const RoomInventory = () => {
                         {room?.status ? room.status : '-'}
                       </span>
                     </td>
-                    <td className="p-4 border-b text-center">
+                    {/* <td className="p-4 border-b text-center">
                       <button className="text-gray-600 hover:text-gray-800 mr-2">
                         <FontAwesomeIcon icon={faEye} />
                       </button>
@@ -181,7 +181,7 @@ const RoomInventory = () => {
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </>

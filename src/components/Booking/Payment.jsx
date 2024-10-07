@@ -107,7 +107,7 @@ const Payment = ({ bookedData}) => {
       setStates([]);
     }
   };
-
+console.log({ bookedData });
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     setAddressInfo({
@@ -137,8 +137,12 @@ const Payment = ({ bookedData}) => {
       try {
         const bookingUrl = `${API}bookings/`;
         const bookingInformation = {
-          checkIn: bookedData?.checkIn,
-          checkOut: bookedData?.checkOut,
+          checkIn: bookedData?.checkIn
+            ? moment(bookedData.checkIn).format("YYYY-MM-DD")
+            : null,
+          checkOut: bookedData?.checkOut
+            ? moment(bookedData.checkOut).format("YYYY-MM-DD")
+            : null,
           hotelType: bookedData?.roomTypeId, // The ObjectId of the RoomType
           rooms: bookedData?.rooms,
           adults: bookedData?.adults,
@@ -157,11 +161,14 @@ const Payment = ({ bookedData}) => {
             zipCode: addressInfo?.zipcode,
           },
         };
+        console.log({ bookingInformation });
         const response = await axios.post(bookingUrl, bookingInformation);
+        console.log("Reserved=============",{response})
         toast.success("Booking is Successful Please check your email !!")
         navigate('/')
       } catch (error) {
         console.error("Error BOOKING RESPONSE", error);
+        toast.error(error?.response?.data?.message)
       }
     };
   // reservation form handler
