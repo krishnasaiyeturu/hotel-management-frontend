@@ -20,7 +20,6 @@ const menuItems = [
 
 const AdminsSidebar = () => {
   const { pathname } = useLocation();
-  console.log({ pathname });
 
   return (
     <aside className="bg-[#001844] text-white h-screen py-6 pl-2 pr-4">

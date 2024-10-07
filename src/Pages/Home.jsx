@@ -19,7 +19,6 @@ const RoomsList = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const userFilters = location.state;
-  console.log({ userFilters });
   // const [hasScroll, setHasScroll] = useState(false);
   // //  before tax price state
   // const [showBeforeTaxPrice, setShowBeforeTaxPrice] = useState(false);

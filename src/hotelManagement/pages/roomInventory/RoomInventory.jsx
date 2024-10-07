@@ -62,7 +62,7 @@ const RoomInventory = () => {
       dispatch(getAllRoomsCount(activeHotel._id));
     }
   }, [dispatch, activeHotel, activeTab]);
-console.log({ displayedRooms });
+
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">

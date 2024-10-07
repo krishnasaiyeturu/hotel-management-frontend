@@ -8,7 +8,7 @@ const ErrorBoundary = ({ children }) => {
 
   // Error handling functions
   const staticGetDerivedStateFromError = (error) => {
-    console.log("ERROR MESSAGE",{error},error.message)
+    // console.log("ERROR MESSAGE",{error},error.message)
     setHasError(true);
     setErrorMessage(error.message);
   };

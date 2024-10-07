@@ -26,7 +26,7 @@ export const getAllRooms = (hotelId, status) => async (dispatch) => {
 export const getAllRoomsCount = (hotelId) => async (dispatch) => {
   try {
     // http://localhost:4000/api/room/room-status-counts?hotelId=66fe6c3217895adcbe9763c1
-    const response = await api.get(`/room/room-status-counts?hotelId=${hotelId}`); // Update endpoint as needed
+    const response = await api.get(`/room/room-status-counts?hotelId=${hotelId}`);
     dispatch({ type: GET_ROOMS_COUNT, payload: response.data });
     if (!response) {
       throw new Error('Failed to fetch rooms');
@@ -38,8 +38,7 @@ export const getAllRoomsCount = (hotelId) => async (dispatch) => {
 
 export const createRoom = (roomData) => async (dispatch) => {
   try {
-    const response = await api.post("/room", roomData); // Update endpoint as needed
-    console.log("CREATE RESPONSE",{response})
+    const response = await api.post("/room", roomData);
     dispatch({ type: CREATE_ROOM, payload: response.data });
     if (!response) {
       throw new Error('Failed to fetch rooms');
@@ -51,7 +50,7 @@ export const createRoom = (roomData) => async (dispatch) => {
 
 export const getRoomById = (id) => async (dispatch) => {
   try {
-    const response = await api.get(`/rooms/${id}`); // Update endpoint as needed
+    const response = await api.get(`/rooms/${id}`);
     dispatch({ type: GET_ROOM_BY_ID, payload: response.data });
     if (!response) {
       throw new Error('Failed to fetch rooms');
@@ -63,8 +62,7 @@ export const getRoomById = (id) => async (dispatch) => {
 
 export const editRoom = (id, roomData) => async (dispatch) => {
   try {
-    const response = await api.post(`/rooms/${id}`, roomData); // Update endpoint as needed
-    console.log("edit room response",{ response });
+    const response = await api.post(`/rooms/${id}`, roomData);
     dispatch({ type: EDIT_ROOM, payload: response.data });
     if (!response) {
       throw new Error('Failed to fetch rooms');

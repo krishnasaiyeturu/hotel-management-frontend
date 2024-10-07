@@ -16,7 +16,6 @@ import { parseISO } from "date-fns";
 
 /* eslint-disable react/prop-types */
 const ReservationCard = ({ listingData, filters }) => {
-  console.log({ listingData });
   // refs
   const calendarRef = useRef();
   const dropdownRef = useRef();
@@ -85,7 +84,6 @@ const ReservationCard = ({ listingData, filters }) => {
   // );
   // Function to handle date selection
 const handleSelect = (ranges) => {
-  console.log({ ranges });
   if (ranges?.key === "selection") {
     setSelectedDates([ranges.selection]);
   } else {
@@ -99,9 +97,6 @@ const handleSelect = (ranges) => {
       // Set end date to the next day
       endDate.setDate(endDate.getDate() + 1);
     }
-    console.log("Selected Start Date:", startDate);
-    console.log("Adjusted End Date:", endDate);
-
     // Set selected dates in the state
     setSelectedDates([{ startDate, endDate, key: "selection" }]);
   }

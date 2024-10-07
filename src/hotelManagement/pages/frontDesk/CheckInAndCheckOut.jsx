@@ -1,5 +1,5 @@
 /* eslint-disable no-unsafe-optional-chaining */
-import { bookingMockDataForCheckInAndCheckOut } from "../../modules/mockData";
+// import { bookingMockDataForCheckInAndCheckOut } from "../../modules/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -14,10 +14,10 @@ import toast from "react-hot-toast";
 import { formatDate } from "../../../utils/helper";
 
 const CheckInAndCheckOut = () => {
-  const data = bookingMockDataForCheckInAndCheckOut;
+  // const data = bookingMockDataForCheckInAndCheckOut;
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [customerDetails, setCustomerDetails] = useState({});
-  const [guestStatus, setGuestStatus] = useState('');
+  const [guestStatus, setGuestStatus] = useState("");
 
   const handleRoomSelection = (roomId) => {
     const updatedSelectedRooms = selectedRooms.includes(roomId)
@@ -29,21 +29,26 @@ const CheckInAndCheckOut = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { bookingId } = location?.state;
-  const isRoomSelectionAllowed = (roomId) =>
-    selectedRooms.includes(roomId) || selectedRooms.length < data.noOfRooms;
-  const isButtonDisabled = data?.numberOfRooms === selectedRooms?.length;
 
+  const isRoomSelectionAllowed = (roomId) => {
+    if (selectedRooms.length === customerDetails.numberOfRooms) {
+      if (!selectedRooms.includes(roomId)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else return false;
+  };
   const getDetailsOfSelectedCustomer = async () => {
     try {
-      const response = await axios.get(
-        `${API}bookings/${bookingId}`
-      );
-      console.log("GET DETAILS OF SELECTED USER", { response });
+      const response = await axios.get(`${API}bookings/${bookingId}`);
       setCustomerDetails(response?.data);
       setGuestStatus(response?.data?.status);
     } catch (error) {
-      console.log("GET DETAILS OF SELECTED USER ERROR", { error });
-      toast.error(error.response.data.message || "Error while fetching guest information !");
+      toast.error(
+        error.response.data.message ||
+          "Error while fetching guest information !"
+      );
     }
   };
   useEffect(() => {
@@ -59,10 +64,13 @@ const CheckInAndCheckOut = () => {
       const response = await axios.put(`${API}bookings/check-in/${bookingId}`, {
         roomIds: selectedRooms?.length ? selectedRooms : [],
       });
-      console.log("CHECK IN SUCCESS RESPONSE", { response });
+      if(response){
+      const successMessage = `${customerDetails.guest?.firstName} 
+              ${customerDetails.guest?.lastName}${" "} has Successfully Checked In !`;
+      toast.success(successMessage);
       navigate("/admin/front-desk");
+      }
     } catch (error) {
-      console.log("CHECK IN ERROR RESPONSE", { error });
       toast.error(error.response.data.message || "Error while checking in !");
     }
   };
@@ -70,14 +78,25 @@ const CheckInAndCheckOut = () => {
   const checkOutHandler = async () => {
     try {
       const response = await axios.put(`${API}bookings/check-out/${bookingId}`);
-      console.log("CHECK OUT SUCCESS RESPONSE", { response });
+      if(response){
+      const successMessage = `${customerDetails.guest?.firstName}
+              ${customerDetails.guest?.lastName}${" "} has Successfully Checked Out !`;
+      toast.success(successMessage);
       navigate("/admin/front-desk");
+      }
     } catch (error) {
-      console.log("CHECK OUT ERROR RESPONSE", { error });
       toast.error(error.response.data.message || "Error while checking out !");
     }
   };
+  const checkRoomsLength =
+    customerDetails?.status === "booked"
+      ? customerDetails?.availableRooms?.length > 0
+      : customerDetails?.room?.length > 0;
 
+  const mappingRooms =
+    customerDetails?.status === "booked"
+      ? customerDetails?.availableRooms
+      : customerDetails?.room;
   return (
     <div className="p-6 rounded-lg bg-white min-h-screen">
       {/* Guest Information and Current Booking */}
@@ -131,7 +150,7 @@ const CheckInAndCheckOut = () => {
               </div>
               <div>
                 <p className="font-semibold">Room Type</p>
-                <p className="py-2">{customerDetails?.roomTyp?.namee || "-"}</p>
+                <p className="py-2">{customerDetails?.roomType?.name || "-"}</p>
               </div>
               <div>
                 <p className="font-semibold">No of Rooms</p>
@@ -245,7 +264,9 @@ const CheckInAndCheckOut = () => {
       {/* List of available rooms */}
       <div className=" p-6  lg:col-span-2">
         <h2 className="text-lg text-center font-semibold my-2">
-          Available Rooms for Assignment
+          {customerDetails?.status === "booked"
+            ? "Available Rooms for Assignment"
+            : "Assaigned rooms"}
         </h2>
 
         {/* List of available rooms */}
@@ -265,22 +286,22 @@ const CheckInAndCheckOut = () => {
               </tr>
             </thead>
             <tbody>
-              {customerDetails.availableRooms?.length > 0 ? (
-                customerDetails.availableRooms.map((room, index) => (
+              {checkRoomsLength ? (
+                mappingRooms.map((room, index) => (
                   <tr key={index}>
                     {guestStatus === "booked" && (
                       <td className="p-2">
                         <input
                           type="checkbox"
-                          disabled={!isRoomSelectionAllowed(room.roomId)}
-                          checked={selectedRooms.includes(room.roomId)}
-                          onChange={() => handleRoomSelection(room.roomId)}
+                          disabled={isRoomSelectionAllowed(room?._id)}
+                          checked={selectedRooms.includes(room?._id)}
+                          onChange={() => handleRoomSelection(room?._id)}
                         />
                       </td>
                     )}
-                    <td className="p-2">{room.roomId}</td>
+                    <td className="p-2">#{room._id.slice(0, 4)}</td>
                     <td className="p-2">{room.roomNumber}</td>
-                    <td className="p-2">{room.roomType}</td>
+                    <td className="p-2">{customerDetails?.roomType?.name}</td>
                     <td className="p-2">{room.floorNumber}</td>
                     <td className="p-2">${room.pricePerNight}</td>
                     {/* <td className="p-2">
@@ -315,26 +336,35 @@ const CheckInAndCheckOut = () => {
         <button
           type="submit"
           className={`flex items-center text-white p-2 rounded-md transition-opacity  ${
-            isButtonDisabled || customerDetails?.numberOfRooms
-              ? "bg-blue-500 opacity-50 cursor-not-allowed"
+            guestStatus === "booked"
+              ? selectedRooms?.length !== customerDetails?.numberOfRooms
+                ? "bg-blue-500 opacity-50 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
               : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
           }`}
-          onClick={
-            guestStatus === 'booked'
-              ? checkInHandler
-              : checkOutHandler
+          onClick={guestStatus === "booked" ? checkInHandler : checkOutHandler}
+          disabled={
+            guestStatus === "booked"
+              ? selectedRooms?.length !== customerDetails?.numberOfRooms ||
+                customerDetails?.numberOfRooms === 0
+              : false
           }
-          disabled={isButtonDisabled || data?.numberOfRooms === 0}
         >
           <FontAwesomeIcon
             icon={
-              guestStatus === 'booked'
+              guestStatus === "booked"
                 ? faCircleCheck
                 : faPersonWalkingDashedLineArrowRight
             }
-            className={`mr-2 pt-1 ${isButtonDisabled ? "opacity-50" : "opacity-100"}`}
+            className={`mr-2 pt-1 ${
+              guestStatus === "booked"
+                ? selectedRooms?.length !== customerDetails?.numberOfRooms
+                  ? "opacity-50"
+                  : "opacity-100"
+                : "opacity-100"
+            } `}
           />
-          {guestStatus === 'booked' ? "Check In" : "Check Out"}
+          {guestStatus === "booked" ? "Check In" : "Check Out"}
         </button>
       </div>
     </div>

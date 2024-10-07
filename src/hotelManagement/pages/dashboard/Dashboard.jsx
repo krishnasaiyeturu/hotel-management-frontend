@@ -82,13 +82,13 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-1 bg-white h-[25rem] p-4 rounded-lg">
+        <div className="col-span-1 bg-white p-4 rounded-lg">
           <h1 className="text-base font-semibold text-[#002d72]">
             Recent Check In's
           </h1>
           <RecentBookings />
         </div>
-        <div className="col-span-1 bg-white h-[25rem] p-4 rounded-lg">
+        <div className="col-span-1 bg-white  p-4 rounded-lg">
           <h1 className="text-base font-semibold text-[#002d72]">
             Room Status Spectrum
           </h1>

@@ -32,10 +32,10 @@ function AdminsNavbar() {
   // const [activeHotel, setActiveHotel] = useState(allHotels[0]);
   const { pathname } = useLocation();
   const dispatch = useDispatch(); // Add dispatch
-  const admin = useSelector((state) => state.admin);
+  // const admin = useSelector((state) => state.admin);
   const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
   const allHotels = useSelector((state) => state.admin.hotels.allHotels);
-  console.log({ admin, allHotels, activeHotel });
+
   const userDropdownRef = useRef(null);
   const hotelDropdownRef = useRef(null);
   const handleHotelSelect = (hotel) => {

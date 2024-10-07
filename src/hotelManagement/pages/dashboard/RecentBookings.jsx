@@ -15,7 +15,7 @@ function RecentBookings() {
     const handleNext = () => {
       if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
-    const roomsPerPage = 10;
+    const roomsPerPage = 5;
     const totalPages = Math.ceil(rooms.length / roomsPerPage);
     const displayedRooms = rooms.slice(
       (currentPage - 1) * roomsPerPage,
@@ -32,7 +32,7 @@ function RecentBookings() {
 
   return (
     <div>
-      <div className="">
+      <div className="flex-grow">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr>
@@ -82,7 +82,9 @@ function RecentBookings() {
                     </td>
                     <td className="p-2 pl-3 border-b text-xs">
                       <span
-                        className={'px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-600'}
+                        className={
+                          "px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-600"
+                        }
                       >
                         {room?.status ? room.status : "-"}
                       </span>
@@ -96,8 +98,8 @@ function RecentBookings() {
       </div>
 
       {/* Pagination */}
-      {rooms.length > 0 && totalPages > 1  && (
-        <div className="flex justify-between items-center mt-4">
+      {rooms.length > 0 && totalPages > 1 && (
+        <div className="flex justify-between items-center mt-auto">
           <button
             onClick={handlePrev}
             disabled={currentPage === 1}
@@ -109,17 +111,17 @@ function RecentBookings() {
             {totalPages > 1 && (
               <>
                 {Array.from({ length: totalPages }, (_, index) => (
-                  <button
+                  <div
                     key={index + 1}
-                    className={`px-3 py-1 border mx-1 rounded ${
+                    className={`px-3 border mx-1 rounded ${
                       currentPage === index + 1
                         ? "bg-blue-500 text-white"
                         : "bg-gray-200 text-gray-700"
                     }`}
                     onClick={() => handlePageClick(index + 1)}
                   >
-                    {index + 1}
-                  </button>
+                    <span className="text-xs"> {index + 1} </span>
+                  </div>
                 ))}
               </>
             )}

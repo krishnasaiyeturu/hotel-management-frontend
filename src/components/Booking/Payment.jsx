@@ -107,7 +107,7 @@ const Payment = ({ bookedData}) => {
       setStates([]);
     }
   };
-console.log({ bookedData });
+
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     setAddressInfo({
@@ -161,9 +161,7 @@ console.log({ bookedData });
             zipCode: addressInfo?.zipcode,
           },
         };
-        console.log({ bookingInformation });
         const response = await axios.post(bookingUrl, bookingInformation);
-        console.log("Reserved=============",{response})
         toast.success("Booking is Successful Please check your email !!")
         navigate('/')
       } catch (error) {

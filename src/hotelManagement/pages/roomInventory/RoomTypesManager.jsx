@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { API } from "../../../backend";
@@ -15,11 +15,9 @@ const RoomTypesManager = () => {
   };
 
   const getAllRoomTypes = async () => {
-    // setLoading(true); // Start loading state
     try {
       const res = await axios.get(`${API}room/public`);
       setRoomTypes(res.data);
-      // toast.success("Room types fetched successfully!");
     } catch (error) {
       console.error("Error fetching room types:", { error });
       toast.error("Failed to fetch room types. Please try again.");
@@ -34,6 +32,13 @@ const RoomTypesManager = () => {
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-base font-semibold">Room Types Manager</h1>
+        <button
+          onClick={() => navigateFunction("create-room")}
+          className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          Add Room Type
+        </button>
       </div>
 
       {/* Room Table */}
@@ -79,7 +84,7 @@ const RoomTypesManager = () => {
                         : "-"}
                     </td>
                     <td className="p-4 border-b text-xs">
-                      {room?.type?.maxOccupancy ? room.type.maxOccupancy : "-"}
+                      {room?.maxOccupancy ? room.maxOccupancy : "-"}
                     </td>
                     <td className="p-4 border-b text-xs">
                       {room?.hotel?.rating ? room.hotel.rating : "-"}
@@ -89,13 +94,13 @@ const RoomTypesManager = () => {
                         {room?.amenities?.slice(0, 4).map((amenity, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-500 text-white rounded-full text-xs font-semibold"
+                            className="px-2 py-1 bg-blue-300 text-white rounded-full text-xs font-semibold"
                           >
                             {amenity}
                           </span>
                         ))}
                         {room?.amenities?.length > 4 && (
-                          <span className="px-2 py-1 bg-blue-500 text-white rounded-full text-xs font-semibold">
+                          <span className="px-2 py-1 bg-blue-300 text-white rounded-full text-xs font-semibold">
                             ...
                           </span>
                         )}

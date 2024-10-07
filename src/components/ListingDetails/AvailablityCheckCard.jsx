@@ -38,23 +38,20 @@ const AvailablityCheckCard = () => {
   const localEndDate = new Date(formattedEndDate).toLocaleDateString();
 
   // Function to handle date selection
-const handleSelect = (ranges) => {
-if(ranges?.key === "selection"){
-  setSelectedDates([ranges.selection]);
-}else {
-  const startDate = new Date(ranges.selection.startDate);
-  const endDate = new Date(ranges.selection.endDate);
-  // Reset time to compare only the date
-  startDate.setHours(0, 0, 0, 0);
-  endDate.setHours(0, 0, 0, 0);
-  // Check if the dates are the same
-  if (startDate.getTime() === endDate.getTime()) {
-    // Set end date to the next day
-    endDate.setDate(endDate.getDate() + 1);
-  }
-  console.log("Selected Start Date:", startDate);
-  console.log("Adjusted End Date:", endDate);
-
+  const handleSelect = (ranges) => {
+    if (ranges?.key === "selection") {
+      setSelectedDates([ranges.selection]);
+    } else {
+      const startDate = new Date(ranges.selection.startDate);
+      const endDate = new Date(ranges.selection.endDate);
+      // Reset time to compare only the date
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+      // Check if the dates are the same
+      if (startDate.getTime() === endDate.getTime()) {
+        // Set end date to the next day
+        endDate.setDate(endDate.getDate() + 1);
+      }
       if (startDate.getTime() === endDate.getTime()) {
         endDate.setDate(endDate.getDate() + 1);
       }

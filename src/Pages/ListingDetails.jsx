@@ -12,25 +12,23 @@ const ListingDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const selectedRoomData = useSelector((state) => state.house.listingDetails);
   const params = useParams();
-  console.log({ selectedRoomData });
   const location = useLocation();
-  console.log({location})
   // const { data } = location.state || {};
   // console.log("PARAMS",{data}) 
   const dispatch = useDispatch();
-  const roomPictures = [
-    "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600",
-  ];
+  // const roomPictures = [
+  //   "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600",
+  //   "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
+  //   "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600",
+  // ];
 
   // listing details selectedRoomData
   // const listingData = selectedRoomData?.listing;
-  const listingData = {
-    ...selectedRoomData?.listing,
-    photos: roomPictures,
-  };
-  console.log({ listingData });
+  // const listingData = {
+  //   ...selectedRoomData?.listing,
+  //   photos: roomPictures,
+  // };
+
   // const listedAuthor = selectedRoomData?.listingAuthor;
 
   useEffect(() => {

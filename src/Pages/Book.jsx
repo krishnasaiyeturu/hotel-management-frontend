@@ -20,7 +20,6 @@ const Book = () => {
   const [calculatedPriceDetails, setCalculatedPriceDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  console.log({ location });
   const {data} = location?.state;
   // const [searchParams] = useSearchParams();
 
