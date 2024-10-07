@@ -18,6 +18,7 @@ import {
 } from "../../../utils/helper";
 
 import './FrontDesk.css';
+import moment from 'moment/moment';
 
 const FrontDesk = () => {
   const location = useLocation();
@@ -94,10 +95,12 @@ const FrontDesk = () => {
       return {
         ...room,
         bookings: room.bookings.map((bookingData) => {
+          const label = `${bookingData.name} (${moment(bookingData.checkin).format('DD-MM-YYYY')} - ${moment(bookingData.checkout).format('DD-MM-YYYY')})`;
           const { checkin, checkout} = getDaysInMonth(bookingData.checkin, bookingData.checkout, activeMonth);
           const randomNumber = getRandomNumber();
           return {
             ...bookingData,
+            label,
             checkin: checkin + (occupancyStatus === OCCUPANCY_STATUSES.CHECK_IN ? 0 : 1),
             color: colorPalette[randomNumber],
             backgroundColor: backgroundColorPalette[randomNumber],
@@ -214,9 +217,9 @@ const FrontDesk = () => {
                                 backgroundColor: currentBooking.backgroundColor,
                                 color: currentBooking.color,
                               }}
-                              title={currentBooking.name}
+                              title={currentBooking.label}
                             >
-                              {currentBooking.name}
+                              {currentBooking.label}
                             </div>
                           )}
                         </td>
