@@ -15,6 +15,7 @@ import {
 } from "../redux/actions/hotelsListActions";
 import toast from "react-hot-toast";
 import hotelLogo from "../../assets/ASPENLOGO.jpg";
+import { jwtDecode } from "jwt-decode";
 
 // Mock data for user options
 const userOptions = [
@@ -33,6 +34,9 @@ function AdminsNavbar() {
   const { pathname } = useLocation();
   const dispatch = useDispatch(); // Add dispatch
   // const admin = useSelector((state) => state.admin);
+  const token = localStorage.getItem('accessToken')
+  const user = jwtDecode(token);
+  console.log(user)
   const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
   const allHotels = useSelector((state) => state.admin.hotels.allHotels);
 
@@ -170,7 +174,7 @@ function AdminsNavbar() {
                 onClick={handleUserDropdownToggle}
               >
                 <FontAwesomeIcon icon={faUser} className="text-xl" />
-                <span className="ml-2 text-black">John Abraham</span>
+                <span className="ml-2 text-black">{user?.user?.name ? user.user.name : '-' }</span>
                 <FontAwesomeIcon icon={faCaretDown} className="ml-1" />
               </div>
 
