@@ -68,3 +68,27 @@ export const OCCUPANCY_STATUS_STYLES = [
 
 export const getRandomNumber = () => Math.floor(Math.random() * 5);
 
+
+export const getDaysInMonth = (checkIn, checkOut, month) => {
+  const checkInDate = new Date(checkIn);
+  const checkOutDate = new Date(checkOut);
+
+  const startOfMonth = new Date(checkInDate.getFullYear(), month - 1, 1);
+  const endOfMonth = new Date(checkInDate.getFullYear(), month, 0);
+
+  let checkin = startOfMonth.getDate();
+  let checkout = endOfMonth.getDate();
+
+  if (month === checkInDate.getMonth() + 1) {
+    checkin = checkInDate.getDate();
+  }
+
+  if (month === checkOutDate.getMonth() + 1) {
+    checkout = checkOutDate.getDate();
+  }
+
+  return { checkin, checkout };
+}
+
+
+

@@ -13,7 +13,8 @@ import {
   getRandomNumber,
   OCCUPANCY_STATUSES,
   OCCUPANCY_STATUS_LABELS,
-  OCCUPANCY_STATUS_STYLES
+  OCCUPANCY_STATUS_STYLES,
+  getDaysInMonth
 } from "../../../utils/helper";
 
 import './FrontDesk.css';
@@ -93,13 +94,11 @@ const FrontDesk = () => {
       return {
         ...room,
         bookings: room.bookings.map((bookingData) => {
-          const checkout = bookingData.checkin > bookingData.checkout
-            ? dayOptions[dayOptions.length - 1]
-            : bookingData.checkout;
+          const { checkin, checkout} = getDaysInMonth(bookingData.checkin, bookingData.checkout, activeMonth);
           const randomNumber = getRandomNumber();
           return {
             ...bookingData,
-            checkin: bookingData.checkin + (occupancyStatus === OCCUPANCY_STATUSES.CHECK_IN ? 0 : 1),
+            checkin: checkin + (occupancyStatus === OCCUPANCY_STATUSES.CHECK_IN ? 0 : 1),
             color: colorPalette[randomNumber],
             backgroundColor: backgroundColorPalette[randomNumber],
             checkout: checkout + (occupancyStatus === OCCUPANCY_STATUSES.CHECK_IN ? 0 : 1),
@@ -124,13 +123,6 @@ const FrontDesk = () => {
       search: `?${queryParams.toString()}`,
     }, { replace: true });
     setOccupancyStatus(status);
-  
-    // Additional navigation if the status is 'Bookings'
-    if (status === OCCUPANCY_STATUSES.BOOKINGS) {
-      navigate("/admin/front-desk/check-in", {
-        state: { bookingId: "670124e99ce37abfb1b613f2" },
-      });
-    }
   };
 
   const handlePageClick = ($event) => {
