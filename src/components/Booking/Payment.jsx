@@ -15,6 +15,7 @@ import axios from "axios";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { API } from "../../backend";
+import moment from "moment/moment";
 
 const Payment = ({ bookedData}) => {
   const [countries, setCountries] = useState([]);
