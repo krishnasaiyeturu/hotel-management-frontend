@@ -31,7 +31,7 @@ const RoomTypesManager = () => {
   return (
     <div className="bg-white p-6 rounded shadow-md mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-base font-semibold">Room Types Manager</h1>
+        <h1 className="text-base font-semibold">Room Categories</h1>
         <button
           onClick={() => navigateFunction("create-room")}
           className="bg-blue-500 roomStatusWiseButtons  text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"

@@ -150,7 +150,7 @@ function AdminsNavbar() {
         {/* Navigation Menu */}
         <nav
           className={`${
-            hideMenu ? "hidden" : "block"
+            hideMenu ? "hidden" : "block bg-[#c9d3e4]"
           } absolute top-16 left-0 w-full lg:static lg:block lg:w-auto`}
         >
           <ul className="flex flex-col lg:flex-row lg:items-center lg:gap-6 font-bold">
@@ -166,21 +166,34 @@ function AdminsNavbar() {
                   icon={faBell}
                   className="text-xl cursor-pointer"
                 />
+                {!hideMenu ? (
+                  <span className="ml-2 text-black hover:text-blue-600">
+                    Notifivations
+                  </span>
+                ) : null}
               </Link>
             </li>
             <li className="relative p-2 lg:p-0" ref={userDropdownRef}>
               <div
-                className="flex items-center cursor-pointer"
+                className="flex ml-2 items-center cursor-pointer"
                 onClick={handleUserDropdownToggle}
               >
-                <FontAwesomeIcon icon={faUser} className="text-xl" />
-                <span className="ml-2 text-black">{user?.user?.name ? user.user.name : '-' }</span>
-                <FontAwesomeIcon icon={faCaretDown} className="ml-1" />
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-xl hover:text-blue-600"
+                />
+                <span className="ml-2 text-black hover:text-blue-600">
+                  {user?.user?.name ? user.user.name : "-"}
+                </span>
+                <FontAwesomeIcon
+                  icon={faCaretDown}
+                  className="ml-1 hover:text-blue-600"
+                />
               </div>
 
               {/* User Dropdown Menu */}
               {userDropdownOpen && (
-                <ul className="absolute mt-2 bg-white shadow-lg border rounded-md py-2 right-0 w-48">
+                <ul className="absolute mt-2 bg-white shadow-lg border rounded-md py-2 left-0 w-48">
                   {userOptions.map((option) => (
                     <li
                       key={option.id}

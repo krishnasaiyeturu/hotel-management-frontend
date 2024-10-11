@@ -36,6 +36,22 @@ const adminsRouter = [
         ),
       },
       {
+        path: "room-categories",
+        element: (
+          <ProtectedRoute>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <RoomTypesManager />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "room-inventory",
         element: (
           <ProtectedRoute>

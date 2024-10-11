@@ -13,6 +13,7 @@ const menuItems = [
   { to: "dashboard", icon: faTachometerAlt, title: "Dashboard" },
   { to: "room-inventory", icon: faDoorOpen, title: "Room Inventory" },
   { to: "front-desk", icon: faClipboardCheck, title: "FrontDesk" },
+  { to: "room-categories", icon: faDoorOpen, title: "Room Categories" },
   { to: "transactions", icon: faMoneyBillWave, title: "Transactions" },
   { to: "agents", icon: faUserFriends, title: "Agents" },
   { to: "settings", icon: faCogs, title: "Settings" },

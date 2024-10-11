@@ -7,6 +7,9 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API } from "../../backend";
+import toast from "react-hot-toast";
 
 /* eslint-disable react/prop-types */
 const AvailablityCheckCard = () => {
@@ -60,7 +63,7 @@ const AvailablityCheckCard = () => {
     }
   };
 
-  const checkAvailability = () => {
+  const checkAvailability = async () => {
     const checkkingData = {
       checkIn: selectedDates[0]?.startDate,
       checkOut: selectedDates[0]?.endDate,
@@ -68,7 +71,20 @@ const AvailablityCheckCard = () => {
       adults: guestsNumber,
       children: childrenNumber,
     };
-    navigate("/rooms", { state: { data: checkkingData } });
+    try {
+      const res = await axios.post(
+        `${API}bookings/check-availability`,
+        checkkingData
+      );
+      navigate("/rooms", {
+        state: {
+          data: checkkingData,
+          availabilityTypes: res.data.availabilityTypes,
+        },
+      });
+    } catch (error) {
+      toast.error(error.response.data.message || "Error while Checking Availability !");
+    }
   };
 
   useEffect(() => {

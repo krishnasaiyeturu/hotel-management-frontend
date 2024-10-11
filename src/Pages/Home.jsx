@@ -18,7 +18,10 @@ const RoomsList = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const userFilters = location.state;
+  console.log({location})
+  const  userFilters  = location?.state?.data ? location?.state?.data : {};
+  const availabilityTypes = location?.state?.availabilityTypes ? location?.state?.availabilityTypes : [];
+
   // const [hasScroll, setHasScroll] = useState(false);
   // //  before tax price state
   // const [showBeforeTaxPrice, setShowBeforeTaxPrice] = useState(false);
@@ -96,23 +99,6 @@ const getAllRoomTypes = async () => {
   }
 };
 
-const getAvailableRoomTypes = async () => {
-  setLoading(true); // Start loading state
-  try {
-    const res = await axios.post(
-      `${API}bookings/check-availability`,
-      userFilters?.data
-    );
-    console.log("USER FILTERS ROOMS", { res });
-    setRoomTypes(res.data.availabilityTypes);
-    // toast.success("Available room types fetched successfully!");
-  } catch (error) {
-    console.error("Error user fetching available room types:", {error});
-    toast.error("Failed to fetch available room types. Please try again.");
-  } finally {
-    setLoading(false); // Stop loading state
-  }
-};
   // const handleScrollTracking = () => {
   //   const scrollPosition = window.scrollY;
   //   // checking if we scroll from top
@@ -146,11 +132,12 @@ const getAvailableRoomTypes = async () => {
   //     JSON.stringify(localStorage.setItem("category", "House"));
   //   }
   // }, [location.search]);
-
+console.log({userFilters})
   useEffect(() => {
     setLoading(true);
-    userFilters !== null ? getAvailableRoomTypes() : getAllRoomTypes();
-  }, [userFilters]);
+    userFilters !== null ? availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]) : getAllRoomTypes();
+    setLoading(false);
+  }, []);
 
   if (loading) {
     if (window.innerWidth <= 1080) {
@@ -215,7 +202,7 @@ const getAvailableRoomTypes = async () => {
                   to={`/rooms/${roomType._id}`} // Uncommented this line to enable linking
                   key={roomType._id}
                   className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto"
-                  state={{ data: userFilters?.data }}
+                  state={{ data: userFilters }}
                 >
                   <ListingPreviewCard
                     room={roomType}
