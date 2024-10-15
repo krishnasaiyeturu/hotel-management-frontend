@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-      <SEO />
+      <SEO addPostfixTitle={true} />
       <RouterProvider router={rootRouter} />
       <Toaster></Toaster>
     </>
