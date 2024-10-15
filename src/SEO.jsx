@@ -11,13 +11,13 @@ export const SEO = () => {
 
       <meta property="og:title" content="Aspen Grand Hotels in La Porte" />
       <meta property="og:description" content="Book your stay at Aspen Grand Hotels in La Porte for a memorable experience." />
-      <meta property="og:image" content="URL-to-your-image.jpg" />
+      <meta property="og:image" content="/src/assets/ASPENLOGO.jpg" />
       <meta property="og:url" content="https://www.aspenl.com/" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="Aspen Grand Hotels in La Porte" />
       <meta name="twitter:description" content="Comfortable accommodations and exceptional service await you at Aspen Grand Hotels." />
-      <meta name="twitter:image" content="URL-to-your-image.jpg" />
+      <meta name="twitter:image" content="/src/assets/ASPENLOGO.jpg" />
     </Helmet>
   );
 };
