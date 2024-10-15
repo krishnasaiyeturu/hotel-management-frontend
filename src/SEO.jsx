@@ -9,7 +9,7 @@ const DEFAULT_TITLE = 'Aspen Grand Hotels in LaPorte';
 const DEFAULT_DESCRIPTION = 'Welcome to ASPEN GRAND HOTELS, where elegance meets comfort in a stunning blend of modern luxury and timeless charm.';
 const DEFAULT_IMAGE_CARD = AspenLogo;
 const FAVICON_SOURCE = AspenLogo;
-const POSTFIX_TITLE = ' - My Website'
+const POSTFIX_TITLE = ` - ${MAIN_KEYWORDS}`
 
 export const SEO = ({
   title = DEFAULT_TITLE,
