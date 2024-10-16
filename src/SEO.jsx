@@ -3,13 +3,12 @@ import Head from 'react-helmet';
 import AspenLogo from './assets/ASPENLOGO.jpg';
 
 const DOMAIN = 'https://www.aspenl.com/';
-const MAIN_KEYWORDS = 'aspen, grand, hotels, laporte, business, rooms, texas';
+const MAIN_KEYWORDS = 'hotels in la porte, hotel in la porte, hotels in laporte, hotel in laporte, hotels in laporte texas, hotel in laporte texas, hotel in la porte texas, hotels in la porte texas, cheap hotels near laporte, luxary hotel in laporte, aspen grand hotel in laporte, aspen grand hotel in laporte texas, aspen, grand, hotel laporte, texas';
 
 const DEFAULT_TITLE = 'Aspen Grand Hotels in LaPorte';
 const DEFAULT_DESCRIPTION = 'Welcome to ASPEN GRAND HOTELS, where elegance meets comfort in a stunning blend of modern luxury and timeless charm.';
 const DEFAULT_IMAGE_CARD = AspenLogo;
 const FAVICON_SOURCE = AspenLogo;
-const POSTFIX_TITLE = ` - ${MAIN_KEYWORDS}`
 
 export const SEO = ({
   title = DEFAULT_TITLE,
