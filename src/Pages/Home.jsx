@@ -135,7 +135,7 @@ const getAllRoomTypes = async () => {
 console.log({userFilters})
   useEffect(() => {
     setLoading(true);
-    userFilters !== null ? availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]) : getAllRoomTypes();
+    JSON.stringify(userFilters) !== '{}' ? availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]) : getAllRoomTypes();
     setLoading(false);
   }, []);
 
@@ -159,7 +159,7 @@ console.log({userFilters})
   // });
   // console.log({ allListingData, formattedData });
   return (
-    <main className="max-w-screen-2xl xl:px-10 px-6  sm:px-16 mx-auto">
+    <main className="max-w-screen-2xl mb-8 xl:px-10 px-6  sm:px-16 mx-auto">
       <h1 className="text-center font-bold text-xl text-[#002d72] py-4">
         OUR ROOMS
       </h1>
