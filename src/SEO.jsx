@@ -3,7 +3,7 @@ import Head from 'react-helmet';
 import AspenLogo from './assets/ASPENLOGO.jpg';
 
 const DOMAIN = 'https://www.aspenl.com/';
-const MAIN_KEYWORDS = 'hotels, business, rooms, laporte, aspen, texas';
+const MAIN_KEYWORDS = 'aspen, grand, hotels, laporte, business, rooms, texas';
 
 const DEFAULT_TITLE = 'Aspen Grand Hotels in LaPorte';
 const DEFAULT_DESCRIPTION = 'Welcome to ASPEN GRAND HOTELS, where elegance meets comfort in a stunning blend of modern luxury and timeless charm.';
