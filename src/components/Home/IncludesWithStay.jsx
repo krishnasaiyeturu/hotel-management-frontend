@@ -1,27 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCoffee,
-  faBath,
   faTv,
   faLaptop,
   faWind,
   faBroom,
-  faFan,
   faWifi,
-  faGlassMartiniAlt,
+  faJugDetergent,
+  faDumbbell,
+  faSwimmingPool,
+  faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 
 const IncludedWithStay = () => {
   const amenities = [
-    { icon: faCoffee, label: "Coffee maker" },
-    { icon: faBath, label: "Bath amenities" },
+    { icon: faJugDetergent, label: "Guest Laundry" },
+    { icon: faSwimmingPool, label: "Swimming Pool" },
     { icon: faLaptop, label: "Work space" },
-    { icon: faFan, label: "Hair dryer" },
+    { icon: faBriefcase, label: "Business Center" },
     { icon: faBroom, label: "Daily housekeeping" },
     { icon: faTv, label: "Television" },
     { icon: faWind, label: "Air conditioning" },
     { icon: faWifi, label: "Free Wi-Fi" },
-    { icon: faGlassMartiniAlt, label: "Mini Bar" },
+    { icon: faDumbbell, label: "Fitness Center" },
   ];
 
   return (
@@ -33,7 +33,9 @@ const IncludedWithStay = () => {
         {amenities.map((amenity, index) => (
           <div key={index} className="flex flex-col items-center">
             <FontAwesomeIcon icon={amenity.icon} className="text-2xl mb-2" />
-            <span className="text-base font-semibold">{amenity.label}</span>
+            <span className="lg:text-sm md:text-sm sm:text-base text-xs font-semibold">
+              {amenity.label}
+            </span>
           </div>
         ))}
       </div>

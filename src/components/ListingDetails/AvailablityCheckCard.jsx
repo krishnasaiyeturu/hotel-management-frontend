@@ -1,52 +1,32 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
-import {  AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { DateRange } from "react-date-range";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-// date range selector css
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css";
-// import { useDispatch } from "react-redux";
-// import { newReservation } from "../../redux/actions/reservationsActions";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { API } from "../../backend";
-// import { parseISO } from "date-fns";
+import axios from "axios";
+import { API } from "../../backend";
+import toast from "react-hot-toast";
 
 /* eslint-disable react/prop-types */
 const AvailablityCheckCard = () => {
-  // refs
   const calendarRef = useRef();
   const dropdownRef = useRef();
-
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // handling outside click
   const { state: calendarState, setState: setCalendarState } =
     useOutsideClick(calendarRef);
   const { state: showDropdown, setState: setShowDropdown } =
     useOutsideClick(dropdownRef);
 
-  // guests state is here
   const [guestsNumber, setGuestsNumber] = useState(1);
   const [numberOfRooms, setNumberOfRooms] = useState(1);
   const [childrenNumber, setChildrenNumber] = useState(0);
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
-  // const [reservations, setReservations] = useState([]);
-  // // pricing state
-  // const [reservationBasePrice, setReservationBasePrice] = useState(
-  //   listingData?.basePrice
-  // );
-  // const [tax, setTax] = useState(
-  //   listingData?.priceAfterTaxes - listingData?.basePrice
-  // );
-  // const [authorEarned, setAuthorEarned] = useState(
-  //   listingData?.authorEarnedPrice
-  // );
 
-  // dates saving and showing to the dateRange calendar calculation here
   const [selectedDates, setSelectedDates] = useState([
     {
       startDate: new Date(),
@@ -54,56 +34,36 @@ const AvailablityCheckCard = () => {
       key: "selection",
     },
   ]);
-console.log({selectedDates})
-  // calculating how many nights guest is staying
-  // const [nightsStaying, setNightStaying] = useState(1);
-
-  // // console.log(nightsStaying, typeof nightsStaying, "nights");
-
-  // formatted dates to save in the db
   const formattedStartDate = selectedDates[0]?.startDate?.toISOString();
   const formattedEndDate = selectedDates[0]?.endDate?.toISOString();
 
-  // local dates from fromatted date to show in the ui
   const localStartDate = new Date(formattedStartDate).toLocaleDateString();
   const localEndDate = new Date(formattedEndDate).toLocaleDateString();
 
-  // // console.log(
-  //   new Date(formattedStartDate).toLocaleDateString(),
-  //   localStartDate,
-  //   localEndDate,
-  //   "dates"
-  // );
   // Function to handle date selection
-const handleSelect = (ranges) => {
-  console.log({ ranges });
-if(ranges?.key === "selection"){
-  setSelectedDates([ranges.selection]);
-}else {
-  const startDate = new Date(ranges.selection.startDate);
-  const endDate = new Date(ranges.selection.endDate);
-  // Reset time to compare only the date
-  startDate.setHours(0, 0, 0, 0);
-  endDate.setHours(0, 0, 0, 0);
-  // Check if the dates are the same
-  if (startDate.getTime() === endDate.getTime()) {
-    // Set end date to the next day
-    endDate.setDate(endDate.getDate() + 1);
-  }
-  console.log("Selected Start Date:", startDate);
-  console.log("Adjusted End Date:", endDate);
+  const handleSelect = (ranges) => {
+    if (ranges?.key === "selection") {
+      setSelectedDates([ranges.selection]);
+    } else {
+      const startDate = new Date(ranges.selection.startDate);
+      const endDate = new Date(ranges.selection.endDate);
+      // Reset time to compare only the date
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+      // Check if the dates are the same
+      if (startDate.getTime() === endDate.getTime()) {
+        // Set end date to the next day
+        endDate.setDate(endDate.getDate() + 1);
+      }
+      if (startDate.getTime() === endDate.getTime()) {
+        endDate.setDate(endDate.getDate() + 1);
+      }
 
-  // Set selected dates in the state
-  setSelectedDates([{ startDate, endDate,key: 'selection' }]);
-}
-};
+      setSelectedDates([{ startDate, endDate, key: "selection" }]);
+    }
+  };
 
-
-  // booking function
-  // const orderNumber = localStorage.getItem("orderId");
-  // const orderId = orderNumber ? orderNumber : 1;
-  // // console.log(orderId);
-  const checkAvailability = () => {
+  const checkAvailability = async () => {
     const checkkingData = {
       checkIn: selectedDates[0]?.startDate,
       checkOut: selectedDates[0]?.endDate,
@@ -111,140 +71,60 @@ if(ranges?.key === "selection"){
       adults: guestsNumber,
       children: childrenNumber,
     };
-    console.log({ checkkingData });
-    navigate("/rooms", { state: {data : checkkingData} });
+    try {
+      const res = await axios.post(
+        `${API}bookings/check-availability`,
+        checkkingData
+      );
+      navigate("/rooms", {
+        state: {
+          data: checkkingData,
+          availabilityTypes: res.data.availabilityTypes,
+        },
+      });
+    } catch (error) {
+      toast.error(error.response.data.message || "Error while Checking Availability !");
+    }
   };
-
-  // getting saved reservations data
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await axios.post(`${API}reservations/get_reservations`, {
-  //       id: listingData?._id,
-  //     });
-
-  //     if (res.status === 200) {
-  //       setReservations(res.data);
-  //     }
-  //     // // console.log(res, "reservation data");
-  //   })();
-  // }, [listingData?._id]);
-
-  // calculation of price for reservations
-  // side effects and logic
-  // useEffect(() => {
-  //   const daysInMiliSec = Math.ceil(
-  //     selectedDates[0]?.endDate - selectedDates[0]?.startDate
-  //   );
-  //   // turning miliseconds into days
-  //   const calculatedNights = daysInMiliSec / (1000 * 60 * 60 * 24);
-  //   const finalNights = calculatedNights === 0 ? 1 : calculatedNights;
-  //   const calculatedBasePrice = listingData?.basePrice * finalNights;
-  //   // tax is 14%
-  //   const calculatingTaxes = Math.round((calculatedBasePrice * 14) / 100);
-  //   // motel service charge is 3%
-  //   const calculateAuthorEarned =
-  //     calculatedBasePrice - Math.round((calculatedBasePrice * 3) / 100);
-
-  //   // setting states
-  //   setReservationBasePrice(calculatedBasePrice);
-  //   setTax(calculatingTaxes);
-  //   setAuthorEarned(calculateAuthorEarned);
-  //   setNightStaying(calculatedNights);
-  // }, [selectedDates, listingData?.basePrice]);
 
   useEffect(() => {
     setTotalGuest(guestsNumber + childrenNumber);
   }, [guestsNumber, childrenNumber]);
 
-  // reservation data
-  // useEffect(() => {
-  //   const data = {
-  //     listingData,
-  //     formattedStartDate,
-  //     formattedEndDate,
-  //     nightsStaying,
-  //     totalGuest,
-  //     reservationBasePrice,
-  //     tax,
-  //     authorEarned,
-  //   };
-  //   dispatch(newReservation(data));
-  // }, [
-  //   dispatch,
-  //   listingData,
-  //   formattedStartDate,
-  //   formattedEndDate,
-  //   nightsStaying,
-  //   totalGuest,
-  //   reservationBasePrice,
-  //   tax,
-  //   authorEarned,
-  // ]);
-
-  // Calculate the disabled date ranges for each object
-  // const disabledDateRanges = reservations?.map((obj) => ({
-  //   startDate: parseISO(obj.checkIn),
-  //   endDate: parseISO(obj.checkOut),
-  // }));
-
-  // // console.log(disabledDateRanges);
-
-  // Generate an array of individual dates within disabledDateRanges
-  // const disabledDates = disabledDateRanges.reduce((dates, range) => {
-  //   const startDate = new Date(range.startDate);
-  //   const endDate = new Date(range.endDate);
-  //   const currentDate = new Date(startDate);
-
-  //   while (currentDate <= endDate) {
-  //     dates.push(new Date(currentDate));
-  //     currentDate.setDate(currentDate.getDate() + 1);
-  //   }
-
-  //   return dates;
-  // }, []);
-
   return (
     <>
-      <div className="grid place-items-center min-h-[100px]">
-        <div className="min-h-[100px] rounded-xl border border-[#dddddd] shadow-customShadow p-6 bg-white">
-          <div className="grid grid-cols-3 justify-between items-center gap-4">
+      <div className="grid place-items-center min-h-[100px] sm:pt-10 pb-6">
+        <div className="min-h-[100px] rounded-xl border border-[#dddddd] shadow-customShadow p-4 md:p-6 bg-white w-full max-w-md sm:max-w-2xl md:max-w-2xl lg:max-w-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Calendar Section */}
-            {/* {!calendarState && ( */}
-            <div className="rounded-tl-lg rounded-tr-lg border border-[#b9b9b9] w-full min-h-[60px] relative flex">
+            <div className="rounded-lg border border-[#b9b9b9] w-full min-h-[60px] flex">
               <div
-                onClick={() => {
-                  setCalendarState(true);
-                }}
+                onClick={() => setCalendarState(true)}
                 className="grid grid-cols-2 cursor-pointer w-full"
               >
                 <div className="px-3 py-3">
-                  <p className="text-[10px] text-black font-semibold uppercase">
+                  <p className="text-[10px] md:text-xs text-black font-semibold uppercase">
                     check-in
                   </p>
                   <p className="text-sm text-[#222222]">{localStartDate}</p>
                 </div>
                 <div className="px-3 py-3 border-l border-[#b9b9b9]">
-                  <p className="text-[10px] text-black font-semibold uppercase">
+                  <p className="text-[10px] md:text-xs text-black font-semibold uppercase">
                     checkout
                   </p>
                   <p className="text-sm text-[#222222]">{localEndDate}</p>
                 </div>
               </div>
             </div>
-            {/* )} */}
 
             {/* Guest Selection */}
-            {/* {!calendarState && ( */}
-            {/* <> */}
             <div
-              onClick={() => {
-                setShowDropdown((prev) => !prev);
-              }}
+              onClick={() => setShowDropdown((prev) => !prev)}
               ref={dropdownRef}
-              className="rounded-bl-lg rounded-br-lg border border-[#b9b9b9] w-full min-h-[50px] cursor-pointer flex items-center justify-between px-3 py-3"
+              className="rounded-lg border border-[#b9b9b9] w-full min-h-[50px] cursor-pointer flex items-center justify-between px-3 py-3"
             >
               <div className="flex flex-col">
-                <p className="text-[10px] text-black font-semibold uppercase">
+                <p className="text-[10px] md:text-xs text-black font-semibold uppercase">
                   guests
                 </p>
                 <p className="text-sm text-[#222222]">
@@ -260,161 +140,118 @@ if(ranges?.key === "selection"){
               </div>
             </div>
 
-            {/* {!showDropdown && !calendarState && ( */}
-            <div className="flex flex-col">
+            {/* Find Rooms Button */}
+            <div className="flex justify-center sm:justify-end">
               <button
                 onClick={checkAvailability}
-                className="p-3 bg-[#1b4281] hover:bg-[#002662] text-white text-sm font-medium rounded-md"
+                className="p-3 bg-[#1b4281] hover:bg-[#002662] text-white text-sm font-medium rounded-md w-full sm:w-auto"
               >
                 Find Rooms
               </button>
             </div>
-            {/* )} */}
-            {/* </>
-            )} */}
           </div>
 
           {/* Dropdown for Guests */}
           {showDropdown && (
             <div
               ref={dropdownRef}
-              className="min-h-[240px] w-60 shadow-lg border absolute right-1/3 z-[90] bg-white px-4 py-5 rounded-md"
+              className="min-h-[240px] w-60 shadow-lg border absolute right-0 sm:right-1/3 z-[90] bg-white px-4 py-5 rounded-md"
             >
-              <div className=" flex flex-col gap-5">
-                <div className=" flex felx-row items-center justify-between">
-                  {/*  number of Rooms here */}
-                  <span>
-                    <p className=" text-base text-[#222222] font-medium">
-                      Rooms
-                    </p>
-                  </span>
-                  {/* icons */}
-                  <span className=" flex flex-row-reverse items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setNumberOfRooms((prev) => prev + 1);
-                      }}
-                      disabled={numberOfRooms === 4}
-                      className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <AiOutlinePlus size={16} />
-                    </button>
-                    <p className=" w-[30px] flex justify-center">
-                      {numberOfRooms}
-                    </p>
-
-                    <button
-                      onClick={() => {
-                        setNumberOfRooms((prev) => (prev > 0 ? prev - 1 : 0));
-                      }}
-                      disabled={numberOfRooms === 0}
-                      className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <AiOutlineMinus size={16} />
-                    </button>
-                  </span>
-                </div>
-                <div className=" flex felx-row items-center justify-between">
-                  {/* adults number here */}
-                  <span>
-                    <p className=" text-base text-[#222222] font-medium">
-                      Adults
-                    </p>
-                    <p className=" text-sm text-[#313131]">Age 13+</p>
-                  </span>
-                  {/* icons */}
-                  <span className=" flex flex-row-reverse items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setGuestsNumber((prev) => prev + 1);
-                      }}
-                      disabled={totalGuest === 8}
-                      className={` p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20`}
-                    >
-                      <AiOutlinePlus size={16} />
-                    </button>
-                    <p className=" w-[30px] flex justify-center">
-                      {guestsNumber}
-                    </p>
-
-                    <button
-                      onClick={() => {
-                        setGuestsNumber((prev) => (prev > 0 ? prev - 1 : 0));
-                      }}
-                      disabled={guestsNumber === 1}
-                      className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <AiOutlineMinus size={16} />
-                    </button>
-                  </span>
-                </div>
-                <div className=" flex felx-row items-center justify-between">
-                  {/* children number here */}
-                  <span>
-                    <p className=" text-base text-[#222222] font-medium">
-                      Children
-                    </p>
-                    <p className=" text-sm text-[#313131]">Ages 2-12</p>
-                  </span>
-                  {/* icons */}
-                  <span className=" flex flex-row-reverse items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setChildrenNumber((prev) => prev + 1);
-                      }}
-                      disabled={totalGuest === 8}
-                      className=" p-2 rounded-full border border-[#c0c0c0] opacity-90 disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <AiOutlinePlus size={16} />
-                    </button>
-                    <p className=" w-[30px] flex justify-center">
-                      {childrenNumber}
-                    </p>
-
-                    <button
-                      onClick={() => {
-                        setChildrenNumber((prev) => (prev > 0 ? prev - 1 : 0));
-                      }}
-                      disabled={childrenNumber === 0}
-                      className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <AiOutlineMinus size={16} />
-                    </button>
-                  </span>
-                </div>
+              {/* Rooms Section */}
+              <div className="flex items-center justify-between mb-3">
+                <span>
+                  <p className="text-base text-[#222222] font-medium">Rooms</p>
+                </span>
+                <span className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setNumberOfRooms((prev) => (prev > 0 ? prev - 1 : 0))
+                    }
+                    disabled={numberOfRooms === 1}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{numberOfRooms}</p>
+                  <button
+                    onClick={() => setNumberOfRooms((prev) => prev + 1)}
+                    disabled={numberOfRooms === 4}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
+                  </button>
+                </span>
               </div>
-              {/* close btn */}
-              <div className=" flex justify-end absolute bottom-3 right-2">
-                <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                  }}
-                  className="underline text-base text-[#222222] font-medium px-3 py-2 rounded-lg hover:bg-[#f5f5f5]"
-                >
-                  Close
-                </button>
+
+              {/* Adults Section */}
+              <div className="flex items-center justify-between mb-3">
+                <span>
+                  <p className="text-base text-[#222222] font-medium">Adults</p>
+                  <p className="text-sm text-[#313131]">Age 13+</p>
+                </span>
+                <span className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setGuestsNumber((prev) => (prev > 0 ? prev - 1 : 0))
+                    }
+                    disabled={guestsNumber === 1}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{guestsNumber}</p>
+                  <button
+                    onClick={() => setGuestsNumber((prev) => prev + 1)}
+                    disabled={totalGuest === 8}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
+                  </button>
+                </span>
+              </div>
+
+              {/* Children Section */}
+              <div className="flex items-center justify-between">
+                <span>
+                  <p className="text-base text-[#222222] font-medium">
+                    Children
+                  </p>
+                  <p className="text-sm text-[#313131]">Ages 2-12</p>
+                </span>
+                <span className="flex items-center gap-2">
+                  <button
+                    onClick={() =>
+                      setChildrenNumber((prev) => (prev > 0 ? prev - 1 : 0))
+                    }
+                    disabled={childrenNumber === 0}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlineMinus size={16} />
+                  </button>
+                  <p className="w-[30px] text-center">{childrenNumber}</p>
+                  <button
+                    onClick={() => setChildrenNumber((prev) => prev + 1)}
+                    disabled={totalGuest === 8}
+                    className="p-2 rounded-full border border-[#c0c0c0] disabled:opacity-20"
+                  >
+                    <AiOutlinePlus size={16} />
+                  </button>
+                </span>
               </div>
             </div>
           )}
-          {/* calendar & date picker */}
-          {!calendarState ? null : (
+
+          {/* Calendar Dropdown */}
+          {calendarState && (
             <div
               ref={calendarRef}
-              className="absolute left-1/4 border-b-[1.2px] border-neutral-200 shadow-md sm:translate-x-[30%] sm:translate-y-[0%] md:translate-x-[-30%] lg:translate-x-[-20%] xl:translate-x-0 xl:translate-y-0"
+              className="absolute z-50 mt-3 sm:mt-5 shadow-md rounded-lg border bg-white overflow-hidden"
             >
               <DateRange
-                rangeColors={["#262626"]}
-                date={new Date()}
-                editableDateInputs={true}
-                onChange={handleSelect}
-                moveRangeOnFirstSelection={false}
                 ranges={selectedDates}
-                showMonthAndYearPickers={false}
-                // disabledDates={disabledDates}
-                // isDayBlocked={(date) => isDateDisabled(date)}
-                direction="vertical"
-                showDateDisplay={false}
+                onChange={handleSelect}
                 minDate={new Date()}
+                rangeColors={["#1b4281"]}
               />
             </div>
           )}

@@ -16,7 +16,6 @@ import { parseISO } from "date-fns";
 
 /* eslint-disable react/prop-types */
 const ReservationCard = ({ listingData, filters }) => {
-  console.log({ listingData });
   // refs
   const calendarRef = useRef();
   const dropdownRef = useRef();
@@ -38,7 +37,7 @@ const ReservationCard = ({ listingData, filters }) => {
     filters?.rooms ? filters?.rooms : 1
   );
   const [childrenNumber, setChildrenNumber] = useState(
-    filters?.children ? filters?.children : 1
+    filters?.children ? filters?.children : 0
   );
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
   const [reservations, setReservations] = useState([]);
@@ -85,7 +84,6 @@ const ReservationCard = ({ listingData, filters }) => {
   // );
   // Function to handle date selection
 const handleSelect = (ranges) => {
-  console.log({ ranges });
   if (ranges?.key === "selection") {
     setSelectedDates([ranges.selection]);
   } else {
@@ -99,9 +97,6 @@ const handleSelect = (ranges) => {
       // Set end date to the next day
       endDate.setDate(endDate.getDate() + 1);
     }
-    console.log("Selected Start Date:", startDate);
-    console.log("Adjusted End Date:", endDate);
-
     // Set selected dates in the state
     setSelectedDates([{ startDate, endDate, key: "selection" }]);
   }
@@ -325,7 +320,7 @@ const handleSelect = (ranges) => {
                     onClick={() => {
                       setNumberOfRooms((prev) => prev - 1);
                     }}
-                    disabled={numberOfRooms === 0}
+                    disabled={numberOfRooms === 1}
                     className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
                   >
                     <AiOutlineMinus size={16} />

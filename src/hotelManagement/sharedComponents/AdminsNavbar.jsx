@@ -14,6 +14,8 @@ import {
   setActiveHotel,
 } from "../redux/actions/hotelsListActions";
 import toast from "react-hot-toast";
+import hotelLogo from "../../assets/ASPENLOGO.jpg";
+import { jwtDecode } from "jwt-decode";
 
 // Mock data for user options
 const userOptions = [
@@ -31,10 +33,13 @@ function AdminsNavbar() {
   // const [activeHotel, setActiveHotel] = useState(allHotels[0]);
   const { pathname } = useLocation();
   const dispatch = useDispatch(); // Add dispatch
-  const admin = useSelector((state) => state.admin);
+  // const admin = useSelector((state) => state.admin);
+  const token = localStorage.getItem('accessToken')
+  const user = jwtDecode(token);
+  console.log(user)
   const activeHotel = useSelector((state) => state.admin.hotels.activeHotel);
   const allHotels = useSelector((state) => state.admin.hotels.allHotels);
-  console.log({ admin, allHotels, activeHotel });
+
   const userDropdownRef = useRef(null);
   const hotelDropdownRef = useRef(null);
   const handleHotelSelect = (hotel) => {
@@ -88,9 +93,16 @@ function AdminsNavbar() {
         {/* Logo (Hotel Name) on the left */}
         {/* Dropdown for Hotels */}
         <div className="flex items-center">
-          <h2 className="text-2xl font-bold text-[#001f53]">
-            ASPEN GRAND HOTELS
-          </h2>
+          <div className="flex">
+            <img
+              src={hotelLogo}
+              alt="Hotel logo"
+              className="w-6 h-6 mr-4 mt-1"
+            />
+            <h2 className="text-2xl font-bold text-[#001f53]">
+              ASPEN GRAND HOTELS
+            </h2>
+          </div>
 
           {/* Dropdown beside hotel name */}
           <div className="relative ml-4" ref={hotelDropdownRef}>
@@ -138,7 +150,7 @@ function AdminsNavbar() {
         {/* Navigation Menu */}
         <nav
           className={`${
-            hideMenu ? "hidden" : "block"
+            hideMenu ? "hidden" : "block bg-[#c9d3e4]"
           } absolute top-16 left-0 w-full lg:static lg:block lg:w-auto`}
         >
           <ul className="flex flex-col lg:flex-row lg:items-center lg:gap-6 font-bold">
@@ -154,21 +166,34 @@ function AdminsNavbar() {
                   icon={faBell}
                   className="text-xl cursor-pointer"
                 />
+                {!hideMenu ? (
+                  <span className="ml-2 text-black hover:text-blue-600">
+                    Notifivations
+                  </span>
+                ) : null}
               </Link>
             </li>
             <li className="relative p-2 lg:p-0" ref={userDropdownRef}>
               <div
-                className="flex items-center cursor-pointer"
+                className="flex ml-2 items-center cursor-pointer"
                 onClick={handleUserDropdownToggle}
               >
-                <FontAwesomeIcon icon={faUser} className="text-xl" />
-                <span className="ml-2 text-black">John Abraham</span>
-                <FontAwesomeIcon icon={faCaretDown} className="ml-1" />
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-xl hover:text-blue-600"
+                />
+                <span className="ml-2 text-black hover:text-blue-600">
+                  {user?.user?.name ? user.user.name : "-"}
+                </span>
+                <FontAwesomeIcon
+                  icon={faCaretDown}
+                  className="ml-1 hover:text-blue-600"
+                />
               </div>
 
               {/* User Dropdown Menu */}
               {userDropdownOpen && (
-                <ul className="absolute mt-2 bg-white shadow-lg border rounded-md py-2 right-0 w-48">
+                <ul className="absolute mt-2 bg-white shadow-lg border rounded-md py-2 left-0 w-48">
                   {userOptions.map((option) => (
                     <li
                       key={option.id}

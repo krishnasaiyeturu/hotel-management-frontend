@@ -12,6 +12,7 @@ import RoomCreatorAndEditor from "../pages/roomInventory/RoomCreaterAndEditer";
 import FrontDesk from "../pages/frontDesk/FrontDesk";
 import ProtectedRoute from "./ProtectedRoute";
 import CheckInAndCheckOut from "../pages/frontDesk/CheckInAndCheckOut";
+import RoomTypesManager from "../pages/roomInventory/RoomTypesManager";
 
 const adminsRouter = [
   {
@@ -35,6 +36,22 @@ const adminsRouter = [
         ),
       },
       {
+        path: "room-categories",
+        element: (
+          <ProtectedRoute>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <RoomTypesManager />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "room-inventory",
         element: (
           <ProtectedRoute>
@@ -46,6 +63,22 @@ const adminsRouter = [
               }
             >
               <RoomInventory />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "room-inventory/types",
+        element: (
+          <ProtectedRoute>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <RoomTypesManager />
             </Suspense>
           </ProtectedRoute>
         ),
@@ -99,7 +132,7 @@ const adminsRouter = [
         ),
       },
       {
-        path: "front-desk/check-in",
+        path: "front-desk/guest",
         element: (
           <ProtectedRoute>
             <Suspense
@@ -115,7 +148,7 @@ const adminsRouter = [
         ),
       },
       {
-        path: "front-desk/check-out",
+        path: "front-desk/guest",
         element: (
           <ProtectedRoute>
             <Suspense

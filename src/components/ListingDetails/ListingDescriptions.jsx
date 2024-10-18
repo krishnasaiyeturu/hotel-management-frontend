@@ -11,8 +11,6 @@ const ListingDescriptions = ({ listingData }) => {
   const longitude = -95.02791;
   const latLong = [latitude, longitude];
   // const latLongNaN = isNaN(latitude) || isNaN(longitude);
-  // // console.log(latLongNaN, "lat long");
-  console.log(listingData?.amenities);
   return (
     <>
       <div className=" flex flex-row justify-between items-center max-h-16">
