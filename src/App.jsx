@@ -8,12 +8,12 @@ import { SEO } from "./SEO";
 
 function App() {
   const googleTagId = import.meta.env.VITE_APP_GOOGLE_TAG_ID;
-
-  if (!googleTagId) {
-    toast.warn("Google Analytics Id is missing");
-  }
   useEffect(() => {
-    loadGtagScript(googleTagId);
+      if (!googleTagId) {
+        toast.error("Google Analytics Id is missing");
+      }else {
+        loadGtagScript(googleTagId);
+      }
   }, [googleTagId]);
 
   return (

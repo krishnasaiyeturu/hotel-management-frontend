@@ -1,81 +1,198 @@
+import { useState } from "react";
+import { API } from "../../backend";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { customerSignUp } from "../../hotelManagement/redux/actions/customerActions";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 const SignUp = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [isFormValid, setIsFormValid] = useState(true);
+  const dispatch = useDispatch(); // For redux dispatch
+  const navigate = useNavigate(); // To redirect users after sign-up
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      username: formData.username ? "" : "Username is required",
+      email: validateEmail(formData.email) ? "" : "Enter a valid email",
+      password: validatePassword(formData.password)
+        ? ""
+        : "Password must be at least 6 characters with 1 capital letter, 1 number, and 1 special character",
+    };
+
+    setErrors(newErrors);
+
+    const formIsValid =
+      !newErrors.username && !newErrors.email && !newErrors.password;
+    setIsFormValid(formIsValid);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (errors[name]) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    }
+    if (!isFormValid) {
+      setIsFormValid(true);
+    }
+  };
+
+  const createCustomer = async () => {
+    try {
+      const response = await axios.post(`${API}auth/register`, {
+        name: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log("Customer Sign Up",{response})
+      const token = response.data.token;
+      const decodedToken = jwtDecode(token);
+      dispatch(customerSignUp(decodedToken.user));
+      if (token) {
+        localStorage.setItem("accessToken", token);
+        toast.success("Sign-up successful!");
+      }
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error during sign-up!");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    validateForm();
+
+    if (isFormValid) {
+      createCustomer();
+    } else {
+      console.log("Form has errors");
+    }
+  };
+
   return (
     <div className="h-[100vh] grid grid-cols-1 lg:grid-cols-2">
-      {/* left Side: Hotel Image */}
       <div className="hidden lg:block relative">
         <img
-          src="https://images.pexels.com/photos/7746950/pexels-photo-7746950.jpeg?auto=compress&cs=tinysrgb&w=600" // Replace with the image you want to use
+          src="https://images.pexels.com/photos/7746950/pexels-photo-7746950.jpeg?auto=compress&cs=tinysrgb&w=600"
           alt="Hotel"
           className="object-cover w-full h-[100vh]"
         />
       </div>
-      {/* right Side: Form */}
+
       <div className="bg-gray-100 flex flex-col justify-center px-10 py-6">
         <div className="max-w-md w-full mx-auto">
-          {/* Logo */}
           <h2 className="text-left text-2xl font-bold text-navy-600">
             ASPEN GRAND HOTELS
           </h2>
-
-          {/* Welcome Back */}
-          <h1 className="text-xl font-bold mt-6 text-navy-600">Welcome Back</h1>
+          <h1 className="text-xl font-bold mt-6 text-navy-600">Sign Up</h1>
           <p className="text-gray-600 mb-6">Please fill your details below.</p>
 
-          {/* Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Username */}
+            <div>
+              <label htmlFor="username" className="text-sm text-gray-700">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded mt-1"
+              />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+              )}
+            </div>
+
+            {/* Email */}
             <div>
               <label htmlFor="email" className="text-sm text-gray-700">
                 Email
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
+            {/* Password */}
             <div>
               <label htmlFor="password" className="text-sm text-gray-700">
                 Password
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="********"
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded mt-1"
               />
+              <p
+                className={`text-sm mt-1 ${
+                  errors.password ? "text-red-500" : "text-gray-500"
+                }`}
+              >
+                Password must be at least 6 characters, 1 capital letter, 1
+                number, and 1 special character.
+              </p>
             </div>
-
-            {/* Remember and Forgot password */}
-            {/* <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 text-navy-600"
-                />
-                <label htmlFor="remember" className="ml-2 text-gray-700">
-                  Remember me
-                </label>
-              </div>
-              <a href="/" className="text-sm text-[#33568f] hover:underline">
-                Forgot password?
-              </a>
-            </div> */}
 
             {/* Sign Up Button */}
             <div>
               <button
                 type="submit"
-                className="w-full py-3 bg-[#1b4281] hover:bg-[#002662] bg-navy-600 text-white font-bold rounded hover:bg-navy-700 transition duration-300"
+                className={`w-full py-3 text-white font-bold rounded transition duration-300 ${
+                  isFormValid
+                    ? "bg-[#1b4281] hover:bg-[#002662] cursor-pointer"
+                    : "bg-[#94a8c8] cursor-not-allowed opacity-50"
+                }`}
+                disabled={!isFormValid}
               >
                 Sign Up
               </button>
             </div>
           </form>
 
-          {/* Sign up link */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
               Already have an account?{" "}

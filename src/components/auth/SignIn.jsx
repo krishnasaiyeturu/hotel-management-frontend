@@ -27,11 +27,9 @@ const SignIn = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     // Reset error messages
     setEmailError("");
     setPasswordError("");
-
     // Validate inputs
     let valid = true;
     if (!adminEmail) {

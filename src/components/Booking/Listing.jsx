@@ -4,7 +4,7 @@ import { AiFillStar } from "react-icons/ai";
 const Listing = ({ listingData, calculatedPriceDetails }) => {
 
   return (
-    <div className="relative">
+    <div className="relative z-40">
       <div className="border border-[#dddddd] rounded-xl p-6 sticky top-24 max-h-[85vh] bg-white overflow-y-auto">
         {/* Images Section */}
         <div className="grid grid-cols-3 gap-2">
