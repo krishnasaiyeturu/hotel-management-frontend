@@ -8,7 +8,7 @@ import { useDateFormatting } from "../../hooks/useDateFormatting";
 //   useStripe,
 // } from "@stripe/react-stripe-js";
 import { PulseLoader } from "react-spinners";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,9 +16,11 @@ import axios from "axios";
 // import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { API } from "../../backend";
 import moment from "moment/moment";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
+import { redirectToStripe } from "../../utils/helper";
 
-const Payment = ({ bookedData }) => {
+const Payment = ({ bookedData, listingId }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -33,8 +35,8 @@ const Payment = ({ bookedData }) => {
   });
   const [errors, setErrors] = useState({});
   const [sessionId, setSessionId] = useState();
-  const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-  const  stripePromise = loadStripe(stripePublicKey);
+
+  let customer = useSelector((state) => state.admin.customer.customerDetails);
 
   // const user = useSelector((state) => state.user.userDetails);
   const newReservationData = useSelector(
@@ -58,6 +60,7 @@ const Payment = ({ bookedData }) => {
     lastName: "",
     email: "",
   });
+  const dispatch = useDispatch();
 
   const updateErrors = (name) => {
     const updatedErrors = errors;
@@ -82,19 +85,6 @@ const Payment = ({ bookedData }) => {
     ? newReservationData.guestNumber
     : bookedData?.adults + bookedData?.children;
 
-    const redirectToStripe = async (sessionId) => {
-      try {
-        const stripe = await stripePromise;
-        const result = await stripe.redirectToCheckout({ sessionId });
-
-        if (result.error) {
-          console.log(result.error);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
   const fetchCountries = async () => {
     try {
       const countriesUrl =
@@ -109,6 +99,11 @@ const Payment = ({ bookedData }) => {
   useEffect(() => {
     fetchCountries();
   }, []);
+
+  // Fetch customer data on component mount
+  useEffect(() => {
+    dispatch(fetchCustomerData());
+  }, [dispatch]);
 
   // Fetch states based on selected country
   const fetchStates = async (country) => {
@@ -179,6 +174,7 @@ const Payment = ({ bookedData }) => {
       zipCode: addressInfo?.zipcode,
     },
   };
+
   const bookRooms = async () => {
     try {
       const bookingUrl = `${API}bookings/`;
@@ -191,24 +187,37 @@ const Payment = ({ bookedData }) => {
     }
   };
 
-  const payAndBookRoom = async () => {
-    //  const stripe = await stripePromise;
-    if (!validateForm()) return;
+  const getSessionId = async() =>{
     try {
       const bookingUrl = `${API}bookings/`;
-      const bookingResponse = await axios.post(bookingUrl, bookingInformation);
-      console.log({ bookingResponse });
+      return await axios.post(bookingUrl, bookingInformation);
+    } catch(error){
+      return error;
+    }
+  }
+  const payment = async () => {
+    try {
+      const bookingResponse = getSessionId();
       setSessionId(bookingResponse?.data?.sessionId);
-      redirectToStripe(bookingResponse?.data?.sessionId)
-      //  const result = await stripe.redirectToCheckout({
-      //    sessionId: bookingResponse?.data?.sessionId,
-      //  });
-      //  console.log({result})
-      // toast.success("Booking is Successful Please check your email !!");
-      // navigate("/");
+      redirectToStripe(bookingResponse?.data?.sessionId);
     } catch (error) {
       console.error("Error BOOKING RESPONSE", error);
       toast.error(error?.response?.data?.message);
+    }
+  };
+  const payAndBookRoom = async () => {
+    //  const stripe = await stripePromise;
+    if (!validateForm()) return;
+    if (customer === null) {
+      // localStorage.setItem("formData", JSON.stringify(bookingInformation));
+      const url =`/book/stays/${listingId}`
+      const bookingResponse = await getSessionId();
+      console.log({ bookingResponse });
+      navigate("/sign-up", {
+        state: { from: url, sessionId: bookingResponse?.data?.sessionId },
+      });
+    } else {
+      payment();
     }
   };
 

@@ -1,3 +1,5 @@
+import { loadStripe } from "@stripe/stripe-js";
+
 export const generateDates = (month, year) => {
   let days = [];
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -99,4 +101,19 @@ export const formatDate = (dateString) => {
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
+};
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const stripePromise = loadStripe(stripePublicKey);
+
+export const redirectToStripe = async (sessionId) => {
+  try {
+    const stripe = await stripePromise;
+    const result = await stripe.redirectToCheckout({ sessionId });
+
+    if (result.error) {
+      console.log(result.error);
+    }
+  } catch (error) {
+    console.log({error});
+  }
 };

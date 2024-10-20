@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../../backend";
 import { parseISO } from "date-fns";
+import { clearSelectedRoom, setSelectedRoom } from "../../hotelManagement/redux/actions/customerSelectedRoomTypeWithDetails";
 
 /* eslint-disable react/prop-types */
 const ReservationCard = ({ listingData, filters }) => {
@@ -107,7 +108,7 @@ const handleSelect = (ranges) => {
   // const orderId = orderNumber ? orderNumber : 1;
   // // console.log(orderId);
   const handleBooking = () => {
-    const checkkingData = {
+    const checkingData = {
       checkIn: selectedDates[0]?.startDate,
       checkOut: selectedDates[0]?.endDate,
       rooms: numberOfRooms,
@@ -116,7 +117,12 @@ const handleSelect = (ranges) => {
       roomTypeId: listingData?._id,
       listingData: listingData,
     };
-    navigate(`/book/stays/${guestsNumber}`, { state: { data: checkkingData } });
+    // Clear any previously selected room data
+    dispatch(clearSelectedRoom());
+
+    // Set the new selected room data in Redux
+    dispatch(setSelectedRoom(checkingData));
+    navigate(`/book/stays/${listingData?._id}`);
   };
 
   // getting saved reservations data

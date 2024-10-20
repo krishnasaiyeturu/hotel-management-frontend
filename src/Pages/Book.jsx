@@ -8,7 +8,7 @@ import Listing from "../components/Booking/Listing";
 // import { loadStripe } from "@stripe/stripe-js";
 // import { Elements } from "@stripe/react-stripe-js";
 import { FadeLoader } from "react-spinners";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getOneListingRoomsDetails } from "../redux/actions/houseActions";
 import toast from "react-hot-toast";
 import { API } from "../backend";
@@ -20,7 +20,9 @@ const Book = () => {
   const [calculatedPriceDetails, setCalculatedPriceDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const {data} = location?.state;
+  let selectedRoomDetails = useSelector(
+    (state) => state.admin.customerSelectedRoomTypeWithDetails.selectedRoom
+  );
   // const [searchParams] = useSearchParams();
 
   //   making the search params in an obj and store in a vairable
@@ -29,10 +31,13 @@ const Book = () => {
   const navigate = useNavigate();
 
   const params = useParams();
-  const listingId = params?.id;
+  const listingIdFromState = location?.state?.from?.match(
+    /\/book\/stays\/([^/]+)/
+  )?.[1]; // Extracts the ID from the string if it matches
+  const listingId = listingIdFromState || params?.id; // Use the ID from state if available, otherwise use params.id
 
   const dispatch = useDispatch();
-
+console.log({ listingId });
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -63,29 +68,30 @@ const Book = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-    const calculateFinalPrice = async () => {
-      try {
-        const guestDetails = {
-          checkIn: data?.checkIn,
-          checkOut: data?.checkOut,
-          hotelType: data?.roomTypeId,
-          rooms: data?.rooms,
-        };
-        0;
-        const claculatePriceUrl = `${API}bookings/calculate-total-price`;
-        const response = await axios.post(claculatePriceUrl, guestDetails);
-        setCalculatedPriceDetails(response?.data || {});
-      } catch (error) {
-        toast.error(
-          error?.response?.data?.message || "Error calculating final price !"
-        );
-        console.error("Error GET FINAL PRICE RESPONSE", error);
-      }
-    };
+  const calculateFinalPrice = async () => {
+    try {
+      console.log({ selectedRoomDetails });
+      const guestDetails = {
+        checkIn: selectedRoomDetails?.checkIn,
+        checkOut: selectedRoomDetails?.checkOut,
+        hotelType: selectedRoomDetails?.roomTypeId,
+        rooms: selectedRoomDetails?.rooms,
+      };
+      0;
+      const claculatePriceUrl = `${API}bookings/calculate-total-price`;
+      const response = await axios.post(claculatePriceUrl, guestDetails);
+      setCalculatedPriceDetails(response?.data || {});
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Error calculating final price !"
+      );
+      console.error("Error GET FINAL PRICE RESPONSE", error);
+    }
+  };
 
-    useEffect(() => {
-      calculateFinalPrice();
-    }, [data]);
+  useEffect(() => {
+    calculateFinalPrice();
+  }, [selectedRoomDetails]);
 
   if (isLoading) {
     return (
@@ -116,13 +122,13 @@ const Book = () => {
       <section className=" grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 pt-10 px-8 md:px-10">
         {/* left side data => reservations data */}
         <div className="order-2 md:order-1">
-          <Payment bookedData={data} />
+          <Payment bookedData={selectedRoomDetails} listingId={listingId} />
         </div>
         {/* right side data => listing details */}
         <div className="order-1 md:order-2">
           <Listing
             calculatedPriceDetails={calculatedPriceDetails}
-            listingData={data?.listingData}
+            listingData={selectedRoomDetails?.listingData}
           />
         </div>
       </section>

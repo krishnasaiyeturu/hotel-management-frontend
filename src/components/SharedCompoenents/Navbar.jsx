@@ -4,21 +4,21 @@ import {
   faClose,
   faUser,
   faCaretDown,
-} from "@fortawesome/free-solid-svg-icons"; // Import the caret down icon
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useLocation, useNavigate } from "react-router-dom"; // Use React Router for navigation
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import hotelLogo from "../../assets/ASPENLOGO.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
 
 function Navbar() {
   const [hideMenu, setHideMenu] = useState(true);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown
-  const dispatch = useDispatch(); // Dispatch for Redux actions
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
   let customer = useSelector((state) => state.admin.customer.customerDetails);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const dropdownRef = useRef(null); // Ref for the dropdown
+  const dropdownRef = useRef(null);
 
   // Fetch customer data on component mount
   useEffect(() => {

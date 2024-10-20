@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { API } from "../../backend";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { customerSignUp } from "../../hotelManagement/redux/actions/customerActions";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { redirectToStripe } from "../../utils/helper";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -21,8 +23,24 @@ const SignUp = () => {
   });
 
   const [isFormValid, setIsFormValid] = useState(true);
-  const dispatch = useDispatch(); // For redux dispatch
-  const navigate = useNavigate(); // To redirect users after sign-up
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const toastShownRef = useRef(false); // useRef to track if toast has been shown
+
+  // Other state variables...
+
+  useEffect(() => {
+    if (
+      location.state?.from.includes("/book/stays") &&
+      !toastShownRef.current
+    ) {
+      console.log("Test");
+      toast.success("Please Sign Up For Payment !");
+      toastShownRef.current = true; // Mark the toast as shown
+    }
+  }, [location]);
 
   // Validation functions
   const validateEmail = (email) => {
@@ -71,7 +89,7 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log("Customer Sign Up",{response})
+      console.log("Customer Sign Up", { response });
       const token = response.data.token;
       const decodedToken = jwtDecode(token);
       dispatch(customerSignUp(decodedToken.user));
@@ -79,9 +97,16 @@ const SignUp = () => {
         localStorage.setItem("accessToken", token);
         toast.success("Sign-up successful!");
       }
-      navigate("/");
+      if (location.state?.from.includes("/book/stays")) {
+        redirectToStripe(location?.state?.sessionId);
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Error during sign-up!");
+    } finally {
+      // const previousPath = location.state?.from.includes("/book/stays");
+      navigate(location.state?.from);
     }
   };
 
