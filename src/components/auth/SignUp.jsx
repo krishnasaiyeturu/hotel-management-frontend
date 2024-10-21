@@ -29,8 +29,15 @@ const SignUp = () => {
 
   const toastShownRef = useRef(false); // useRef to track if toast has been shown
 
-  // Other state variables...
+  // Redirect if accessToken exists in localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/"); // If token exists, redirect to the homepage
+    }
+  }, [navigate]);
 
+  // Other state variables...
   useEffect(() => {
     if (
       location.state?.from.includes("/book/stays") &&
@@ -89,14 +96,14 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log("Customer Sign Up", { response });
+      console.log("Customer Sign Up", { response,location });
       const token = response.data.token;
       const decodedToken = jwtDecode(token);
       dispatch(customerSignUp(decodedToken.user));
       if (token) {
         localStorage.setItem("accessToken", token);
-        toast.success("Sign-up successful!");
       }
+      toast.success("Sign-up successful!");
       if (location.state?.from.includes("/book/stays")) {
         redirectToStripe(location?.state?.sessionId);
       } else {
@@ -104,9 +111,6 @@ const SignUp = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Error during sign-up!");
-    } finally {
-      // const previousPath = location.state?.from.includes("/book/stays");
-      navigate(location.state?.from);
     }
   };
 

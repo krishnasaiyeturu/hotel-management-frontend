@@ -10,3 +10,8 @@ export const amenitiesList = [
   "Outdoor dining area",
   "First aid kit"
 ]
+
+export const ROLES = {
+  admin: 'admin',
+  guest: 'guest',
+}

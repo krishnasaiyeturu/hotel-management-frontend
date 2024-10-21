@@ -9,7 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import hotelLogo from "../../assets/ASPENLOGO.jpg";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
+import { customerLogOut, fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
+import toast from "react-hot-toast";
 
 function Navbar() {
   const [hideMenu, setHideMenu] = useState(true);
@@ -44,9 +45,15 @@ function Navbar() {
   };
 
   const handleOptionClick = (option) => {
-    // Add your handling logic here for each option
-    console.log(option);
-    setDropdownOpen(false);
+if (option === "Logout") {
+  // Perform the logout process
+  dispatch(customerLogOut()); // Dispatch the customer logout action
+  // navigate("/admin/sign-in"); // Redirect to sign-in page after logout
+  toast.success("Successfully logged out!"); // Optional: Show a success message
+} else {
+  console.log(option);
+}
+setDropdownOpen(false); 
   };
 
   return (

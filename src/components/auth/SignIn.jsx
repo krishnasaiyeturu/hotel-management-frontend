@@ -7,6 +7,7 @@ import { API } from "../../backend";
 import { adminLogIn } from "../../hotelManagement/redux/actions/adminActions";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { ROLES } from "../../hotelManagement/modules/constants";
 
 const SignIn = () => {
   const [adminEmail, setAdminEmail] = useState("");
@@ -52,23 +53,37 @@ const SignIn = () => {
     }
 
     // Proceed with API call
-    try {
-      const response = await axios.post(`${API}auth/login`, {
-        email: adminEmail,
-        password: adminPassword,
-      });
-      const token = response.data.token;
-      const decodedToken = jwtDecode(token);
-      dispatch(adminLogIn(decodedToken.user));
-      if (token) {
-        localStorage.setItem("accessToken", token);
-        toast.success("Successfully Logged in!");
-      }
-      setIsLoading(false);
-      navigate("/admin/dashboard");
-    } catch (error) {
-      toast.error(error.response.data.message || "Error while logging in !");
-    }
+   try {
+     const response = await axios.post(`${API}auth/login`, {
+       email: adminEmail,
+       password: adminPassword,
+     });
+
+     const token = response.data.token;
+     const decodedToken = jwtDecode(token);
+     console.log({ decodedToken });
+
+     // Dispatch the login action to update the state
+     dispatch(adminLogIn(decodedToken.user));
+
+     if (token) {
+       // Save the token in localStorage
+       localStorage.setItem("accessToken", token);
+       toast.success("Successfully Logged in!");
+     }
+     // Check the user's role and navigate accordingly
+     if (decodedToken.user.role === ROLES.admin) {
+       // Navigate to admin dashboard if the role is 'admin'
+       navigate("/admin/dashboard");
+     } else if (decodedToken.user.role === ROLES.guest) {
+       // Navigate to home or guest-specific page if the role is 'guest'
+       navigate("/");
+     }
+     setIsLoading(false); // Stop the loading indicator
+   } catch (error) {
+     setIsLoading(false);
+     toast.error(error.response.data.message || "Error while logging in !");
+   }
   };
 
   return (

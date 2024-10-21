@@ -19,6 +19,7 @@ import moment from "moment/moment";
 // import { loadStripe } from "@stripe/stripe-js";
 import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
 import { redirectToStripe } from "../../utils/helper";
+import { setSelectedRoom } from "../../hotelManagement/redux/actions/customerSelectedRoomTypeWithDetails";
 
 const Payment = ({ bookedData, listingId }) => {
   const [countries, setCountries] = useState([]);
@@ -34,7 +35,6 @@ const Payment = ({ bookedData, listingId }) => {
     zipcode: "",
   });
   const [errors, setErrors] = useState({});
-  const [sessionId, setSessionId] = useState();
 
   let customer = useSelector((state) => state.admin.customer.customerDetails);
 
@@ -42,7 +42,7 @@ const Payment = ({ bookedData, listingId }) => {
   const newReservationData = useSelector(
     (state) => state.reservations?.newReservationsData
   );
-  console.log({ sessionId });
+  console.log({newReservationData})
   // const listingData = useSelector(
   //   (state) => state.house.listingDetails.listing
   // );
@@ -145,6 +145,7 @@ const Payment = ({ bookedData, listingId }) => {
     if (!addressInfo.city) newErrors.city = "City is required.";
     if (!addressInfo.zipcode) newErrors.zipcode = "Zip code is required.";
     setErrors(newErrors);
+    console.log("Validate form");
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
@@ -187,37 +188,37 @@ const Payment = ({ bookedData, listingId }) => {
     }
   };
 
-  const getSessionId = async() =>{
+  const getSessionId = async () => {
+    dispatch(setSelectedRoom(newReservationData));
     try {
       const bookingUrl = `${API}bookings/`;
       return await axios.post(bookingUrl, bookingInformation);
-    } catch(error){
-      return error;
-    }
-  }
-  const payment = async () => {
-    try {
-      const bookingResponse = getSessionId();
-      setSessionId(bookingResponse?.data?.sessionId);
-      redirectToStripe(bookingResponse?.data?.sessionId);
     } catch (error) {
-      console.error("Error BOOKING RESPONSE", error);
       toast.error(error?.response?.data?.message);
     }
   };
+  // const payment = async () => {
+  //   try {
+  //     const bookingResponse = await getSessionId();
+  //     setSessionId(bookingResponse?.data?.sessionId);
+  //     redirectToStripe(bookingResponse?.data?.sessionId);
+  //   } catch (error) {
+  //     toast.error(error?.response?.data?.message);
+  //   }
+  // };
   const payAndBookRoom = async () => {
     //  const stripe = await stripePromise;
+    console.log("1");
     if (!validateForm()) return;
+    console.log("2", customer);
+    const url = `/book/stays/${listingId}`;
+    const bookingResponse = await getSessionId();
     if (customer === null) {
-      // localStorage.setItem("formData", JSON.stringify(bookingInformation));
-      const url =`/book/stays/${listingId}`
-      const bookingResponse = await getSessionId();
-      console.log({ bookingResponse });
-      navigate("/sign-up", {
-        state: { from: url, sessionId: bookingResponse?.data?.sessionId },
-      });
+        navigate("/sign-up", {
+          state: { from: url, sessionId: bookingResponse?.data?.sessionId },
+        });
     } else {
-      payment();
+        redirectToStripe(bookingResponse?.data?.sessionId);
     }
   };
 
@@ -502,6 +503,7 @@ const Payment = ({ bookedData, listingId }) => {
         <button
           className="bg-[#002d72] mt-5 p-2 text-white text-white transition-opacity px-4 rounded-md rounded"
           onClick={payAndBookRoom}
+          disabled={Object.keys(errors).length > 0}
         >
           Pay & Book
         </button>

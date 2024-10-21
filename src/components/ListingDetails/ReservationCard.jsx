@@ -119,7 +119,6 @@ const handleSelect = (ranges) => {
     };
     // Clear any previously selected room data
     dispatch(clearSelectedRoom());
-
     // Set the new selected room data in Redux
     dispatch(setSelectedRoom(checkingData));
     navigate(`/book/stays/${listingData?._id}`);
