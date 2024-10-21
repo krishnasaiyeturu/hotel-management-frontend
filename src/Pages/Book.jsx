@@ -91,7 +91,7 @@ console.log({ listingId });
 
   useEffect(() => {
     calculateFinalPrice();
-  }, [selectedRoomDetails]);
+  }, []);
 
   if (isLoading) {
     return (

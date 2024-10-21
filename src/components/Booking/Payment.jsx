@@ -20,6 +20,7 @@ import moment from "moment/moment";
 import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
 import { redirectToStripe } from "../../utils/helper";
 import { setSelectedRoom } from "../../hotelManagement/redux/actions/customerSelectedRoomTypeWithDetails";
+import { GUEST_PAYMENT_TYPES } from "../../hotelManagement/modules/constants";
 
 const Payment = ({ bookedData, listingId }) => {
   const [countries, setCountries] = useState([]);
@@ -42,7 +43,7 @@ const Payment = ({ bookedData, listingId }) => {
   const newReservationData = useSelector(
     (state) => state.reservations?.newReservationsData
   );
-  console.log({newReservationData})
+  console.log({ newReservationData, bookedData });
   // const listingData = useSelector(
   //   (state) => state.house.listingDetails.listing
   // );
@@ -179,6 +180,7 @@ const Payment = ({ bookedData, listingId }) => {
   const bookRooms = async () => {
     try {
       const bookingUrl = `${API}bookings/`;
+      bookingInformation.paymentType = GUEST_PAYMENT_TYPES.offline;
       await axios.post(bookingUrl, bookingInformation);
       toast.success("Booking is Successful Please check your email !!");
       navigate("/");
@@ -188,37 +190,29 @@ const Payment = ({ bookedData, listingId }) => {
     }
   };
 
-  const getSessionId = async () => {
-    dispatch(setSelectedRoom(newReservationData));
-    try {
-      const bookingUrl = `${API}bookings/`;
-      return await axios.post(bookingUrl, bookingInformation);
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    }
-  };
-  // const payment = async () => {
-  //   try {
-  //     const bookingResponse = await getSessionId();
-  //     setSessionId(bookingResponse?.data?.sessionId);
-  //     redirectToStripe(bookingResponse?.data?.sessionId);
-  //   } catch (error) {
-  //     toast.error(error?.response?.data?.message);
-  //   }
-  // };
   const payAndBookRoom = async () => {
-    //  const stripe = await stripePromise;
-    console.log("1");
     if (!validateForm()) return;
-    console.log("2", customer);
-    const url = `/book/stays/${listingId}`;
-    const bookingResponse = await getSessionId();
-    if (customer === null) {
+    try {
+      console.log("1", bookingInformation);
+      const bookingUrl = `${API}bookings/`;
+      bookingInformation.paymentType = GUEST_PAYMENT_TYPES.online;
+      const bookingResponse = await axios.post(bookingUrl, bookingInformation);
+      console.log("current 2", { bookingResponse });
+      if (customer === null) {
+        console.log("current 3");
+        const url = `/book/stays/${listingId || newReservationData?.listingId}`;
         navigate("/sign-up", {
           state: { from: url, sessionId: bookingResponse?.data?.sessionId },
         });
-    } else {
+      } else {
+        console.log("current 4");
         redirectToStripe(bookingResponse?.data?.sessionId);
+      }
+    } catch (error) {
+      console.log("catch block 5");
+      toast.error(error?.response?.data?.message);
+    } finally {
+      dispatch(setSelectedRoom(newReservationData));
     }
   };
 
@@ -226,9 +220,8 @@ const Payment = ({ bookedData, listingId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    // if (!user) {
     bookRooms();
-    // }
+    dispatch(setSelectedRoom(newReservationData));
   };
   return (
     <div>

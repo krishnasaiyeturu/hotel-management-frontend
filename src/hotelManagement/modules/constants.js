@@ -15,3 +15,8 @@ export const ROLES = {
   admin: 'admin',
   guest: 'guest',
 }
+
+export const GUEST_PAYMENT_TYPES = {
+  online: 'online',
+  offline: 'offline',
+}

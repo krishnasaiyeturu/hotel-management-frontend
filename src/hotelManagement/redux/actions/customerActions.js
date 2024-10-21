@@ -29,9 +29,7 @@ export const getCustomerDetails = (customerDetails) => {
 // Action for customer logout
 export const customerLogOut = () => (dispatch) => {
   // Optionally remove tokens or session data if required
-  localStorage.removeItem("customerAccessToken");
-  localStorage.removeItem("customerRefreshToken");
-
+  localStorage.removeItem("accessToken");
   dispatch({
     type: "CUSTOMER_LOG_OUT",
   });

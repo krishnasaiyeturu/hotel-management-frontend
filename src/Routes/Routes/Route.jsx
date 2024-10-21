@@ -34,6 +34,8 @@ import SignUp from "../../components/auth/SignUp";
 import Gallery from "../../components/Home/Gallery";
 import ErrorBoundary from "../errorHandling/ErrorBoundary";
 import HomeAmenities from "../../components/amenities/HomeAmenities";
+import PaymentSuccess from "../../hotelManagement/payments/PaymentSuccess";
+import PaymentFailed from "../../hotelManagement/payments/PaymentFailed";
 
 
 const ListingHouseStepOneAddress = lazy(() =>
@@ -268,6 +270,22 @@ const router = [
     element: (
       <ErrorBoundary>
         <SignUp />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/payment/suc",
+    element: (
+      <ErrorBoundary>
+        <PaymentSuccess />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/payment/fail",
+    element: (
+      <ErrorBoundary>
+        <PaymentFailed />
       </ErrorBoundary>
     ),
   },
