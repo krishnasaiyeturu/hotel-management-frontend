@@ -65,12 +65,11 @@ console.log({ listingId });
     // });
   }, []);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, behavior: "smooth" });
+  // }, []);
   const calculateFinalPrice = async () => {
     try {
-      console.log({ selectedRoomDetails });
       const guestDetails = {
         checkIn: selectedRoomDetails?.checkIn,
         checkOut: selectedRoomDetails?.checkOut,

@@ -43,7 +43,6 @@ const Payment = ({ bookedData, listingId }) => {
   const newReservationData = useSelector(
     (state) => state.reservations?.newReservationsData
   );
-  console.log({ newReservationData, bookedData });
   // const listingData = useSelector(
   //   (state) => state.house.listingDetails.listing
   // );
@@ -146,7 +145,6 @@ const Payment = ({ bookedData, listingId }) => {
     if (!addressInfo.city) newErrors.city = "City is required.";
     if (!addressInfo.zipcode) newErrors.zipcode = "Zip code is required.";
     setErrors(newErrors);
-    console.log("Validate form");
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
@@ -185,34 +183,27 @@ const Payment = ({ bookedData, listingId }) => {
       toast.success("Booking is Successful Please check your email !!");
       navigate("/");
     } catch (error) {
-      console.error("Error BOOKING RESPONSE", error);
       toast.error(error?.response?.data?.message);
     }
   };
 
   const payAndBookRoom = async () => {
     if (!validateForm()) return;
+    // dispatch(setSelectedRoom(newReservationData));
     try {
-      console.log("1", bookingInformation);
       const bookingUrl = `${API}bookings/`;
       bookingInformation.paymentType = GUEST_PAYMENT_TYPES.online;
       const bookingResponse = await axios.post(bookingUrl, bookingInformation);
-      console.log("current 2", { bookingResponse });
       if (customer === null) {
-        console.log("current 3");
         const url = `/book/stays/${listingId || newReservationData?.listingId}`;
         navigate("/sign-up", {
           state: { from: url, sessionId: bookingResponse?.data?.sessionId },
         });
       } else {
-        console.log("current 4");
         redirectToStripe(bookingResponse?.data?.sessionId);
       }
     } catch (error) {
-      console.log("catch block 5");
       toast.error(error?.response?.data?.message);
-    } finally {
-      dispatch(setSelectedRoom(newReservationData));
     }
   };
 
@@ -498,7 +489,7 @@ const Payment = ({ bookedData, listingId }) => {
           onClick={payAndBookRoom}
           disabled={Object.keys(errors).length > 0}
         >
-          Pay & Book
+          Pay Now
         </button>
       </div>
       <div>

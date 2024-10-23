@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import hotelLogo from "../../assets/ASPENLOGO.jpg";
+import hotelLogo from "../../assets/logos/aspenLogo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { customerLogOut, fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
 import toast from "react-hot-toast";
@@ -65,8 +65,8 @@ setDropdownOpen(false);
           title="ASPEN GRAND HOTELS"
           onClick={() => navigate("/")}
         >
-          <img src={hotelLogo} alt="Hotel logo" className="w-6 h-6 mr-4 mt-1" />
-          <h2 className="text-2xl font-bold text-[#001f53]">
+          <img src={hotelLogo} alt="Hotel logo" className="w-14 h-14 mr-4" />
+          <h2 className="text-2xl my-auto font-bold text-[#001f53]">
             ASPEN GRAND HOTELS
           </h2>
         </div>

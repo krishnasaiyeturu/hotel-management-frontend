@@ -18,7 +18,6 @@ const RoomsList = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  console.log({location})
   const  userFilters  = location?.state?.data ? location?.state?.data : {};
   const availabilityTypes = location?.state?.availabilityTypes ? location?.state?.availabilityTypes : [];
 
@@ -196,19 +195,24 @@ console.log({userFilters})
         <section className="py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mx-auto gap-x-7 gap-y-10">
           {roomTypes?.length ? (
             roomTypes.map((roomType) => {
-              return (
-                // This will be a link to see full details of the roomType
+              return roomType.availableStatus ? (
+                // Link component for available rooms
                 <Link
-                  to={`/rooms/${roomType._id}`} // Uncommented this line to enable linking
+                  to={`/rooms/${roomType._id}`}
                   key={roomType._id}
                   className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto"
                   state={{ data: userFilters }}
                 >
-                  <ListingPreviewCard
-                    room={roomType}
-                    // showBeforeTaxPrice={showBeforeTaxPrice}
-                  />
+                  <ListingPreviewCard room={roomType} />
                 </Link>
+              ) : (
+                // Non-clickable div for unavailable rooms
+                <div
+                  key={roomType._id}
+                  className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto cursor-not-allowed"
+                >
+                  <ListingPreviewCard room={roomType} />
+                </div>
               );
             })
           ) : (
