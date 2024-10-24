@@ -2,8 +2,6 @@
 import { AiFillStar } from "react-icons/ai";
 
 const ListingPreviewCard = ({ room }) => {
-  // const taxes = Math.round((room?.basePrice * 14) / 100);
-  // const priceAfterTaxes = room?.basePrice + taxes;
          
   return (
     <>
@@ -23,16 +21,12 @@ const ListingPreviewCard = ({ room }) => {
         <div className=" flex flex-col gap-1">
           <p className="text-sm text-[#222222] font-medium">
             {room?.name}
-            {/* {room?.hotel?.location?.city}, {room?.hotel?.location?.country} */}
           </p>
-          {/* {showBeforeTaxPrice && (
-            <p className="text-sm text-[#717171]">
-              After tax ${priceAfterTaxes}{" "}
-              <span className=" font-normal">night</span>
-            </p>
-          )} */}
           <p className="text-sm text-[#222222] font-semibold">
             ${room?.pricePerNight} <span className=" font-normal">night</span>
+            {!room?.availableStatus ? (
+              <span className="ml-3 font-bold text-red-500">(Sold Out)</span>
+            ) : null}
           </p>
         </div>
         {/* ratings / new status */}

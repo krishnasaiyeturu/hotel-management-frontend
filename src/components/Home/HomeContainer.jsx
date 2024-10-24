@@ -1,11 +1,12 @@
 // import React from 'react'
 import AboutUs from './AboutUs'
-import Home from '../../Pages/Home'
+// import Home from '../../Pages/Home'
 import IncludedWithStay from './IncludesWithStay'
 import AdditionalInformation from './AdditionalInformation'
 import HomeCarousel from './HomeCarousel'
 import AvailablityCheckCard from '../ListingDetails/AvailablityCheckCard'
 import HotelBenefits from '../amenities/HotelBenefits'
+import HomePageRoomsList from './HomePageRoomsList'
 
 const HomeContainer = () => {
   return (
@@ -23,7 +24,8 @@ const HomeContainer = () => {
       </div>
       <HotelBenefits />
       <IncludedWithStay />
-      <Home />
+      {/* <Home /> */}
+      <HomePageRoomsList />
       <AboutUs />
       <AdditionalInformation />
     </div>

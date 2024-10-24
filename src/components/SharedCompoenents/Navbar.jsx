@@ -85,7 +85,7 @@ setDropdownOpen(false);
             hideMenu ? "hidden" : "block"
           } absolute top-16 left-0 w-full lg:static lg:block lg:w-auto`}
         >
-          <ul className="flex flex-col lg:flex-row lg:items-center lg:gap-6 font-bold">
+          <ul className="flex flex-col bg-gray-200 lg:flex-row lg:items-center lg:gap-6 font-bold">
             <li className="p-2 lg:p-0">
               <Link
                 className={`${
