@@ -134,7 +134,7 @@ const getAllRoomTypes = async () => {
 console.log({userFilters})
   useEffect(() => {
     setLoading(true);
-    JSON.stringify(userFilters) !== '{}' ? availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]) : getAllRoomTypes();
+    JSON.stringify(userFilters) !== '{}' && availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]);
     setLoading(false);
   }, []);
 

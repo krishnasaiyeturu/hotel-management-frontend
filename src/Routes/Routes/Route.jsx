@@ -36,6 +36,7 @@ import ErrorBoundary from "../errorHandling/ErrorBoundary";
 import HomeAmenities from "../../components/amenities/HomeAmenities";
 import PaymentSuccess from "../../hotelManagement/payments/PaymentSuccess";
 import PaymentFailed from "../../hotelManagement/payments/PaymentFailed";
+import HomePageRoomsList from "../../components/Home/HomePageRoomsList";
 
 
 const ListingHouseStepOneAddress = lazy(() =>
@@ -147,6 +148,23 @@ const router = [
               }
             >
               <RoomsList />
+            </Suspense>
+          </ErrorBoundary>
+        ),
+        // loader: ({ params }) => fetch(`${API}house/listing/${params.id}`),
+      },
+      {
+        path: "/roomsList",
+        element: (
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className=" flex justify-center items-center w-full h-[60dvh]">
+                  <FadeLoader color="#000" />
+                </div>
+              }
+            >
+              <HomePageRoomsList />
             </Suspense>
           </ErrorBoundary>
         ),
