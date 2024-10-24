@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import lottie from "lottie-web";
-import paymentFailed from "../../assets/animations/paymentFailed.json"
+import paymentFailed from "../../../public/animations/paymentFailed.json"
 import { useNavigate } from "react-router-dom";
 
 const PaymentFailed = () => {

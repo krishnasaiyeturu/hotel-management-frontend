@@ -1,7 +1,7 @@
 import  { useEffect, useRef } from "react";
 import lottie from "lottie-web";
 import { useNavigate } from "react-router-dom";
-import PaymentSuccessAnimation from "../../assets/animations/paymentSuccess.json";
+import PaymentSuccessAnimation from "../../../public/animations/paymentSuccess.json";
 
 const PaymentSuccess = () => {
   // Mock data
