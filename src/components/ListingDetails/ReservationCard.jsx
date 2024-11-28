@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../../backend";
 import { parseISO } from "date-fns";
+import { setSelectedRoom } from "../../hotelManagement/redux/actions/customerSelectedRoomTypeWithDetails";
 
 /* eslint-disable react/prop-types */
 const ReservationCard = ({ listingData, filters }) => {
-  console.log({ listingData });
   // refs
   const calendarRef = useRef();
   const dropdownRef = useRef();
@@ -38,7 +38,7 @@ const ReservationCard = ({ listingData, filters }) => {
     filters?.rooms ? filters?.rooms : 1
   );
   const [childrenNumber, setChildrenNumber] = useState(
-    filters?.children ? filters?.children : 1
+    filters?.children ? filters?.children : 0
   );
   const [totalGuest, setTotalGuest] = useState(guestsNumber + childrenNumber);
   const [reservations, setReservations] = useState([]);
@@ -85,7 +85,6 @@ const ReservationCard = ({ listingData, filters }) => {
   // );
   // Function to handle date selection
 const handleSelect = (ranges) => {
-  console.log({ ranges });
   if (ranges?.key === "selection") {
     setSelectedDates([ranges.selection]);
   } else {
@@ -99,9 +98,6 @@ const handleSelect = (ranges) => {
       // Set end date to the next day
       endDate.setDate(endDate.getDate() + 1);
     }
-    console.log("Selected Start Date:", startDate);
-    console.log("Adjusted End Date:", endDate);
-
     // Set selected dates in the state
     setSelectedDates([{ startDate, endDate, key: "selection" }]);
   }
@@ -112,7 +108,7 @@ const handleSelect = (ranges) => {
   // const orderId = orderNumber ? orderNumber : 1;
   // // console.log(orderId);
   const handleBooking = () => {
-    const checkkingData = {
+    const checkingData = {
       checkIn: selectedDates[0]?.startDate,
       checkOut: selectedDates[0]?.endDate,
       rooms: numberOfRooms,
@@ -121,7 +117,11 @@ const handleSelect = (ranges) => {
       roomTypeId: listingData?._id,
       listingData: listingData,
     };
-    navigate(`/book/stays/${guestsNumber}`, { state: { data: checkkingData } });
+    // Clear any previously selected room data
+    // dispatch(clearSelectedRoom());
+    // Set the new selected room data in Redux
+    dispatch(setSelectedRoom(checkingData));
+    navigate(`/book/stays/${listingData?._id}`);
   };
 
   // getting saved reservations data
@@ -325,7 +325,7 @@ const handleSelect = (ranges) => {
                     onClick={() => {
                       setNumberOfRooms((prev) => prev - 1);
                     }}
-                    disabled={numberOfRooms === 0}
+                    disabled={numberOfRooms === 1}
                     className=" p-2 rounded-full border border-[#c0c0c0] disabled:cursor-not-allowed disabled:opacity-20"
                   >
                     <AiOutlineMinus size={16} />

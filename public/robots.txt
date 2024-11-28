@@ -1,0 +1,10 @@
+# Block all web crawlers from accessing any pages
+User-agent: *
+Disallow:
+
+# Allow all web crawlers to access all content
+User-agent: *
+Disallow:
+
+# Specify the location of the sitemap
+Sitemap: https://www.aspenl.com/sitemap.xml

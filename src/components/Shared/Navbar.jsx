@@ -111,7 +111,7 @@ const Navbar = () => {
             {/* searchbar */}
             {inUserProfile || inUserDashboard || inHostHomesLandingPage ? (
               // if user is in dahsboard
-              <div>{inUserDashboard && <MiniNavbar />} </div>
+            <div>{inUserDashboard && <MiniNavbar />} </div>
             ) : (
               <div className="mx-auto lg:block hidden"></div>
             )}

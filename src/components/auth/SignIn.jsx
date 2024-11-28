@@ -7,37 +7,83 @@ import { API } from "../../backend";
 import { adminLogIn } from "../../hotelManagement/redux/actions/adminActions";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { ROLES } from "../../hotelManagement/modules/constants";
 
 const SignIn = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const validateEmail = (email) => {
+    // Regular expression for basic email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      const response = await axios.post(`${API}auth/login`, {
-        email: adminEmail,
-        password: adminPassword,
-      });
-      const token = response.data.token;
-      const decodedToken = jwtDecode(token);
-      console.log({ decodedToken });
-      dispatch(adminLogIn(decodedToken.user));
-      if (token) {
-        localStorage.setItem("accessToken", token);
-        toast.success("Succesfully Logged in!");
-      }
-      setIsLoading(false);
-      navigate("/admin/dashboard");
-    } catch (error) {
-      setIsLoading(false);
-      toast.warn("Network error, try again!");
+    // Reset error messages
+    setEmailError("");
+    setPasswordError("");
+    // Validate inputs
+    let valid = true;
+    if (!adminEmail) {
+      setEmailError("Email is required.");
+      valid = false;
+    } else if (!validateEmail(adminEmail)) {
+      setEmailError("Please enter a valid email address.");
+      valid = false;
     }
+
+    if (!adminPassword) {
+      setPasswordError("Password is required.");
+      valid = false;
+    }
+
+    // If validations fail, stop execution
+    if (!valid) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Proceed with API call
+   try {
+     const response = await axios.post(`${API}auth/login`, {
+       email: adminEmail,
+       password: adminPassword,
+     });
+
+     const token = response.data.token;
+     const decodedToken = jwtDecode(token);
+     console.log({ decodedToken });
+
+     // Dispatch the login action to update the state
+     dispatch(adminLogIn(decodedToken.user));
+
+     if (token) {
+       // Save the token in localStorage
+       localStorage.setItem("accessToken", token);
+       toast.success("Successfully Logged in!");
+     }
+     // Check the user's role and navigate accordingly
+     if (decodedToken.user.role === ROLES.admin) {
+       // Navigate to admin dashboard if the role is 'admin'
+       navigate("/admin/dashboard");
+     } else if (decodedToken.user.role === ROLES.guest) {
+       // Navigate to home or guest-specific page if the role is 'guest'
+       navigate("/");
+     }
+     setIsLoading(false); // Stop the loading indicator
+   } catch (error) {
+     setIsLoading(false);
+     toast.error(error.response.data.message || "Error while logging in !");
+   }
   };
 
   return (
@@ -61,11 +107,21 @@ const SignIn = () => {
               <input
                 id="email"
                 value={adminEmail}
-                onChange={(e) => setAdminEmail(e.target.value)}
+                onChange={(e) => {
+                  if (emailError) {
+                    setEmailError("");
+                  }
+                  setAdminEmail(e.target.value);
+                }}
                 type="email"
                 placeholder="email"
-                className="w-full p-3 border border-gray-300 rounded mt-1"
+                className={`w-full p-3 border rounded mt-1 ${
+                  emailError ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {emailError && (
+                <p className="text-red-500 text-sm">{emailError}</p>
+              )}
             </div>
             <div>
               <label htmlFor="password" className="text-sm text-gray-700">
@@ -74,11 +130,21 @@ const SignIn = () => {
               <input
                 id="password"
                 value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
+                onChange={(e) => {
+                  if (passwordError) {
+                    setPasswordError("");
+                  }
+                  setAdminPassword(e.target.value);
+                }}
                 type="password"
                 placeholder="********"
-                className="w-full p-3 border border-gray-300 rounded mt-1"
+                className={`w-full p-3 border rounded mt-1 ${
+                  passwordError ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {passwordError && (
+                <p className="text-red-500 text-sm">{passwordError}</p>
+              )}
             </div>
             {/* Remember and Forgot password */}
             <div className="flex justify-between items-center">
@@ -97,7 +163,7 @@ const SignIn = () => {
               </a>
             </div>
 
-            {/* Sign Up Button */}
+            {/* Sign In Button */}
             <div>
               <button
                 type="submit"

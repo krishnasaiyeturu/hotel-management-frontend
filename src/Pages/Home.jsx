@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 // import Category from "../components/Home/Category";
 // import PriceWithTaxCard from "../components/Home/PriceWithTaxCard";
 // import { useQuery } from "@tanstack/react-query";
-import { API } from "../backend";
+// import { API } from "../backend";
 // import { useParams } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { useLocation } from "react-router-dom";
 import HomePageSkeleton from "../components/skeletonLoading/HomePageSkeleton";
 import ListingPreviewCard from "../components/Home/ListingPreviewCard";
@@ -12,14 +12,16 @@ import { Link } from "react-router-dom";
 // import { useGetSubCatListing } from "../hooks/useGetSubCatListing";
 // import SkeletonLoadingCards from "../components/skeletonLoading/SkeletonLoadingCards";
 import { FadeLoader } from "react-spinners";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { OUR_ROOMS_HEADING } from "../hotelManagement/modules/headings";
 
 const RoomsList = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const userFilters = location.state;
-  console.log({ userFilters });
+  const  userFilters  = location?.state?.data ? location?.state?.data : {};
+  const availabilityTypes = location?.state?.availabilityTypes ? location?.state?.availabilityTypes : [];
+
   // const [hasScroll, setHasScroll] = useState(false);
   // //  before tax price state
   // const [showBeforeTaxPrice, setShowBeforeTaxPrice] = useState(false);
@@ -81,39 +83,22 @@ const RoomsList = () => {
   //   ],
   // ];
   // fetching all listing data
-const getAllRoomTypes = async () => {
-  setLoading(true); // Start loading state
-  try {
-    const res = await axios.get(`${API}room/public`);
-    console.log("ALL ROOMS", { res });
+// const getAllRoomTypes = async () => {
+//   setLoading(true); // Start loading state
+//   try {
+//     const res = await axios.get(`${API}room/public`);
+//     console.log("ALL ROOMS", { res });
 
-    setRoomTypes(res.data);
-    // toast.success("Room types fetched successfully!");
-  } catch (error) {
-    console.error("Error fetching room types:", {error});
-    toast.error("Failed to fetch room types. Please try again.");
-  } finally {
-    setLoading(false); // Stop loading state
-  }
-};
+//     setRoomTypes(res.data);
+//     // toast.success("Room types fetched successfully!");
+//   } catch (error) {
+//     console.error("Error fetching room types:", {error});
+//     toast.error("Failed to fetch room types. Please try again.");
+//   } finally {
+//     setLoading(false); // Stop loading state
+//   }
+// };
 
-const getAvailableRoomTypes = async () => {
-  setLoading(true); // Start loading state
-  try {
-    const res = await axios.post(
-      `${API}bookings/check-availability`,
-      userFilters?.data
-    );
-    console.log("USER FILTERS ROOMS", { res });
-    setRoomTypes(res.data.availabilityTypes);
-    // toast.success("Available room types fetched successfully!");
-  } catch (error) {
-    console.error("Error user fetching available room types:", {error});
-    toast.error("Failed to fetch available room types. Please try again.");
-  } finally {
-    setLoading(false); // Stop loading state
-  }
-};
   // const handleScrollTracking = () => {
   //   const scrollPosition = window.scrollY;
   //   // checking if we scroll from top
@@ -147,11 +132,12 @@ const getAvailableRoomTypes = async () => {
   //     JSON.stringify(localStorage.setItem("category", "House"));
   //   }
   // }, [location.search]);
-
+console.log({userFilters})
   useEffect(() => {
     setLoading(true);
-    userFilters !== null ? getAvailableRoomTypes() : getAllRoomTypes();
-  }, [userFilters]);
+    JSON.stringify(userFilters) !== '{}' && availabilityTypes?.length > 0 ? setRoomTypes(availabilityTypes) : setRoomTypes([]);
+    setLoading(false);
+  }, []);
 
   if (loading) {
     if (window.innerWidth <= 1080) {
@@ -173,9 +159,9 @@ const getAvailableRoomTypes = async () => {
   // });
   // console.log({ allListingData, formattedData });
   return (
-    <main className="max-w-screen-2xl xl:px-10 px-6  sm:px-16 mx-auto">
+    <main className="max-w-screen-2xl mb-8 xl:px-10 px-6  sm:px-16 mx-auto">
       <h1 className="text-center font-bold text-xl text-[#002d72] py-4">
-        OUR ROOMS
+        {OUR_ROOMS_HEADING}
       </h1>
       {/* <section
         className={` pt-8 grid md:grid-cols-12 gap-5 bg-white sticky top-16 z-30 ${
@@ -210,19 +196,24 @@ const getAvailableRoomTypes = async () => {
         <section className="py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mx-auto gap-x-7 gap-y-10">
           {roomTypes?.length ? (
             roomTypes.map((roomType) => {
-              return (
-                // This will be a link to see full details of the roomType
+              return roomType.availableStatus ? (
+                // Link component for available rooms
                 <Link
-                  to={`/rooms/${roomType._id}`} // Uncommented this line to enable linking
+                  to={`/rooms/${roomType._id}`}
                   key={roomType._id}
                   className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto"
-                  state={{ data: userFilters?.data }}
+                  state={{ data: userFilters }}
                 >
-                  <ListingPreviewCard
-                    room={roomType}
-                    // showBeforeTaxPrice={showBeforeTaxPrice}
-                  />
+                  <ListingPreviewCard room={roomType} />
                 </Link>
+              ) : (
+                // Non-clickable div for unavailable rooms
+                <div
+                  key={roomType._id}
+                  className="flex flex-col gap-3 rounded-xl w-full sm:max-w-[300px] md:w-full mx-auto cursor-not-allowed"
+                >
+                  <ListingPreviewCard room={roomType} />
+                </div>
               );
             })
           ) : (

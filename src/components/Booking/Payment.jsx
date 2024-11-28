@@ -3,21 +3,26 @@
 import { useEffect, useState } from "react";
 import { useDateFormatting } from "../../hooks/useDateFormatting";
 // import {
-//   // PaymentElement,
+//   PaymentElement,
 //   useElements,
 //   useStripe,
 // } from "@stripe/react-stripe-js";
 import { PulseLoader } from "react-spinners";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { API } from "../../backend";
+import moment from "moment/moment";
+// import { loadStripe } from "@stripe/stripe-js";
+import { fetchCustomerData } from "../../hotelManagement/redux/actions/customerActions";
+import { redirectToStripe } from "../../utils/helper";
+import { setSelectedRoom } from "../../hotelManagement/redux/actions/customerSelectedRoomTypeWithDetails";
+import { GUEST_PAYMENT_TYPES } from "../../hotelManagement/modules/constants";
 
-const Payment = ({ bookedData}) => {
-  console.log({bookedData})
+const Payment = ({ bookedData, listingId }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -31,6 +36,9 @@ const Payment = ({ bookedData}) => {
     zipcode: "",
   });
   const [errors, setErrors] = useState({});
+
+  let customer = useSelector((state) => state.admin.customer.customerDetails);
+
   // const user = useSelector((state) => state.user.userDetails);
   const newReservationData = useSelector(
     (state) => state.reservations?.newReservationsData
@@ -52,6 +60,8 @@ const Payment = ({ bookedData}) => {
     lastName: "",
     email: "",
   });
+  const dispatch = useDispatch();
+
   const updateErrors = (name) => {
     const updatedErrors = errors;
     if (updatedErrors[`${name}`]) {
@@ -90,6 +100,11 @@ const Payment = ({ bookedData}) => {
     fetchCountries();
   }, []);
 
+  // Fetch customer data on component mount
+  useEffect(() => {
+    dispatch(fetchCustomerData());
+  }, [dispatch]);
+
   // Fetch states based on selected country
   const fetchStates = async (country) => {
     if (country) {
@@ -118,7 +133,7 @@ const Payment = ({ bookedData}) => {
     updateErrors(name);
   };
 
-    const validateForm = () => {
+  const validateForm = () => {
     const newErrors = {};
     if (!guestInfo.firstName) newErrors.firstName = "First Name is required.";
     if (!guestInfo.lastName) newErrors.lastName = "Last Name is required.";
@@ -133,74 +148,79 @@ const Payment = ({ bookedData}) => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  // Booking 
-    const bookRooms = async () => {
-      try {
-        const bookingUrl = `${API}bookings/`;
-        const bookingInformation = {
-          checkIn: bookedData?.checkIn,
-          checkOut: bookedData?.checkOut,
-          hotelType: bookedData?.roomTypeId, // The ObjectId of the RoomType
-          rooms: bookedData?.rooms,
-          adults: bookedData?.adults,
-          children: bookedData?.children,
-          guestInformation: {
-            firstName: guestInfo?.firstName,
-            lastName: guestInfo?.lastName,
-            email: guestInfo?.email,
-          },
-          address: {
-            addressLine1: addressInfo?.addressLine1,
-            addressLine2: addressInfo?.addressLine2,
-            country: selectedCountry,
-            state: selectedState,
-            city: addressInfo?.city,
-            zipCode: addressInfo?.zipcode,
-          },
-        };
-        const response = await axios.post(bookingUrl, bookingInformation);
-        console.log('BOOKING RESPONSE',{response});
-        toast.success("Booking is Successful Please check your email !!")
-        navigate('/')
-      } catch (error) {
-        console.error("Error BOOKING RESPONSE", error);
+  // Booking
+  const bookingInformation = {
+    checkIn: bookedData?.checkIn
+      ? moment(bookedData.checkIn).format("YYYY-MM-DD")
+      : null,
+    checkOut: bookedData?.checkOut
+      ? moment(bookedData.checkOut).format("YYYY-MM-DD")
+      : null,
+    hotelType: bookedData?.roomTypeId, // The ObjectId of the RoomType
+    rooms: bookedData?.rooms,
+    adults: bookedData?.adults,
+    children: bookedData?.children,
+    guestInformation: {
+      firstName: guestInfo?.firstName,
+      lastName: guestInfo?.lastName,
+      email: guestInfo?.email,
+    },
+    address: {
+      addressLine1: addressInfo?.addressLine1,
+      addressLine2: addressInfo?.addressLine2,
+      country: selectedCountry,
+      state: selectedState,
+      city: addressInfo?.city,
+      zipCode: addressInfo?.zipcode,
+    },
+  };
+
+  const bookRooms = async () => {
+    try {
+      const bookingUrl = `${API}bookings/`;
+      bookingInformation.paymentType = GUEST_PAYMENT_TYPES.offline;
+      await axios.post(bookingUrl, bookingInformation);
+      toast.success("Booking is Successful Please check your email !!");
+      navigate("/");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const payAndBookRoom = async () => {
+    if (!validateForm()) return;
+    // dispatch(setSelectedRoom(newReservationData));
+    try {
+      const bookingUrl = `${API}bookings/`;
+      bookingInformation.paymentType = GUEST_PAYMENT_TYPES.online;
+      const bookingResponse = await axios.post(bookingUrl, bookingInformation);
+      if (customer === null) {
+        const url = `/book/stays/${listingId || newReservationData?.listingId}`;
+        navigate("/sign-up", {
+          state: { from: url, sessionId: bookingResponse?.data?.sessionId },
+        });
+      } else {
+        redirectToStripe(bookingResponse?.data?.sessionId);
       }
-    };
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   // reservation form handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    // if (!user) {
     bookRooms();
-    // }
-// {
-//   "checkIn": "2024-10-19",
-//   "checkOut": "2024-10-20",
-//   "hotelType": "67000bfc980b7ecadcd9813d",  // The ObjectId of the RoomType
-//   "rooms": 1,
-//   "adults": 4,
-//   "children": 2,
-//   "guestInformation": {
-//     "firstName": "John",
-//     "lastName": "Doe",
-//     "email": "john.doe@example.com"
-//   },
-//   "address": {
-//     "addressLine1": "1234 Elm Street",
-//     "addressLine2": "Apt 101",
-//     "country": "USA",
-//     "state": "CA",
-//     "city": "Los Angeles",
-//     "zipCode": "90001"
-//   }
-// }
+    dispatch(setSelectedRoom(newReservationData));
   };
-  console.log({ states });
   return (
     <div>
       {/* trips section */}
       <div className=" flex flex-col gap-6">
-        <h5 className="text-xl text-[#222222] font-bold">Your Booking Details</h5>
+        <h5 className="text-xl text-[#222222] font-bold">
+          Your Booking Details
+        </h5>
         {/* dates */}
         <div className=" flex flex-row justify-between">
           <span className="text-lg text-[#222222]">
@@ -451,12 +471,50 @@ const Payment = ({ bookedData}) => {
         </div>
       </div>
       {/* payment element */}
-      <form onSubmit={handleSubmit}>
+      <div className="flex justify-between">
+        <button
+          onClick={handleSubmit}
+          className={`px-4 mt-5 bg-[#002d72] text-white p-2 rounded-md transition-opacity ${
+            Object.keys(errors).length > 0
+              ? "bg-gray-400 opacity-50 cursor-not-allowed"
+              : "cursor-pointer"
+          } rounded-md py-2`}
+          disabled={Object.keys(errors).length > 0}
+        >
+          {/* <FontAwesomeIcon icon={faPlus} className="mr-2" /> */}
+          Book now & pay at hotel
+        </button>
+        <button
+          className="bg-[#002d72] mt-5 p-2 text-white text-white transition-opacity px-4 rounded-md rounded"
+          onClick={payAndBookRoom}
+          disabled={Object.keys(errors).length > 0}
+        >
+          Pay Now
+        </button>
+      </div>
+      <div>
         {/* <h5 className="text-xl md:text-[22px] text-[#222222] font-medium pb-4">
             Pay with
           </h5> */}
         {/* <PaymentElement /> */}
-        <hr className="w-full h-[1.3px] bg-[#dddddd] my-10" />
+        {/* {paymentIntent && (
+          <Elements
+            stripe={stripePromise}
+            options={{ clientSecret: paymentIntent }}
+          >
+            <ElementsConsumer>
+              {({ stripe, elements }) => (
+                <form
+                  onSubmit={(e) => handleSubmit(e, stripe, elements)}
+                  id="payment-form"
+                >
+                  <PaymentElement />
+                </form>
+              )}
+            </ElementsConsumer>
+          </Elements>
+        )} */}
+        <hr className="w-full h-[1.3px] bg-[#dddddd] my-4" />
         <div>
           <h5 className="text-xl md:text-[22px] text-[#222222] font-medium">
             Ground rules
@@ -487,21 +545,7 @@ const Payment = ({ bookedData}) => {
           <FontAwesomeIcon icon={faPlus} className="mr-2" />
           Create Room
         </button> */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSubmit}
-            className={`px-4 mt-5 bg-blue-500 text-white p-2 rounded-md transition-opacity ${
-              Object.keys(errors).length > 0
-                ? "bg-gray-400 opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            } rounded-md py-2`}
-            disabled={Object.keys(errors).length > 0}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Book
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

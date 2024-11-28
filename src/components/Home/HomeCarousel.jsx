@@ -11,9 +11,6 @@ import room4 from "../../assets/aspengrandhotellaportepictures/2qb2.jpeg";
 import room5 from "../../assets/aspengrandhotellaportepictures/pool2.jpg";
 import dinning from "../../assets/aspengrandhotellaportepictures/Dinning.jpg";
 
-
-
-
 //  imagess Front,2qtsup,2QB,2qb1,2qb2,BF,Dinning,
 const images = [hotelImg, room1, room2, room3, room4, room5, dinning];
 
@@ -34,7 +31,7 @@ const HomeCarousel = () => {
             <img
               src={image}
               alt={`carousel-item-${index}`}
-              className="w-full h-[45rem] object-cover"
+              className="w-full h-[40rem] object-cover"
             />
             {/* <div className="absolute inset-0 bg-black bg-opacity-0 flex flex-col justify-end items-center text-white pb-52">
               <h2 className="text-4xl text-gray-400 font-semibold">

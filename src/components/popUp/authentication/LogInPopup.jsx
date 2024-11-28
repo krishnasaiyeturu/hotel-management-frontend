@@ -27,8 +27,7 @@ const LogInPopup = ({
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const user = useSelector((state) => state.user);
-  console.log(user);
+  // const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
